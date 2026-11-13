@@ -4,13 +4,13 @@ El juego no usa base de datos: solo PHP (para `api/catalog.php`) y archivos est�
 
 ## Piezas
 
-- **`.cpanel.yml`**: tareas que cPanel ejecuta al pulsar *Deploy HEAD Commit*. Copia todo menos `tools/`, `docs/`, `openspec/`, `assets-originales/`, `.git*`, `.github/` y los `.md` a `DEPLOYPATH` (`/home/samirade/public_html/henry/`).
+- **`.cpanel.yml`**: tareas que cPanel ejecuta al pulsar *Deploy HEAD Commit*. Copia todo menos `tools/`, `docs/`, `openspec/`, `assets-originales/`, `.git*`, `.github/` y los `.md` a `DEPLOYPATH` (`/home/samirade/public_html/game_ficct/`).
 - **`.github/workflows/deploy.yml`**: en cada push a `main`, llama a la UAPI de cPanel (`VersionControl/update` = pull, `VersionControlDeployment/create` = deploy). Si faltan los secrets, se salta sin fallar.
 
 ## Configuración (una sola vez)
 
 1. **cPanel → Git Version Control → Create**: clonar `https://github.com/Will-34/game_friends.git` en `/home/samirade/repositories/game_friends`.
-2. **(Opcional) Subdominio**: cPanel → Dominios → crear `henry.<dominio>` con raíz `public_html/henry`.
+2. **(Opcional) Subdominio**: cPanel → Dominios → crear `game-ficct.<dominio>` (los subdominios no admiten `_`) con raíz `public_html/game_ficct`.
 3. **cPanel → Manage API Tokens → Create**: copiar el token.
 4. **GitHub → Settings → Secrets and variables → Actions**: crear `CPANEL_URL` (`https://cpanel.samiradev.com`), `CPANEL_USER` y `CPANEL_TOKEN`.
 5. Primer despliegue: en GitHub → Actions → *Deploy a cPanel* → *Run workflow* (o en cPanel: *Update from Remote* + *Deploy HEAD Commit*).

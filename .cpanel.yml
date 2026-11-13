@@ -3,6 +3,6 @@
 # Copia solo lo necesario para jugar a DEPLOYPATH. Ver docs/DESPLIEGUE-CPANEL.md.
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/samirade/public_html/henry/
+    - export DEPLOYPATH=/home/samirade/public_html/game_ficct/
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/rsync -a --delete --exclude='.git' --exclude='.github' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='.gitattributes' --exclude='assets-originales' --exclude='tools' --exclude='docs' --exclude='openspec' --exclude='*.md' ./ $DEPLOYPATH
