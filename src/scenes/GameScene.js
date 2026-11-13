@@ -7,7 +7,7 @@
  * Un mapa sin objetos `arena`/`boss` se gana eliminando a todos los enemigos (como antes).
  */
 import { GAME_WIDTH, GAME_HEIGHT, DEFAULTS } from '../config.js';
-import { mapKey, mapImageKey, effectsKey, tiledProp } from '../systems/ContentLoader.js';
+import { mapKey, mapImageKey, effectsKey, textureKey, animKey, tiledProp } from '../systems/ContentLoader.js';
 import { CharacterRoleManager, ROLES } from '../systems/CharacterRoleManager.js';
 import { ProjectilePool } from '../systems/ProjectilePool.js';
 import { GAME_EVENTS, FIGHTER_EVENTS } from '../systems/GameEvents.js';
@@ -35,6 +35,12 @@ const EMOTE_COOLDOWN_MS = 2500;
 const GROUP_SPACING = 64;
 /** Escala del jefe. */
 const BOSS_SCALE = 1.5;
+/** Colores de nombre por bando: protagonista y aliados en verde, enemigos en rojo, jefe en lila. */
+export const NAME_COLORS = Object.freeze({ hero: '#7dff8a', enemy: '#ff5a5a', boss: '#d7a6ff', captive: '#ffd34d' });
+/** Marca de dificultad junto al nombre del enemigo (el color ya no la indica). */
+const DIFFICULTY_MARK = Object.freeze({ facil: '', normal: ' ★', dificil: ' ★★' });
+/** Escala del personaje capturado sobre el jefe. */
+const CAPTIVE_SCALE = 0.8;
 /** Rango (ms) de espera para que un aliado caído vuelva. */
 const ALLY_RETURN_MS = [5000, 10000];
 /** Cada cuánto daña un tile de peligro a quien lo pisa. */
@@ -50,6 +56,10 @@ export class GameScene extends Phaser.Scene {
         this.mapId = (data && data.mapId) || DEFAULTS.mapId;
         this.checkpoint = (data && data.checkpoint) || null;
         this.ended = false;
+        // La instancia de la escena se reutiliza al reiniciar: se limpia el estado del combate anterior
+        this.boss = null;
+        this.bossEnraged = false;
+        this.captive = null;
     }
 
     create() {
@@ -150,7 +160,7 @@ export class GameScene extends Phaser.Scene {
             specials: this.specials,
             grenadeCount: PLAYER_GRENADES,
             weapons: this.content.weapons,
-            nameColor: '#6fd0ff',
+            nameColor: NAME_COLORS.hero,
         });
         this.player.on(FIGHTER_EVENTS.DAMAGED, (f) => this.events.emit(GAME_EVENTS.PLAYER_HEALTH, f.health, f.stats.maxHealth));
         this.player.on(FIGHTER_EVENTS.STATS, (f) => this.events.emit(GAME_EVENTS.PLAYER_STATS, f));
@@ -215,8 +225,8 @@ export class GameScene extends Phaser.Scene {
             grenadeCount: Number.POSITIVE_INFINITY,
             weapons: this.content.weapons,
             modsOverride: mods,
-            nameColor: boss ? '#d7a6ff' : tier.nameColor,
-            title: opts.title,
+            nameColor: boss ? NAME_COLORS.boss : NAME_COLORS.enemy,
+            title: opts.title || `${def.name.toUpperCase()}${DIFFICULTY_MARK[tier.id] || ''}`,
             scale: boss ? BOSS_SCALE : 1,
         });
         self = enemy;
@@ -262,7 +272,7 @@ export class GameScene extends Phaser.Scene {
             specials: this.specials,
             grenadeCount: 0,
             weapons: this.content.weapons,
-            nameColor: '#7dff8a',
+            nameColor: NAME_COLORS.hero,
         });
         self = ally;
         ai.attach(ally);
@@ -461,6 +471,7 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.shake(300, 0.006);
         if (this.level.bossTaunt) this.time.delayedCall(900, () => this.boss.active && !this.boss.dead && showSpeech(this, this.boss, this.level.bossTaunt, 3200));
         this.spawnEscorts(escorts, 700);
+        this.spawnCaptive(this.boss);
 
         // Aliados: entran por la izquierda de la arena
         const respawns = Math.max(0, this.prop('allyRespawns', 2));
@@ -476,6 +487,127 @@ export class GameScene extends Phaser.Scene {
             });
         });
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
+    }
+
+    /** El jefe lanza su dron cuando lo tiene listo y hay a quién disparar (en fase 2 se recarga antes). */
+    updateBoss(time) {
+        const b = this.boss;
+        if (b && b.active && !b.dead && time >= b.droneReadyAt) {
+            const t = this.nearestHostile(b);
+            if (t && Math.abs(t.x - b.x) < 600 && b.tryUseDrone(time)) {
+                if (this.bossEnraged) b.droneReadyAt = time + b.droneCooldownMs * 0.6;
+            }
+        }
+        this.updateCaptive(time);
+    }
+
+    // ------------------------------------------------------------------ personaje capturado (Henry)
+
+    /**
+     * El personaje de la propiedad `captive` del mapa va montado y enjaulado sobre el jefe.
+     * No es un Fighter (no recibe balas): es un sprite que sigue al jefe. Si es el protagonista, no aparece.
+     */
+    spawnCaptive(boss) {
+        const id = this.prop('captive', null);
+        if (!id || id === this.characterId) return;
+        const def = this.content.characters.get(id);
+        if (!def) return;
+        const s = this.add.sprite(boss.x, boss.y, textureKey(id)).setScale(CAPTIVE_SCALE).setDepth(11);
+        s.def = def;
+        s.headPoint = () => ({ x: s.x, y: s.y - def.body.height * CAPTIVE_SCALE - 30 });
+        playCaptiveAnim(s, def, 'idle');
+        const cage = this.add.graphics().setDepth(12);
+        const label = this.add.text(0, 0, def.name.toUpperCase(), textStyle(12, NAME_COLORS.captive)).setOrigin(0.5, 1).setDepth(30);
+        this.captive = { def, sprite: s, cage, label, free: false, nextCryAt: this.time.now + 10000 };
+        label.setVisible(false); // dentro de la jaula basta con el globo; el nombre vuelve al quedar libre
+        // El nombre del jefe pasa por encima de la jaula
+        boss.labelOffset = def.body.height * CAPTIVE_SCALE + 16;
+        this.time.delayedCall(4300, () => this.captive && !this.captive.free && showSpeech(this, s, '¡Ayúdenme, changos! ¡Sáquenme de aquí!', 2600, '#7a1d1d'));
+    }
+
+    updateCaptive(time) {
+        const c = this.captive;
+        if (!c || c.free) return;
+        const b = this.boss;
+        const s = c.sprite;
+        if (!b || !b.active) return;
+        // Montado sobre los hombros del jefe
+        s.setPosition(b.x - 4 * b.facing, b.y - b.def.body.height * b.sizeScale + 10);
+        s.setFlipX(b.facing < 0);
+        const w = c.def.body.width * CAPTIVE_SCALE + 18;
+        const h = c.def.body.height * CAPTIVE_SCALE + 12;
+        const x0 = s.x - w / 2;
+        const y0 = s.y - h;
+        const g = c.cage;
+        g.clear();
+        g.lineStyle(3, 0x3a3f48, 1);
+        for (let x = x0; x <= x0 + w; x += 9) g.lineBetween(x, y0, x, s.y);
+        g.lineStyle(4, 0x6d737a, 1).strokeRect(x0, y0, w, h);
+        g.fillStyle(0xffd34d, 1).fillRect(s.x - 3, s.y - h / 2 - 3, 6, 6); // candado
+        c.label.setPosition(s.x, y0 - 4);
+        if (time >= c.nextCryAt) {
+            c.nextCryAt = time + 9000 + Math.random() * 5000;
+            const lines = ['¡Sáquenme de aquí!', '¡Qué macana, me tienen enjaulado!', '¡Apurate, chango!'];
+            showSpeech(this, s, Phaser.Utils.Array.GetRandom(lines), 2000, '#7a1d1d');
+        }
+    }
+
+    /** Al caer el jefe: la jaula se rompe, el capturado salta al suelo feliz y celebra. */
+    freeCaptive(boss) {
+        const c = this.captive;
+        if (!c || c.free) return;
+        c.free = true;
+        const s = c.sprite;
+        // Barrotes que salen volando
+        for (let i = 0; i < 8; i++) {
+            const bar = this.add.rectangle(s.x, s.y - 30, 3, 18, 0x6d737a).setDepth(13);
+            this.tweens.add({
+                targets: bar,
+                x: bar.x + Phaser.Math.Between(-90, 90),
+                y: bar.y + Phaser.Math.Between(-80, 40),
+                angle: Phaser.Math.Between(-360, 360),
+                alpha: 0,
+                duration: 700,
+                onComplete: () => bar.destroy(),
+            });
+        }
+        c.cage.destroy();
+        c.label.setVisible(true);
+        boss.labelOffset = 0;
+        audio.sfx('explosion');
+        const groundY = boss.y;
+        const landX = Phaser.Math.Clamp(s.x + 60, this.cameras.main.worldView.x + 40, this.cameras.main.worldView.right - 40);
+        playCaptiveAnim(s, c.def, 'jump');
+        this.tweens.add({
+            targets: s,
+            x: landX,
+            duration: 650,
+            ease: 'Linear',
+        });
+        this.tweens.add({
+            targets: s,
+            y: s.y - 70,
+            duration: 300,
+            ease: 'Quad.easeOut',
+            onComplete: () =>
+                this.tweens.add({
+                    targets: s,
+                    y: groundY,
+                    duration: 350,
+                    ease: 'Quad.easeIn',
+                    onComplete: () => {
+                        s.setScale(1);
+                        playCaptiveAnim(s, c.def, 'victory', true);
+                        showEmote(this, s);
+                        showSpeech(this, s, '¡Gracias, changos! ¡Soy libre! ¡Fuerza camba!', 2400, '#14532d');
+                    },
+                }),
+        });
+        const follow = () => {
+            if (c.label.active) c.label.setPosition(s.x, s.y - c.def.body.height * s.scaleY - 8);
+        };
+        this.events.on('update', follow);
+        this.events.once('shutdown', () => this.events.off('update', follow));
     }
 
     /** Escoltas/refuerzos del jefe: caen desde arriba a los lados de la arena. */
@@ -574,6 +706,7 @@ export class GameScene extends Phaser.Scene {
             this.enemyDirector.update(time);
             if (this.allies.length) this.allyDirector.update(time);
             this.checkArena();
+            this.updateBoss(time);
             if (this.allies.length && time >= (this.nextAllyDroneAt || 0)) {
                 // Los aliados lanzan su dron cuando lo tienen listo y hay un enemigo cerca
                 this.nextAllyDroneAt = time + 1500;
@@ -638,6 +771,7 @@ export class GameScene extends Phaser.Scene {
         });
         if (this.ended) return;
         if (enemy.isBoss) {
+            this.freeCaptive(enemy);
             this.events.emit(GAME_EVENTS.BOSS_END);
             this.winLevel();
         } else if (this.hasBoss) {
@@ -656,7 +790,7 @@ export class GameScene extends Phaser.Scene {
         for (const e of [...this.enemies]) if (!e.dead) e.die();
         for (const a of this.allies) if (!a.dead) a.invulnerableUntil = Number.POSITIVE_INFINITY;
         const next = this.hasBoss ? nextLevelId(this.content, this.mapId) : null;
-        this.time.delayedCall(900, () => {
+        this.time.delayedCall(this.captive ? 2200 : 900, () => {
             this.player.celebrate();
             for (const a of this.allies) if (a.active && !a.dead) a.celebrate();
             audio.sfx('victory');
@@ -772,6 +906,16 @@ export class GameScene extends Phaser.Scene {
         this.scene.stop('Hud');
         audio.stopMusic();
     }
+}
+
+/** Pone una animación al sprite de un personaje que no es Fighter (origen y desplazamiento de character.json). */
+function playCaptiveAnim(sprite, def, name, loop = false) {
+    const a = def.animations[name] || def.animations.idle;
+    const key = def.animations[name] ? name : 'idle';
+    const origin = a.origin || [0.5, 1];
+    const offset = a.offset || [0, 0];
+    sprite.setOrigin(origin[0] - offset[0] / def.frameWidth, origin[1] - offset[1] / def.frameHeight);
+    sprite.play(loop ? { key: animKey(def.id, key), repeat: -1 } : animKey(def.id, key), true);
 }
 
 /** "count" de Tiled: número (2) o rango ("2-3"). */

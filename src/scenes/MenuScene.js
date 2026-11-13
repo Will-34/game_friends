@@ -65,7 +65,7 @@ export class MenuScene extends Phaser.Scene {
             )
             .setOrigin(0.5);
         this.add
-            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.7.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
+            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.8.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
             .setOrigin(1, 1);
     }
 }
