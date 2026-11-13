@@ -1,8 +1,11 @@
 ---
 # Despliegue en cPanel (Git Version Control → Deploy HEAD Commit).
-# Copia solo lo necesario para jugar a DEPLOYPATH. Ver docs/DESPLIEGUE-CPANEL.md.
+# Copia solo lo necesario para jugar a DEPLOYPATH (raíz del subdominio). Ver docs/DESPLIEGUE-CPANEL.md.
+# Se usa cp (no rsync, que no siempre está instalado). Se borran antes las carpetas del juego para no dejar archivos viejos.
 deployment:
   tasks:
     - export DEPLOYPATH=/home/samirade/game-ficct.samiradev.com/
     - /bin/mkdir -p $DEPLOYPATH
-    - /bin/rsync -a --delete --exclude='.git' --exclude='.well-known' --exclude='cgi-bin' --exclude='.github' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='.gitattributes' --exclude='assets-originales' --exclude='tools' --exclude='docs' --exclude='openspec' --exclude='*.md' ./ $DEPLOYPATH
+    - /bin/rm -rf $DEPLOYPATH/api $DEPLOYPATH/content $DEPLOYPATH/css $DEPLOYPATH/icons $DEPLOYPATH/lib $DEPLOYPATH/src
+    - /bin/cp -R api content css icons lib src index.php .htaccess favicon.png manifest.webmanifest $DEPLOYPATH
+    - /bin/chmod -R u=rwX,go=rX $DEPLOYPATH
