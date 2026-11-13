@@ -6,6 +6,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 
 ### Agregado
 - Despliegue en cPanel: `.cpanel.yml` y GitHub Action `deploy.yml` (pull + deploy automático al hacer push a `main`). Ver `docs/DESPLIEGUE-CPANEL.md`.
+- Vista previa al compartir el enlace (WhatsApp, Facebook…): etiquetas Open Graph "Game Ficct" e imagen `icons/share.jpg` generada con `tools/build-share-image.php`.
 
 ## [1.0.0] — 2026-11-13
 
