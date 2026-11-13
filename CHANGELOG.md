@@ -2,6 +2,11 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Agregado
+- Despliegue en cPanel: `.cpanel.yml` y GitHub Action `deploy.yml` (pull + deploy automático al hacer push a `main`). Ver `docs/DESPLIEGUE-CPANEL.md`.
+
 ## [1.0.0] — 2026-11-13
 
 ### E6 — Final
