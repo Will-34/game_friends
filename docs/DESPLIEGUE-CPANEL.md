@@ -4,7 +4,7 @@ El juego no usa base de datos: solo PHP (para `api/catalog.php`) y archivos est�
 
 ## Piezas
 
-- **`.cpanel.yml`**: tareas que cPanel ejecuta al pulsar *Deploy HEAD Commit*. Copia todo menos `tools/`, `docs/`, `openspec/`, `assets-originales/`, `.git*`, `.github/` y los `.md` a `DEPLOYPATH` (`/home/samirade/game-ficct.samiradev.com/`).
+- **`.cpanel.yml`**: tareas que cPanel ejecuta al pulsar *Deploy HEAD Commit*. Copia con `cp` solo lo necesario para jugar (`api`, `content`, `css`, `icons`, `lib`, `src`, `index.php`, `.htaccess`, `favicon.png`, `manifest.webmanifest`) a `DEPLOYPATH` (`/home/samirade/game-ficct.samiradev.com/`) y ajusta permisos (755/644). Si agregas archivos en la raíz que el juego necesite, añádelos a la lista.
 - **`.github/workflows/deploy.yml`**: en cada push a `main`, llama a la UAPI de cPanel (`VersionControl/update` = pull, `VersionControlDeployment/create` = deploy). Si faltan los secrets, se salta sin fallar.
 
 ## Configuración (una sola vez)
