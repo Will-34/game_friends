@@ -17,7 +17,17 @@
         "id": "motivacion-de-equipo",
         "name": "Motivación de Equipo",
         "description": "Aumenta la velocidad y el daño de los aliados cercanos por un tiempo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 8000,
+            "speedMul": 1.25,
+            "damageMul": 1.5,
+            "aura": "#ffd34d"
+        }
+    },
+    "taunt": {
+        "emoji": "👩"
     },
     "enemyAbility": null,
     "body": {

@@ -17,7 +17,18 @@
         "id": "bota-verde",
         "name": "Bota Verde",
         "description": "Impulso de velocidad, mayor agilidad y resistencia temporal.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 6000,
+            "speedMul": 1.6,
+            "jumpMul": 1.2,
+            "damageTakenMul": 0.7,
+            "aura": "#39ff6a"
+        }
+    },
+    "taunt": {
+        "icon": "icon-green-boot"
     },
     "enemyAbility": null,
     "body": {

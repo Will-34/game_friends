@@ -1,36 +1,42 @@
 /**
- * registry.js — Registro de habilidades especiales.
+ * registry.js — Registro de TIPOS de habilidad especial.
  *
- * Cada habilidad vive en src/abilities/<id>.js y se registra aquí con su id,
- * el mismo que aparece en character.json → "ability.id" / "enemyAbility.id".
+ * Cada personaje declara su habilidad en character.json:
+ *   "ability": { "id": "bandera-de-poder", "name": "...", "type": "buff", "params": { ... } }
+ * El "type" elige la implementación (src/abilities/<type>.js) y "params" la ajusta.
+ * Así 10 habilidades distintas se resuelven con pocas implementaciones reutilizables (ADR-009).
  *
- * En E1 no hay habilidades implementadas: SpecialAbilitySystem y las 9 habilidades
- * llegan en E4. Ejemplo de registro futuro:
- *
- *   import { ChatGptAttack } from './chatgpt-attack.js';
- *   registerAbility('chatgpt-attack', ChatGptAttack);
+ * Para un tipo nuevo: crear src/abilities/<tipo>.js con un objeto { activate(fighter, params) }
+ * y registrarlo aquí.
  */
+import { BuffAbility } from './buff.js';
+import { DroneAbility } from './drone.js';
+import { ShadowDashAbility } from './shadow-dash.js';
 
 const abilities = new Map();
 
 /**
- * @param {string} id
- * @param {Function} factory  clase o función que crea la habilidad para un Fighter
+ * @param {string} type
+ * @param {{activate: (fighter: object, params: object) => boolean}} impl
  */
-export function registerAbility(id, factory) {
-    if (abilities.has(id)) console.warn(`[abilities] La habilidad "${id}" ya estaba registrada; se reemplaza.`);
-    abilities.set(id, factory);
+export function registerAbility(type, impl) {
+    if (abilities.has(type)) console.warn(`[abilities] El tipo "${type}" ya estaba registrado; se reemplaza.`);
+    abilities.set(type, impl);
 }
 
-/** Devuelve la fábrica de la habilidad o null si aún no existe. */
-export function getAbility(id) {
-    return (id && abilities.get(id)) || null;
+/** Devuelve la implementación del tipo o null si no existe. */
+export function getAbility(type) {
+    return (type && abilities.get(type)) || null;
 }
 
-export function hasAbility(id) {
-    return abilities.has(id);
+export function hasAbility(type) {
+    return abilities.has(type);
 }
 
 export function listAbilities() {
     return [...abilities.keys()];
 }
+
+registerAbility('buff', BuffAbility);
+registerAbility('drone', DroneAbility);
+registerAbility('shadow-dash', ShadowDashAbility);

@@ -17,7 +17,17 @@
         "id": "sombra-veloz",
         "name": "Sombra Veloz",
         "description": "Se desplaza a gran velocidad, se vuelve momentáneamente invisible y realiza un ataque sorpresa.",
-        "implemented": false
+        "implemented": true,
+        "type": "shadow-dash",
+        "params": {
+            "durationMs": 700,
+            "speed": 640,
+            "damage": 40,
+            "aura": "#b06bff"
+        }
+    },
+    "taunt": {
+        "emoji": "😠"
     },
     "enemyAbility": null,
     "body": {

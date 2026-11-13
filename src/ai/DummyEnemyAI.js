@@ -22,6 +22,9 @@ export class DummyEnemyAI {
         this.burstMs = opts.burstMs ?? 500;
         this.restMs = opts.restMs ?? 1500;
         this.patrolSpeed = opts.patrolSpeed ?? 0.45; // fracción de la velocidad del personaje
+        /** Cada cuánto puede lanzar una granada (0 = nunca). Lo fija la dificultad. */
+        this.grenadeEveryMs = opts.grenadeEveryMs ?? 0;
+        this.nextGrenadeAt = 0;
 
         this.self = null;
         this.homeX = 0;
@@ -35,6 +38,7 @@ export class DummyEnemyAI {
         this.self = fighter;
         this.homeX = fighter.x;
         this.nextBurstAt = 600 + Math.random() * 800;
+        this.nextGrenadeAt = 3000 + Math.random() * this.grenadeEveryMs;
     }
 
     read(raw, time) {
@@ -56,6 +60,11 @@ export class DummyEnemyAI {
                     this.nextBurstAt = time + this.burstMs + this.restMs + Math.random() * 700;
                 }
                 if (time < this.burstUntil) raw.buttons.shoot = true;
+                // Granada a media distancia (solo si su dificultad lo permite)
+                if (this.grenadeEveryMs > 0 && time >= this.nextGrenadeAt && Math.abs(dx) > 120 && Math.abs(dx) < 340) {
+                    raw.buttons.grenade = true;
+                    this.nextGrenadeAt = time + this.grenadeEveryMs + Math.random() * 3000;
+                }
                 return;
             }
         }

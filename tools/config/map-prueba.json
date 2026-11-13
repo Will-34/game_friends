@@ -13,28 +13,131 @@
     "placeholder": true
   },
   "ground": [
-    { "from": 0,  "to": 39,  "top": 14 },
-    { "from": 40, "to": 59,  "top": 12 },
-    { "from": 60, "to": 119, "top": 14 }
+    {
+      "from": 0,
+      "to": 39,
+      "top": 14
+    },
+    {
+      "from": 40,
+      "to": 59,
+      "top": 12
+    },
+    {
+      "from": 60,
+      "to": 119,
+      "top": 14
+    }
   ],
   "platforms": [
-    { "col": 10, "row": 10, "length": 5 },
-    { "col": 18, "row": 7,  "length": 4 },
-    { "col": 28, "row": 10, "length": 6 },
-    { "col": 48, "row": 8,  "length": 5 },
-    { "col": 68, "row": 10, "length": 4 },
-    { "col": 75, "row": 7,  "length": 5 },
-    { "col": 90, "row": 10, "length": 6 },
-    { "col": 100, "row": 7, "length": 4 }
+    {
+      "col": 10,
+      "row": 10,
+      "length": 5
+    },
+    {
+      "col": 18,
+      "row": 7,
+      "length": 4
+    },
+    {
+      "col": 28,
+      "row": 10,
+      "length": 6
+    },
+    {
+      "col": 48,
+      "row": 8,
+      "length": 5
+    },
+    {
+      "col": 68,
+      "row": 10,
+      "length": 4
+    },
+    {
+      "col": 75,
+      "row": 7,
+      "length": 5
+    },
+    {
+      "col": 90,
+      "row": 10,
+      "length": 6
+    },
+    {
+      "col": 100,
+      "row": 7,
+      "length": 4
+    }
   ],
   "crates": [
-    [24, 13], [25, 13], [25, 12], [84, 13], [85, 13], [86, 13], [85, 12]
+    [
+      24,
+      13
+    ],
+    [
+      25,
+      13
+    ],
+    [
+      25,
+      12
+    ],
+    [
+      84,
+      13
+    ],
+    [
+      85,
+      13
+    ],
+    [
+      86,
+      13
+    ],
+    [
+      85,
+      12
+    ]
   ],
   "spawns": [
-    { "type": "player", "col": 3,  "row": 13 },
-    { "type": "enemy",  "col": 33, "row": 13, "characterId": "random", "patrol": 5 },
-    { "type": "enemy",  "col": 54, "row": 11, "characterId": "random", "patrol": 4 },
-    { "type": "enemy",  "col": 78, "row": 6,  "characterId": "random", "patrol": 1 },
-    { "type": "enemy",  "col": 100, "row": 13, "characterId": "random", "patrol": 6 }
+    {
+      "type": "player",
+      "col": 3,
+      "row": 13
+    },
+    {
+      "type": "enemy",
+      "col": 33,
+      "row": 13,
+      "characterId": "random",
+      "patrol": 5,
+      "count": "2-3"
+    },
+    {
+      "type": "enemy",
+      "col": 54,
+      "row": 11,
+      "characterId": "random",
+      "patrol": 4,
+      "count": "2-3"
+    },
+    {
+      "type": "enemy",
+      "col": 78,
+      "row": 6,
+      "characterId": "random",
+      "patrol": 1,
+      "count": "2"
+    },
+    {
+      "type": "enemy",
+      "col": 100,
+      "row": 13,
+      "characterId": "random",
+      "patrol": 6,
+      "count": "2-3"
+    }
   ]
 }

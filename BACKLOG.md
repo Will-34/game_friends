@@ -3,7 +3,7 @@
 Estados: `Pendiente` · `En progreso` · `Hecho` · `Bloqueado`
 Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
-**Hecho:** E3 — Personajes y pantalla de selección (2026-11-13). **Siguiente:** E2 — Móvil (propuesta en `openspec/changes/e2-movil/`, pendiente de aprobación).
+**Hecho:** E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **Siguiente:** E2 — Móvil (propuesta en `openspec/changes/e2-movil/`, pendiente de aprobación) o H-039 (armas).
 
 ### Decisiones del usuario (2026-11-13)
 1. Las láminas sin transparencia se usan tal cual: la herramienta quitará el fondo pintado (H-045).
@@ -189,11 +189,19 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 | ID | Historia | Estado |
 | --- | --- | --- |
 | H-039 | Armas y cambio de arma | Pendiente |
-| H-040 | Definir habilidades de enemigos (diseño) | Pendiente |
-| H-041 | Granadas | Pendiente |
-| H-042 | `SpecialAbilitySystem` y las 9 habilidades | Pendiente |
-| H-043 | Enemigos aleatorios con `DifficultyManager` | Pendiente |
-| H-044 | IA de enemigos definitiva | Pendiente |
+| H-040 | Habilidades de enemigos | Hecho |
+| H-041 | Granadas | Hecho |
+| H-042 | `SpecialAbilitySystem` y las 10 habilidades | Hecho |
+| H-043 | Dificultad aleatoria por enemigo (`DifficultyManager`) y grupos de 2-3 enemigos | Hecho |
+| H-044 | IA de enemigos definitiva (máquina de estados, cobertura, persecución) | Pendiente |
+| H-048 | Nombre sobre cada personaje (y mini barra de vida en enemigos) | Hecho |
+| H-049 | "+1" con el símbolo del personaje en cada baja; gestos de los enemigos | Hecho |
+
+- H-040 (hecho): los enemigos usan su misma habilidad (`enemyAbility: null` = usar `ability`). `EnemyAbilityDirector`: cada 9-16 s elige UN enemigo visible al azar; nunca dos habilidades enemigas a la vez.
+- H-041 (hecho): tecla U / botón GRANADA; 5 al empezar (Domeki recarga 3 con su habilidad); parábola, rebote, explosión con daño en área (85 px) y temblor de cámara. Los enemigos difíciles también lanzan.
+- H-042 (hecho): la habilidad se carga con 2 bajas y se activa con L / botón HABILIDAD. Tipos: `buff` (8 personajes), `drone` (Plata), `shadow-dash` (Reymar). Ver ADR-009.
+- H-043 (hecho): niveles Fácil (verde, 45 %), Normal (amarillo, 35 %), Difícil (rojo, 20 %): vida, cadencia, velocidad de bala, alcance de visión, ráfagas y granadas. El color del nombre indica el nivel.
+- H-049 (hecho): símbolos en `character.json → taunt`: Will "AFK", Ignacio 🎂, Carlos 👩, Reymar 😠, Pablo lata verde, Henry 🧔, Sergio bota verde, Plata "TOKEN", Ruddy 😭, Domeki 🧹. Los emojis dependen de la fuente del sistema (se ven distintos en Windows, Android e iOS).
 
 ## E5 — Mapas
 

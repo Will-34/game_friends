@@ -17,7 +17,18 @@
         "id": "energia-verde",
         "name": "Energía Verde",
         "description": "Consume una lata energética que aumenta su velocidad, resistencia y recuperación por un tiempo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 7000,
+            "speedMul": 1.3,
+            "damageTakenMul": 0.5,
+            "regenPerSec": 6,
+            "aura": "#7dff5a"
+        }
+    },
+    "taunt": {
+        "icon": "icon-green-can"
     },
     "enemyAbility": null,
     "body": {

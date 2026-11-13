@@ -5,7 +5,7 @@
  */
 header('Content-Type: text/html; charset=utf-8');
 // Versión para invalidar la caché del navegador al desplegar (cambiar al publicar).
-$assetVersion = '0.2.0';
+$assetVersion = '0.3.0';
 ?><!DOCTYPE html>
 <html lang="es">
 <head>

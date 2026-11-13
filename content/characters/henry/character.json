@@ -17,7 +17,17 @@
         "id": "bandera-de-poder",
         "name": "Bandera de Poder",
         "description": "Despliega su bandera arcoíris para aumentar su velocidad y el daño de ataque por un tiempo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 8000,
+            "speedMul": 1.35,
+            "damageMul": 1.6,
+            "aura": "rainbow"
+        }
+    },
+    "taunt": {
+        "emoji": "🧔"
     },
     "enemyAbility": null,
     "canBeEnemy": false,

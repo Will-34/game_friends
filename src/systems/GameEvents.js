@@ -4,6 +4,7 @@
  */
 export const GAME_EVENTS = Object.freeze({
     PLAYER_HEALTH: 'player-health',      // (health, maxHealth)
+    PLAYER_STATS: 'player-stats',        // (fighter) granadas, carga de habilidad, bajas
     PLAYER_READY: 'player-ready',        // (fighter)
     ENEMIES_LEFT: 'enemies-left',        // (count)
     LEVEL_CLEARED: 'level-cleared',
@@ -13,6 +14,8 @@ export const GAME_EVENTS = Object.freeze({
 
 /** Eventos que emite cada Fighter sobre sí mismo. */
 export const FIGHTER_EVENTS = Object.freeze({
-    DAMAGED: 'fighter-damaged',          // (fighter, amount)
-    DIED: 'fighter-died',                // (fighter)
+    DAMAGED: 'fighter-damaged',          // (fighter, amount)  amount < 0 = curación
+    DIED: 'fighter-died',                // (fighter, killer|null)
+    HIT: 'fighter-hit',                  // (attacker, victim) el atacante acertó un golpe
+    STATS: 'fighter-stats',              // (fighter) cambió granadas / carga de habilidad / bajas
 });

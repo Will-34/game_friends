@@ -68,6 +68,10 @@ export const SYNTH_SFX = {
         tone(ctx, out, { from: 390, to: 180, duration: 0.18, volume: 0.12, delay: 0.14 });
         tone(ctx, out, { from: 260, to: 60, duration: 0.35, volume: 0.12, delay: 0.3 });
     },
+    special(ctx, out) {
+        tone(ctx, out, { type: 'sawtooth', from: 220, to: 880, duration: 0.25, volume: 0.08 });
+        tone(ctx, out, { from: 660, to: 1320, duration: 0.2, volume: 0.07, delay: 0.12 });
+    },
     ui(ctx, out) {
         tone(ctx, out, { from: 660, to: 990, duration: 0.06, volume: 0.08 });
     },

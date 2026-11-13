@@ -93,16 +93,20 @@ export class CharacterRoleManager {
      * @param {string} role       ROLES.*
      * @param {number} x
      * @param {number} y          coordenada de los pies
-     * @param {object} deps       { controller, projectiles }
+     * @param {object} deps       { controller, projectiles, grenades, specials, grenadeCount, modsOverride, nameColor }
      */
     createFighter(scene, def, role, x, y, deps) {
-        const mods = CharacterRoleManager.modifiersOf(role);
+        const mods = { ...CharacterRoleManager.modifiersOf(role), ...(deps.modsOverride || {}) };
         const fighter = new Fighter(scene, x, y, def, {
             role,
             team: CharacterRoleManager.teamOf(role),
             modifiers: mods,
             controller: deps.controller,
             projectiles: deps.projectiles,
+            grenades: deps.grenades,
+            specials: deps.specials,
+            grenadeCount: deps.grenadeCount,
+            nameColor: deps.nameColor,
         });
         if (mods.tint !== null) fighter.setTint(mods.tint);
         return fighter;

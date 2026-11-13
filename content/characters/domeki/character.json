@@ -17,7 +17,17 @@
         "id": "reposicion-express",
         "name": "Reposición Express",
         "description": "Lanza un kit de suministros que recupera vida o munición a los aliados.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 2500,
+            "heal": 40,
+            "grenades": 3,
+            "aura": "#ff9ad5"
+        }
+    },
+    "taunt": {
+        "emoji": "🧹"
     },
     "enemyAbility": null,
     "body": {

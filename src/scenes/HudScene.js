@@ -29,6 +29,13 @@ export class HudScene extends Phaser.Scene {
         this.healthBar = this.add.rectangle(left + 2, 44, BAR_W, BAR_H, 0x5ee06b).setOrigin(0, 0);
         this.healthText = this.add.text(left + BAR_W + 14, 40, '', textStyle(14, '#ffffff'));
 
+        // ---- Habilidad especial (se carga con 2 bajas), granadas y bajas
+        this.add.rectangle(left, 66, BAR_W + 4, 10, 0x000000, 0.7).setOrigin(0, 0).setStrokeStyle(1, 0xffffff, 0.6);
+        this.specialBar = this.add.rectangle(left + 2, 68, 0, 6, 0x6fd0ff).setOrigin(0, 0);
+        this.specialText = this.add.text(left + BAR_W + 14, 62, '', textStyle(12, '#6fd0ff'));
+        this.grenadeText = this.add.text(left, 82, '', textStyle(13, '#ffffff'));
+        this.killsText = this.add.text(left + 120, 82, '', textStyle(13, '#7dff8a'));
+
         // ---- Enemigos restantes
         this.enemiesText = this.add.text(GAME_WIDTH / 2, 16, '', textStyle(18, '#ffb3b3')).setOrigin(0.5, 0);
 
@@ -54,21 +61,25 @@ export class HudScene extends Phaser.Scene {
             if (this.textures.exists(key)) this.portrait.setTexture(key).setDisplaySize(52, 52).setVisible(true);
         };
         const onEnemies = (n) => this.enemiesText.setText(n > 0 ? `ENEMIGOS: ${n}` : '');
+        const onStats = (p) => this.setStats(p);
         game.events.on(GAME_EVENTS.PLAYER_HEALTH, onHealth);
         game.events.on(GAME_EVENTS.PLAYER_READY, onReady);
         game.events.on(GAME_EVENTS.ENEMIES_LEFT, onEnemies);
+        game.events.on(GAME_EVENTS.PLAYER_STATS, onStats);
 
         // El Game emite su estado inicial en create(); si ya ocurrió, se lee directamente.
         if (game.player) {
             onReady(game.player);
             onHealth(game.player.health, game.player.stats.maxHealth);
             onEnemies(game.aliveEnemies());
+            onStats(game.player);
         }
 
         this.events.once('shutdown', () => {
             game.events.off(GAME_EVENTS.PLAYER_HEALTH, onHealth);
             game.events.off(GAME_EVENTS.PLAYER_READY, onReady);
             game.events.off(GAME_EVENTS.ENEMIES_LEFT, onEnemies);
+            game.events.off(GAME_EVENTS.PLAYER_STATS, onStats);
             audio.off('mute-changed', refreshMute);
             if (this.touch) this.touch.destroy();
             this.touch = null;
@@ -91,7 +102,23 @@ export class HudScene extends Phaser.Scene {
         this.healthText.setText(`${Math.ceil(hp)} / ${max}`);
     }
 
-    update() {
+    /** Carga de habilidad, granadas y bajas del protagonista. */
+    setStats(p) {
+        this.specialReady = p.specialCharge >= 1;
+        this.specialBar.width = BAR_W * p.specialCharge;
+        const name = p.def.ability ? p.def.ability.name : 'Habilidad';
+        this.specialText.setText(this.specialReady ? `${name.toUpperCase()} LISTA (L)` : name);
+        this.grenadeText.setText(`GRANADAS (U): ${p.grenades}`);
+        this.killsText.setText(`BAJAS: ${p.kills}`);
+    }
+
+    update(time) {
         if (this.touch) this.touch.poll();
+        // La barra de habilidad parpadea cuando está lista
+        if (this.specialBar) {
+            const on = this.specialReady && Math.floor(time / 250) % 2 === 0;
+            this.specialBar.setFillStyle(on ? 0xffd34d : 0x6fd0ff);
+            this.specialText.setColor(this.specialReady ? '#ffd34d' : '#6fd0ff');
+        }
     }
 }

@@ -13,6 +13,19 @@ import { KeyboardControls, bindGlobalKeys } from '../input/KeyboardControls.js';
 import { TouchProxy } from '../input/MobileControls.js';
 import { DummyEnemyAI } from '../ai/DummyEnemyAI.js';
 import { Projectile } from '../entities/Projectile.js';
+import { GrenadePool } from '../systems/GrenadePool.js';
+import { SpecialAbilitySystem } from '../systems/SpecialAbilitySystem.js';
+import { EnemyAbilityDirector } from '../systems/EnemyAbilityDirector.js';
+import { DifficultyManager } from '../systems/DifficultyManager.js';
+import { SPECIAL_CHARGE_PER_KILL } from '../entities/Fighter.js';
+import { showKillPopup, showEmote } from '../systems/FloatingText.js';
+
+/** Granadas iniciales del protagonista. */
+const PLAYER_GRENADES = 5;
+/** Tiempo mínimo entre gestos de un mismo enemigo. */
+const EMOTE_COOLDOWN_MS = 2500;
+/** Separación horizontal entre enemigos de un mismo grupo. */
+const GROUP_SPACING = 64;
 import { textStyle } from './ui.js';
 
 export class GameScene extends Phaser.Scene {
@@ -35,7 +48,10 @@ export class GameScene extends Phaser.Scene {
         this.buildMap();
         this.projectiles = new ProjectilePool(this);
         this.fighters = [];
+        this.grenades = new GrenadePool(this, () => this.fighters);
+        this.specials = new SpecialAbilitySystem(this);
         this.spawnFromMap();
+        this.enemyDirector = new EnemyAbilityDirector(this, () => this.enemies);
         this.setupCollisions();
         this.setupCamera();
 
@@ -100,39 +116,84 @@ export class GameScene extends Phaser.Scene {
         this.player = this.roles.createFighter(this, playerDef, ROLES.PLAYER, playerSpawn.x, playerSpawn.y, {
             controller: playerController,
             projectiles: this.projectiles,
+            grenades: this.grenades,
+            specials: this.specials,
+            grenadeCount: PLAYER_GRENADES,
+            nameColor: '#6fd0ff',
         });
         this.player.on(FIGHTER_EVENTS.DAMAGED, (f) => this.events.emit(GAME_EVENTS.PLAYER_HEALTH, f.health, f.stats.maxHealth));
-        this.player.on(FIGHTER_EVENTS.DIED, () => this.onPlayerDied());
+        this.player.on(FIGHTER_EVENTS.STATS, (f) => this.events.emit(GAME_EVENTS.PLAYER_STATS, f));
+        this.player.on(FIGHTER_EVENTS.DIED, (f, killer) => this.onPlayerDied(killer));
         this.fighters.push(this.player);
 
         this.enemies = [];
-        // "random" (o sin characterId): personaje al azar entre los que pueden ser enemigos, nunca el protagonista
-        const enemySpawns = objects.filter((o) => o.type === 'enemy');
-        const randomCount = enemySpawns.filter((o) => (tiledProp(o, 'characterId') || 'random') === 'random').length;
+        // Cada punto de aparición crea un GRUPO de enemigos ("count": número o rango "2-3").
+        // "random" (o sin characterId): personaje al azar entre los que pueden ser enemigos, nunca el protagonista.
+        const groups = objects
+            .filter((o) => o.type === 'enemy')
+            .map((o) => ({ o, n: parseCount(tiledProp(o, 'count', 1)) }));
+        const randomCount = groups
+            .filter(({ o }) => (tiledProp(o, 'characterId') || 'random') === 'random')
+            .reduce((sum, g) => sum + g.n, 0);
         const randomIds = this.roles.pickEnemyIds(this.content.characters, randomCount);
-        for (const o of enemySpawns) {
-            let charId = tiledProp(o, 'characterId') || 'random';
-            if (charId === 'random') charId = randomIds.shift();
-            const def = this.content.characters.get(charId);
-            if (!def) {
-                console.warn(`[Game] Enemigo con personaje desconocido "${charId}"; se omite.`);
-                continue;
+        for (const { o, n } of groups) {
+            for (let k = 0; k < n; k++) {
+                let charId = tiledProp(o, 'characterId') || 'random';
+                if (charId === 'random') charId = randomIds.shift();
+                const def = this.content.characters.get(charId);
+                if (!def) {
+                    console.warn(`[Game] Enemigo con personaje desconocido "${charId}"; se omite.`);
+                    continue;
+                }
+                const x = o.x + (k - (n - 1) / 2) * GROUP_SPACING;
+                const e = this.spawnEnemy(def, x, o.y, tiledProp(o, 'patrol', 3) * this.map.tileWidth);
+                e.labelOffset = (k % 2) * 13; // alterna la altura del nombre dentro del grupo
             }
-            const ai = new DummyEnemyAI({
-                getTarget: () => this.player,
-                groundLayer: this.ground,
-                patrolDistance: tiledProp(o, 'patrol', 3) * this.map.tileWidth,
-            });
-            const enemy = this.roles.createFighter(this, def, ROLES.ENEMY, o.x, o.y, {
-                controller: new Controller([ai]),
-                projectiles: this.projectiles,
-            });
-            enemy.facing = -1;
-            ai.attach(enemy);
-            enemy.on(FIGHTER_EVENTS.DIED, (f) => this.onEnemyDied(f));
-            this.enemies.push(enemy);
-            this.fighters.push(enemy);
         }
+    }
+
+    /** Crea un enemigo con dificultad aleatoria. */
+    spawnEnemy(def, x, y, patrolDistance) {
+        const tier = DifficultyManager.pick();
+        const ai = new DummyEnemyAI({
+            getTarget: () => this.player,
+            groundLayer: this.ground,
+            patrolDistance,
+            ...tier.ai,
+        });
+        const enemy = this.roles.createFighter(this, def, ROLES.ENEMY, x, y, {
+            controller: new Controller([ai]),
+            projectiles: this.projectiles,
+            grenades: this.grenades,
+            specials: this.specials,
+            grenadeCount: Number.POSITIVE_INFINITY,
+            modsOverride: tier.mods,
+            nameColor: tier.nameColor,
+        });
+        enemy.difficulty = tier.id;
+        enemy.facing = -1;
+        enemy.nextEmoteAt = 0;
+        ai.attach(enemy);
+        enemy.on(FIGHTER_EVENTS.DIED, (f, killer) => this.onEnemyDied(f, killer));
+        // Gesto (su símbolo) cuando acierta al protagonista
+        enemy.on(FIGHTER_EVENTS.HIT, (att, victim) => {
+            if (victim === this.player) this.enemyEmote(att);
+        });
+        this.enemies.push(enemy);
+        this.fighters.push(enemy);
+        return enemy;
+    }
+
+    enemyEmote(enemy) {
+        const now = this.time.now;
+        if (!enemy.active || now < enemy.nextEmoteAt) return;
+        enemy.nextEmoteAt = now + EMOTE_COOLDOWN_MS;
+        showEmote(this, enemy);
+    }
+
+    /** Personajes vivos hostiles para `fighter` (lo usan las habilidades). */
+    hostilesOf(fighter) {
+        return this.fighters.filter((o) => o.active && !o.dead && CharacterRoleManager.areHostile(fighter.team, o.team));
     }
 
     // ------------------------------------------------------------------ física
@@ -145,6 +206,7 @@ export class GameScene extends Phaser.Scene {
             return body.velocity.y >= 0 && body.prev.y + body.height <= tile.pixelY + 6;
         };
         this.physics.add.collider(this.fighters, this.ground, null, oneWayFilter, this);
+        this.physics.add.collider(this.grenades.group, this.ground, null, oneWayFilter, this);
 
         // Proyectiles contra el escenario (atraviesan plataformas oneWay)
         this.physics.add.collider(
@@ -195,6 +257,7 @@ export class GameScene extends Phaser.Scene {
             if (f.controller) f.controller.update(time, delta);
             f.update(time, delta);
         }
+        if (!this.ended) this.enemyDirector.update(time);
         const cam = this.cameras.main;
         for (const p of this.parallax) p.sprite.tilePositionX = cam.scrollX * p.factor;
 
@@ -209,13 +272,20 @@ export class GameScene extends Phaser.Scene {
         this.events.emit(GAME_EVENTS.PLAYER_READY, this.player);
         this.events.emit(GAME_EVENTS.PLAYER_HEALTH, this.player.health, this.player.stats.maxHealth);
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.aliveEnemies());
+        this.events.emit(GAME_EVENTS.PLAYER_STATS, this.player);
     }
 
     aliveEnemies() {
         return this.enemies.filter((e) => !e.dead).length;
     }
 
-    onEnemyDied(enemy) {
+    onEnemyDied(enemy, killer) {
+        // Baja del protagonista: "+1" con su símbolo y carga de habilidad
+        if (killer === this.player && !this.player.dead) {
+            this.player.kills++;
+            this.player.addSpecialCharge(SPECIAL_CHARGE_PER_KILL);
+            showKillPopup(this, this.player);
+        }
         const left = this.aliveEnemies();
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, left);
         // Tras la animación de muerte: humo y desaparición
@@ -231,7 +301,9 @@ export class GameScene extends Phaser.Scene {
                 alpha: 0,
                 duration: 400,
                 onComplete: () => {
-                    this.fighters = this.fighters.filter((f) => f !== enemy);
+                    // Se modifica la lista en el sitio: los colisionadores guardan la referencia al array
+                    const i = this.fighters.indexOf(enemy);
+                    if (i >= 0) this.fighters.splice(i, 1);
                     enemy.destroy();
                 },
             });
@@ -248,7 +320,8 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    onPlayerDied() {
+    onPlayerDied(killer) {
+        if (killer && killer.active) showEmote(this, killer);
         this.events.emit(GAME_EVENTS.PLAYER_HEALTH, 0, this.player.stats.maxHealth);
         if (this.ended) return;
         this.ended = true;
@@ -301,9 +374,17 @@ export class GameScene extends Phaser.Scene {
     cleanup() {
         this.game.events.off(Phaser.Core.Events.HIDDEN, this.onHidden, this);
         this.events.off(GAME_EVENTS.REQUEST_PAUSE, this.openPause, this);
-        for (const f of this.fighters) if (f.active) f.destroy();
-        this.fighters = [];
+        for (const f of [...this.fighters]) if (f.active) f.destroy();
+        this.fighters.length = 0;
         this.scene.stop('Hud');
         audio.stopMusic();
     }
+}
+
+/** "count" de Tiled: número (2) o rango ("2-3"). */
+function parseCount(v) {
+    if (typeof v === 'number') return Math.max(1, Math.round(v));
+    const m = /^(\d+)\s*-\s*(\d+)$/.exec(String(v));
+    if (m) return Phaser.Math.Between(Number(m[1]), Number(m[2]));
+    return Math.max(1, parseInt(v, 10) || 1);
 }

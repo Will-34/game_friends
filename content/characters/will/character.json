@@ -17,7 +17,18 @@
         "id": "modo-afk",
         "name": "Modo AFK",
         "description": "Reduce el daño recibido y recupera energía por un corto tiempo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 6000,
+            "damageTakenMul": 0.3,
+            "regenPerSec": 5,
+            "aura": "#4fc3ff"
+        }
+    },
+    "taunt": {
+        "label": "AFK",
+        "color": "#ffffff"
     },
     "enemyAbility": null,
     "body": {

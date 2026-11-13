@@ -39,7 +39,18 @@
         "id": "chatgpt-attack",
         "name": "ChatGPT Attack",
         "description": "Invoca un dron que dispara automáticamente durante 6 segundos.",
-        "implemented": false
+        "implemented": true,
+        "type": "drone",
+        "params": {
+            "durationMs": 6000,
+            "fireRateMs": 280,
+            "range": 480,
+            "damage": 8
+        }
+    },
+    "taunt": {
+        "label": "TOKEN",
+        "color": "#ffd34d"
     },
     "enemyAbility": null,
     "spritesheet": "spritesheet.png",

@@ -17,7 +17,17 @@
         "id": "chef-de-apoyo",
         "name": "Chef de Apoyo",
         "description": "Lanza un refuerzo que recupera vida, otorga un escudo temporal o un bono al equipo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 6000,
+            "heal": 30,
+            "invulnerable": true,
+            "aura": "#ffffff"
+        }
+    },
+    "taunt": {
+        "emoji": "🎂"
     },
     "enemyAbility": null,
     "body": {

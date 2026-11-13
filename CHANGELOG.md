@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.3.0] — 2026-11-13
+
+### E4 — Combate
+
+#### Agregado
+- **Habilidades especiales** de los 10 personajes (`SpecialAbilitySystem` + tipos `buff`, `drone`, `shadow-dash` en `src/abilities/`). Se cargan con 2 bajas y se activan con L / botón HABILIDAD; animación `special`, aura de color y aviso con el nombre de la habilidad.
+- **"+1" con el símbolo** de cada personaje al hacer una baja; los enemigos hacen su gesto (solo el símbolo) al acertarte.
+- **Granadas** (U / botón GRANADA): 5 iniciales, parábola, rebote, daño en área, explosión y temblor de cámara.
+- **Grupos de 2-3 enemigos** por zona (10-11 enemigos en el mapa de prueba).
+- **Dificultad aleatoria** por enemigo (Fácil / Normal / Difícil), visible por el color de su nombre.
+- **Habilidades de enemigos**: aleatorias, una sola a la vez en todo el mapa.
+- **Nombre sobre cada personaje** y mini barra de vida en los enemigos.
+- HUD: barra de habilidad (parpadea al estar lista), granadas y bajas. Botones táctiles GRANADA y HABILIDAD.
+- Sonido sintetizado `special`; texturas generadas para granada, explosión e iconos (lata y bota verdes).
+
+#### Corregido
+- La lista de personajes ya no se reasigna al morir un enemigo (los colisionadores conservaban la lista vieja).
+
 ## [0.2.0] — 2026-11-13
 
 ### E3 — Personajes

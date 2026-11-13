@@ -17,7 +17,17 @@
         "id": "inspiracion-jj",
         "name": "Inspiración J&J",
         "description": "Grito de motivación que recupera vida del equipo, reduce el daño por un tiempo y mejora el ánimo.",
-        "implemented": false
+        "implemented": true,
+        "type": "buff",
+        "params": {
+            "durationMs": 8000,
+            "heal": 25,
+            "damageTakenMul": 0.5,
+            "aura": "#ff6b9a"
+        }
+    },
+    "taunt": {
+        "emoji": "😭"
     },
     "enemyAbility": null,
     "body": {

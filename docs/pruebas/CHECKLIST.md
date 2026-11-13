@@ -59,6 +59,19 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | E7 | Visor de animaciones, ↑/↓ | Recorre los 10 personajes |
 | E8 | Volver al menú y entrar otra vez a la selección | Queda seleccionado el último personaje elegido (solo durante la sesión) |
 
+## F. Combate (E4)
+
+| # | Caso | Esperado |
+| --- | --- | --- |
+| F1 | Empezar partida | 10-11 enemigos en grupos de 2-3, cada uno con su nombre (color = dificultad) y mini barra de vida; el protagonista con su nombre en celeste |
+| F2 | U | Lanza una granada en parábola; explota, daña en área y tiembla la cámara; el contador baja |
+| F3 | Eliminar a un enemigo | "+1" + el símbolo del protagonista sobre su cabeza; BAJAS sube |
+| F4 | 2 bajas | La barra de habilidad se llena y parpadea "… LISTA (L)" |
+| F5 | L con la habilidad lista | Animación especial, aviso "¡NOMBRE!", aura de color y efecto de la habilidad (probar los 10) |
+| F6 | Dejarse disparar | El enemigo que acierta muestra su símbolo (como mucho cada 2,5 s) |
+| F7 | Esperar cerca de enemigos | De vez en cuando UN enemigo usa su habilidad (aviso en rojo); nunca dos a la vez |
+| F8 | Enemigo difícil (nombre rojo) a media distancia | A veces lanza granadas |
+
 ## D. Móvil (táctil o simulación del navegador)
 
 En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono en horizontal. También `?touch=1` en PC.
@@ -78,5 +91,6 @@ En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono en horizont
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 0.3.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | F1–F7 ✅ (las 10 habilidades activadas; granada con daño en área; "+1" y carga; habilidad enemiga). Partida automática de ~45 s sin errores en consola. F8 y la sensación de dificultad: pendientes de prueba humana. |
 | 2026-11-13 | 0.2.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | E1–E6 ✅ (los 10 personajes probados: disparo de pie, agachado, arriba y salto; enemigos aleatorios correctos). Sin errores en consola. E7, E8: pendientes de prueba humana. |
 | 2026-11-13 | 0.1.0 | — | **Pendiente de prueba humana:** escucha real de los sonidos (A4, B6), B15, A6, D5, D7 y dispositivos reales Android/iPhone (E2). Nota D6: en vertical el texto del aviso se ve pequeño (H-031). |

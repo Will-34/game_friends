@@ -66,8 +66,24 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 ## 5. Combate
 
 - Disparo horizontal (de pie y agachado) y hacia arriba.
-- Armas, granadas y habilidades especiales: E4. [PENDIENTE: requisitos-v2] lista de armas y munición.
-- Enemigos aleatorios con `DifficultyManager` (E4).
+- **Granadas** (U): 5 al empezar; daño en área. Los enemigos difíciles también las lanzan.
+- **Habilidad especial** (L): se carga con **2 bajas**. Cada personaje tiene la suya (tabla de la sección 2):
+  | Personaje | Efecto en el juego |
+  | --- | --- |
+  | Plata | Dron que dispara solo al enemigo más cercano durante 6 s |
+  | Carlos | +25 % velocidad, +50 % daño durante 8 s |
+  | Domeki | +40 de vida y +3 granadas |
+  | Henry | +35 % velocidad, +60 % daño durante 8 s (aura arcoíris) |
+  | Ignacio | +30 de vida y escudo (sin daño) durante 6 s |
+  | Pablo | +30 % velocidad, mitad de daño recibido y regeneración durante 7 s |
+  | Reymar | Embestida casi invisible e invulnerable que daña a quien atraviesa |
+  | Ruddy | +25 de vida y mitad de daño recibido durante 8 s |
+  | Sergio | +60 % velocidad, +20 % salto, menos daño recibido durante 6 s |
+  | Will | 70 % menos daño y regeneración durante 6 s |
+- **Bajas**: al eliminar a un enemigo aparece "+1" con el símbolo del personaje (Will "AFK", Ignacio 🎂, Carlos 👩, Reymar 😠, Pablo lata verde, Henry 🧔, Sergio bota verde, Plata "TOKEN", Ruddy 😭, Domeki 🧹).
+- **Enemigos**: aparecen en grupos de 2-3, cada uno con dificultad aleatoria (Fácil verde, Normal amarillo, Difícil rojo). Al acertarte hacen su gesto (su símbolo). Usan su habilidad de vez en cuando, **nunca dos a la vez**.
+- Todos los personajes muestran su nombre encima; los enemigos, también una mini barra de vida.
+- Armas y cambio de arma: pendiente (H-039). [PENDIENTE: requisitos-v2] lista de armas y munición.
 
 ## 6. Niveles y mapas
 
