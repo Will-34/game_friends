@@ -73,7 +73,7 @@ Los puntos de aparición con `characterId: "random"` (o sin él) DEBEN recibir p
 - ENTONCES ninguno de los enemigos es el protagonista ni Henry
 
 ### Requisito: Grupos y dificultad de enemigos
-Cada punto de aparición de enemigos DEBE crear un grupo de `count` enemigos (número o rango "2-3") y cada enemigo DEBE recibir una dificultad aleatoria (Fácil/Normal/Difícil) que ajusta sus stats y su IA y colorea su nombre.
+Cada punto de aparición de enemigos DEBE crear un grupo de `count` enemigos (número o rango "2-3") y cada enemigo DEBE recibir una dificultad aleatoria (Fácil/Normal/Difícil) que ajusta sus stats y su IA y se marca junto a su nombre (Normal ★, Difícil ★★).
 
 #### Escenario: Mapa de prueba
 - DADO el mapa de prueba con 4 zonas
@@ -156,3 +156,11 @@ Las IA (enemigos y aliados) DEBEN apuntar al hostil vivo más cercano, de modo q
 - DADO un aliado más cerca de un enemigo que el protagonista
 - CUANDO el enemigo está en ataque
 - ENTONCES dispara al aliado
+
+### Requisito: Colores de nombre por bando
+El nombre sobre cada personaje DEBE indicar su bando: protagonista y aliados en verde, enemigos en rojo, jefe en lila, personaje capturado en amarillo.
+
+#### Escenario: Combate contra el jefe
+- DADO el combate con 2 aliados, escoltas y el jefe
+- CUANDO se miran los nombres
+- ENTONCES el protagonista y los aliados son verdes, las escoltas rojas y el jefe lila

@@ -81,7 +81,7 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
   | Ruddy | Dron Llorón J&J | Carita que llora con banderita J&J |
   | Sergio | Bota Voladora | Su bota verde brillante; dura más |
   | Will | Dron AFK | Gorra AFK, auriculares y capa roja |
-  Los aliados también lanzan su dron; los enemigos no.
+  Los aliados y el jefe también lanzan su dron; los enemigos comunes no.
 - **Habilidad especial** (L): se carga con **2 bajas**. Cada personaje tiene la suya (tabla de la sección 2):
   | Personaje | Efecto en el juego |
   | --- | --- |
@@ -122,9 +122,11 @@ Flujo: Menú → protagonista → **mapa** → **historia** (texto del nivel) �
 | 2 | **Ciudad Universitaria UAGRM** | Cielo azul: módulos de facultad, letrero UAGRM, laguna, palmeras | Laguna (daño), barro (lento), toldos de la feria azul y rojo (rebote) | El Inge del Cero |
 | 3 | **Lomas de Arena** | Atardecer: dunas rosadas, monte, árboles secos | Curichis (daño), arena movediza (lento), llantas (rebote) | El Rey de las Dunas |
 
-- **Progresión:** más enemigos y más difíciles en cada nivel (Fácil/Normal/Difícil 60/30/10 → 40/40/20 → 25/40/35); vida del jefe ×5 → ×7 → ×9.
+- **Progresión:** más enemigos y más difíciles en cada nivel (Fácil/Normal/Difícil 60/30/10 → 40/40/20 → 25/40/35); vida del jefe ×8 → ×11 → ×14.
+- **Colores de nombre:** protagonista y aliados en **verde**, enemigos en **rojo** (dificultad con estrellas: Normal ★, Difícil ★★), jefe en **lila**, Henry capturado en amarillo.
+- **Henry capturado:** en cada nivel el jefe lleva a **Henry enjaulado sobre los hombros**, pidiendo ayuda. Al vencer al jefe, la jaula se rompe, Henry salta al suelo feliz, celebra y agradece. El robot se lo vuelve a llevar al siguiente nivel (rescate definitivo en E6). Si juegas con Henry, no aparece capturado.
 - **Arena del jefe:** no hace falta eliminar a todos: se puede **esquivar** a los enemigos (no hay choque entre personajes) y llegar al jefe. Al llegar al centro de la arena: cámara fija, la arena se cierra por la izquierda, el jefe cae con su frase y llegan sus escoltas. Los enemigos que quedaron atrás no entran y caen al vencer al jefe.
-- **Jefe:** un amigo "hackeado" al azar, más grande (×1,5), con barra de vida propia. **Fase 2** (≤ 50 % de vida): se enfurece ("¡… SE PICÓ!"), dispara más, usa su habilidad y llegan refuerzos. Al caer, las escoltas se desconectan.
+- **Jefe:** un amigo "hackeado" al azar, más grande (×1,5), nombre en lila, con barra de vida propia y **su propio dron**. **Fase 2** (≤ 50 % de vida): se enfurece ("¡… SE PICÓ!"), dispara más, usa su habilidad y llegan refuerzos. Al caer, las escoltas se desconectan.
 - **Aliados:** en el combate del jefe llegan **2 aliados al azar** (nunca el protagonista, Henry ni el jefe). Siguen al protagonista y atacan al enemigo más cercano. Si caen, **vuelven a los 5-10 s, como máximo 2 veces cada uno**. El HUD muestra su estado.
 - **Reintento:** si caes en la arena, puedes reintentar **desde el jefe**.
 - Arte (fondos de 4 capas parallax y tilesets) **generado por código** con `tools/build-level.php`; se podrá reemplazar por imágenes propias sin tocar código (H-070).

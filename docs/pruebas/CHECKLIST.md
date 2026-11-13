@@ -63,14 +63,14 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 
 | # | Caso | Esperado |
 | --- | --- | --- |
-| F1 | Empezar partida | 10-11 enemigos en grupos de 2-3, cada uno con su nombre (color = dificultad) y mini barra de vida; el protagonista con su nombre en celeste |
+| F1 | Empezar partida | Enemigos en grupos de 2-3, con su nombre en rojo (Normal ★, Difícil ★★) y mini barra de vida; el protagonista con su nombre en verde |
 | F2 | U | Lanza una granada en parábola; explota, daña en área y tiembla la cámara; el contador baja |
 | F3 | Eliminar a un enemigo | "+1" + el símbolo del protagonista sobre su cabeza; BAJAS sube |
 | F4 | 2 bajas | La barra de habilidad se llena y parpadea "… LISTA (L)" |
 | F5 | L con la habilidad lista | Animación especial, aviso "¡NOMBRE!", aura de color y efecto de la habilidad (probar los 10) |
 | F6 | Dejarse disparar | El enemigo que acierta muestra su símbolo (como mucho cada 2,5 s) |
 | F7 | Esperar cerca de enemigos | De vez en cuando UN enemigo usa su habilidad (aviso en rojo); nunca dos a la vez |
-| F8 | Enemigo difícil (nombre rojo) a media distancia | A veces lanza granadas |
+| F8 | Enemigo difícil (★★) a media distancia | A veces lanza granadas |
 | F9 | Recoger una caja de arma (M, E, L) | Se equipa; el HUD muestra nombre y munición; Q cambia entre las armas |
 | F10 | Gastar toda la munición | Vuelve a la pistola |
 | F11 | Lanzallamas contra un grupo | Las llamas crecen y atraviesan, dañando a varios |
@@ -101,6 +101,11 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | G17 | E durante la recarga | No sale otro dron |
 | G18 | Combate contra el jefe | Los aliados lanzan su dron de vez en cuando |
 | G19 | Selección de personaje | Muestra "Dron (E): nombre del dron" |
+| G20 | Combate contra el jefe | Aliados y protagonista en verde, escoltas en rojo, jefe en lila; el jefe lanza su dron |
+| G21 | Inicio del combate | Henry enjaulado sobre los hombros del jefe, lo sigue y pide ayuda |
+| G22 | Vencer al jefe | La jaula se rompe; Henry salta al suelo, celebra y dice "¡Gracias, changos! ¡Soy libre!"; luego el cartel |
+| G23 | Jugar con Henry | No aparece Henry capturado |
+| G24 | Morir contra el jefe y reintentar | El jefe vuelve con toda la vida, Henry enjaulado y se enfurece otra vez al 50 % |
 
 ## D. Móvil (E2)
 
@@ -128,6 +133,7 @@ En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para prueb
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 0.8.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | G20–G24 ✅ (colores, jefe 800/1100/1400 de vida con dron, Henry capturado y liberado, reintento). Sin errores en consola. |
 | 2026-11-13 | 0.7.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30, también con `?touch=1` | G8 (jefe con 10 enemigos del nivel vivos; pared izquierda), G16–G18 ✅ (Pablo, Henry, Will, Domeki; aliados con dron; botón DRON). Sin errores en consola. |
 | 2026-11-13 | 0.6.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | G1–G14 ✅ (selección de mapa, historia, terreno, barrera caminando, arena, jefe ×1,5, aliados y reaparición, fase 2, reintento desde el jefe, victoria → nivel 2; UAGRM y Lomas cargan y se juegan con IA). Sin errores en consola. G15 y la sensación del combate: prueba humana (H-063). |
 | 2026-11-13 | 0.5.0 | Edge sin interfaz vía DevTools Protocol, PHP 8.0.30 | F9–F12, F14 ✅ (las 4 armas, munición, Q, objetos, resumen); IA: transición patrulla → alerta → ataque verificada; partida automática ~45 s sin errores en consola. F13 (sensación de la IA): prueba humana. |

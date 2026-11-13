@@ -2,7 +2,8 @@
  * DifficultyManager.js — Dificultad aleatoria de cada enemigo.
  *
  * Cada enemigo recibe un nivel al aparecer. El nivel ajusta sus stats (sobre los modificadores
- * del rol ENEMY), su IA y el color de su nombre, para que el jugador lo identifique.
+ * del rol ENEMY) y su IA. Desde la versión 0.8.0 todos los enemigos tienen el nombre en rojo y el nivel
+ * se marca con estrellas junto al nombre (GameScene). `nameColor` queda solo como referencia.
  */
 
 export const DIFFICULTY_TIERS = Object.freeze({

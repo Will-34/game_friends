@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.8.0] — 2026-11-13
+
+### E5 — Colores, jefe más fuerte y Henry capturado
+
+#### Agregado
+- **Henry enjaulado sobre el jefe** en cada nivel (propiedad de mapa `captive`): pide ayuda; al vencer al jefe la jaula se rompe y Henry sale feliz celebrando.
+- El **jefe lanza su propio dron**.
+
+#### Cambiado
+- Nombres por bando: **verde** protagonista y aliados, **rojo** enemigos (dificultad con ★ / ★★), **lila** el jefe.
+- Vida del jefe ×8 / ×11 / ×14 (antes ×5 / ×7 / ×9).
+- Historias y textos finales de los niveles con el rescate de Henry.
+
+#### Corregido
+- Al reintentar desde el jefe, el jefe volvía a aparecer sin poder enfurecerse.
+
 ## [0.7.0] — 2026-11-13
 
 ### E5 — Arena libre y drones

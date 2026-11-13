@@ -207,7 +207,7 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 - H-040 (hecho): los enemigos usan su misma habilidad (`enemyAbility: null` = usar `ability`). `EnemyAbilityDirector`: cada 9-16 s elige UN enemigo visible al azar; nunca dos habilidades enemigas a la vez.
 - H-041 (hecho): tecla U / botón GRANADA; 5 al empezar (Domeki recarga 3 con su habilidad); parábola, rebote, explosión con daño en área (85 px) y temblor de cámara. Los enemigos difíciles también lanzan.
 - H-042 (hecho): la habilidad se carga con 2 bajas y se activa con L / botón HABILIDAD. Tipos: `buff` (8 personajes), `drone` (Plata), `shadow-dash` (Reymar). Ver ADR-009.
-- H-043 (hecho): niveles Fácil (verde, 45 %), Normal (amarillo, 35 %), Difícil (rojo, 20 %): vida, cadencia, velocidad de bala, alcance de visión, ráfagas y granadas. El color del nombre indica el nivel.
+- H-043 (hecho): niveles Fácil (45 %), Normal (35 %), Difícil (20 %): vida, cadencia, velocidad de bala, alcance de visión, ráfagas y granadas. Desde 0.8.0 el nivel se marca con estrellas (★ / ★★) y el nombre de todo enemigo es rojo (H-066).
 - H-049 (hecho): símbolos en `character.json → taunt`: Will "AFK", Ignacio 🎂, Carlos 👩, Reymar 😠, Pablo lata verde, Henry 🧔, Sergio bota verde, Plata "TOKEN", Ruddy 😭, Domeki 🧹. Los emojis dependen de la fuente del sistema (se ven distintos en Windows, Android e iOS).
 
 ## E5 — Mapas
@@ -225,6 +225,9 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 | H-063 | Prueba humana del combate contra el jefe y equilibrio | Pendiente |
 | H-064 | Arena sin barrera: se puede esquivar a los enemigos y llegar al jefe | Hecho |
 | H-065 | Dron temático para todos los personajes (E / botón DRON) | Hecho |
+| H-066 | Nombres por bando: verde (protagonista y aliados), rojo (enemigos), lila (jefe) | Hecho |
+| H-067 | Jefe con más vida y con su propio dron | Hecho |
+| H-068 | Henry enjaulado sobre el jefe y liberado al vencerlo | Hecho |
 
 - Decisiones del usuario (2026-11-13): mapas de Santa Cruz; la UAGRM en lugar del mercado Los Pozos (con la foto de la Facultad de Humanidades como referencia); cada mapa con su jefe; el jefe tiene escoltas aleatorias; 2 aliados aleatorios contra el jefe que vuelven a los 5-10 s, como máximo 2 veces; jerga cruceña; arte "a mi manera" (generado) por ahora.
 - H-050 (hecho): `MapSelectScene`: tarjetas con miniatura (fondos del mapa), nivel, nombre, subtítulo, dificultad (★) y jefe. La "Zona de pruebas" solo en desarrollo.
@@ -235,6 +238,7 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 - H-058 (hecho): aliados con `EnemyAI` en modo "seguir al líder"; todas las IA apuntan al hostil más cercano; estado en el HUD.
 - H-064 (hecho, pedido del usuario): se quitó la barrera "NO PASAR"; el jefe empieza al llegar al centro de la arena; pared invisible solo para el combate; los rezagados caen al vencer al jefe.
 - H-065 (hecho, pedido del usuario): acción `drone` (E / DRON), recarga 20 s; 10 drones generados con `tools/build-drones.php` según cada personaje (Pablo lata, Henry bandera arcoíris, Sergio bota verde, Will AFK…). Los aliados también lo usan; los enemigos no.
+- H-066/H-067/H-068 (hecho, pedido del usuario): colores por bando (dificultad con ★); jefe ×8/×11/×14 con dron; Henry enjaulado sobre el jefe (propiedad `captive`), al vencerlo sale feliz con `victory`. Corrige que el jefe no se enfurecía al reintentar.
 - H-059 (hecho): `StoryScene` con el texto `story` de cada mapa; frases de jefes y aliados; carteles "¡QUÉ MACANA!" / "¡FUERZA CAMBA!".
 
 ## E6 — Final
