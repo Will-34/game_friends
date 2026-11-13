@@ -2,6 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.9.0] — 2026-11-13
+
+### Armas de largo alcance
+
+#### Agregado
+- **Láser** (L): rayo muy rápido de largo alcance que atraviesa enemigos (60 cargas).
+- **Rifle de Plasma** (P): esfera lila lenta y potente (30 cargas).
+
+#### Eliminado
+- Escopeta y Lanzallamas (corto alcance) y sus texturas.
+
 ## [0.8.0] — 2026-11-13
 
 ### E5 — Colores, jefe más fuerte y Henry capturado

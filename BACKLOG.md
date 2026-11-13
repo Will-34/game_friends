@@ -228,6 +228,7 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 | H-066 | Nombres por bando: verde (protagonista y aliados), rojo (enemigos), lila (jefe) | Hecho |
 | H-067 | Jefe con más vida y con su propio dron | Hecho |
 | H-068 | Henry enjaulado sobre el jefe y liberado al vencerlo | Hecho |
+| H-069 | Solo armas de largo alcance: Láser y Rifle de Plasma en lugar de Escopeta y Lanzallamas | Hecho |
 
 - Decisiones del usuario (2026-11-13): mapas de Santa Cruz; la UAGRM en lugar del mercado Los Pozos (con la foto de la Facultad de Humanidades como referencia); cada mapa con su jefe; el jefe tiene escoltas aleatorias; 2 aliados aleatorios contra el jefe que vuelven a los 5-10 s, como máximo 2 veces; jerga cruceña; arte "a mi manera" (generado) por ahora.
 - H-050 (hecho): `MapSelectScene`: tarjetas con miniatura (fondos del mapa), nivel, nombre, subtítulo, dificultad (★) y jefe. La "Zona de pruebas" solo en desarrollo.

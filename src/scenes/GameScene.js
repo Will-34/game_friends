@@ -344,7 +344,7 @@ export class GameScene extends Phaser.Scene {
             (a, b) => {
                 const [p, f] = a instanceof Projectile ? [a, b] : [b, a];
                 if (p.pierce) {
-                    // Atraviesa (lanzallamas): daña una sola vez a cada personaje y sigue
+                    // Atraviesa (láser): daña una sola vez a cada personaje y sigue
                     p.hitSet.add(f);
                     f.takeDamage(p.damage, p);
                     return;

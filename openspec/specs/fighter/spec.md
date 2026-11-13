@@ -87,12 +87,12 @@ Todo Fighter DEBE mostrar su nombre sobre la cabeza; los que no son el protagoni
 - ENTONCES se ve "WILL" en rojo sobre él con su barra de vida
 
 ### Requisito: Armas e inventario
-Un Fighter DEBE disparar con su arma actual (valores de `weapons.json`; la pistola con sus propios stats), gastar munición si es limitada, volver a la pistola al agotarla y cambiar de arma con `switchWeapon`.
+Un Fighter DEBE disparar con su arma actual (valores de `weapons.json`; la pistola con sus propios stats), gastar munición si es limitada, volver a la pistola al agotarla y cambiar de arma con `switchWeapon`. Todas las armas DEBEN ser de largo alcance (pistola, metralleta, láser y rifle de plasma).
 
-#### Escenario: Escopeta
-- DADO el protagonista con la escopeta (24 cartuchos)
-- CUANDO dispara una vez
-- ENTONCES salen 6 perdigones en abanico y quedan 23 cartuchos
+#### Escenario: Láser
+- DADO el protagonista con el láser (60 cargas)
+- CUANDO dispara a un grupo de enemigos alineados
+- ENTONCES el rayo los atraviesa dañando a cada uno una vez y quedan 59 cargas
 
 ### Requisito: Dron propio
 Todo personaje DEBE poder lanzar su dron con la acción `drone`: un dron que lo sigue y dispara solo al hostil más cercano durante `params.durationMs`, con recarga `cooldownMs` (20 s por defecto) y listo al empezar la partida. El aspecto, el nombre y el color de bala DEBEN venir de `character.json → drone` (`image`, `frameWidth`, `frameHeight`, `frameCount`, `name`, `bulletColor` o `rainbow`, `params`); un personaje sin `drone` DEBE usar un dron genérico. El HUD DEBE mostrar si está listo o cuántos segundos faltan.
