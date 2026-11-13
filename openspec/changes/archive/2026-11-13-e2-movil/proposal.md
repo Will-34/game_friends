@@ -1,7 +1,7 @@
 # Propuesta: e2-movil
 
 - **Épica:** E2 Móvil · **Historias:** H-030, H-031, H-032, H-033, H-034
-- **Estado:** Pendiente de aprobación del usuario
+- **Estado:** Archivado (2026-11-13). Aprobado por el usuario ("completa el E2, con tus consejos").
 
 ## Por qué
 
@@ -43,3 +43,13 @@ Solo entrada táctil, orientación, pantalla completa, HUD/zonas seguras, manifi
 - **iPhone (Safari) no permite bloquear la orientación ni pantalla completa** desde una página web; la solución es el aviso + "añadir a pantalla de inicio".
 - El bloqueo de orientación en Android requiere pantalla completa (se activa con el toque en JUGAR).
 - Las pruebas reales en Android/iPhone las hace el usuario; yo pruebo con emulación del navegador.
+
+## Resultado de pruebas
+
+Edge sin interfaz vía DevTools Protocol, emulación táctil (412×915 vertical / 915×412 horizontal), `php -S localhost:8000`:
+- Vertical: aviso "GIRA TU DISPOSITIVO" a pantalla completa; partida pausada. Horizontal: el aviso desaparece y la partida se reanuda.
+- Menú → JUGAR (toque) → selección → JUGAR (toque) → partida con controles táctiles.
+- Joystick flotante: la base aparece donde toca el pulgar; corre a la derecha mientras otro dedo mantiene FUEGO (multitáctil).
+- Botones anclados a la esquina inferior derecha; ARMA atenuado (`enabled: false`).
+- La petición de pantalla completa rechazada por el navegador no deja errores en consola.
+- Pendiente del usuario: bloqueo real de orientación y pantalla completa en Android, Safari en iPhone, vibración, zonas seguras con muesca (CHECKLIST D).

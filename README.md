@@ -2,7 +2,7 @@
 
 Videojuego arcade de acción lateral 2D (run-and-gun) en pixel art, 100 % original. Nueve amigos pueden ser protagonistas o enemigos; al final, cuatro se vuelven aliados para rescatar a Henry de un robot gigante.
 
-**Estado:** E0 (Fundaciones), E1 (MVP) y E3 (10 personajes y selección) y E4 (habilidades, granadas, dificultad) terminadas. Siguiente: E2 (móvil). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
+**Estado:** E0 (Fundaciones), E1 (MVP) y E3 (10 personajes y selección) , E2 (móvil) y E4 (habilidades, granadas, dificultad) terminadas. Pendiente en E4: armas (H-039) e IA avanzada (H-044). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
 
 ## Requisitos
 
@@ -28,6 +28,16 @@ Abre <http://localhost:8000>: Menú → JUGAR → **Elige tu protagonista** → 
 
 - `?debug=1` → muestra los cuerpos físicos y habilita el visor de animaciones en el menú (en `localhost` el visor ya está habilitado).
 - `?touch=1` → fuerza los controles táctiles en un equipo de escritorio.
+
+## Jugar desde el teléfono (misma red Wi-Fi)
+
+1. En el PC, arranca el servidor escuchando en la red: `C:\xampp\php\php.exe -S 0.0.0.0:8000`
+2. Averigua la IP del PC: `ipconfig` → "Dirección IPv4" (por ejemplo `192.168.1.50`).
+3. En el teléfono, abre `http://192.168.1.50:8000`. Si no carga, permite PHP en el Firewall de Windows (red privada).
+4. **Android:** toca JUGAR → pantalla completa en horizontal. **iPhone:** desactiva el bloqueo de rotación y gira el teléfono.
+5. Para una experiencia tipo app: menú del navegador → **Añadir a pantalla de inicio**.
+
+Controles táctiles: joystick flotante a la izquierda (donde pongas el pulgar; abajo = agacharse, arriba = apuntar) y botones FUEGO, SALTO, GRANADA y HABIL. a la derecha. Puedes deslizar el dedo de un botón a otro.
 
 ## Controles (teclado)
 

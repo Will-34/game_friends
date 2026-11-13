@@ -1,11 +1,15 @@
 /**
- * HudScene — Interfaz sobre la partida: vida, enemigos restantes, pausa, silencio
- * y controles táctiles (si el dispositivo es táctil o ?touch=1).
+ * HudScene — Interfaz sobre la partida: retrato, vida, habilidad, granadas, bajas, enemigos restantes,
+ * pausa, silencio, pantalla completa y controles táctiles.
+ *
+ * Se adapta a móviles: respeta las zonas seguras (muesca), agranda los botones en pantallas táctiles
+ * y crea los controles táctiles también si el primer toque llega después de cargar.
  */
-import { GAME_WIDTH, FORCE_TOUCH } from '../config.js';
+import { GAME_WIDTH } from '../config.js';
 import { GAME_EVENTS } from '../systems/GameEvents.js';
 import { portraitKey } from '../systems/ContentLoader.js';
 import { audio } from '../systems/AudioManager.js';
+import { device } from '../systems/DeviceManager.js';
 import { MobileControls, TOUCH_REGISTRY_KEY } from '../input/MobileControls.js';
 import { textStyle } from './ui.js';
 
@@ -20,38 +24,50 @@ export class HudScene extends Phaser.Scene {
     create() {
         const content = this.registry.get('content');
         const game = this.scene.get('Game');
+        this.content = content;
 
-        // ---- Retrato, nombre y vida del protagonista
-        this.portrait = this.add.image(16, 12, '__DEFAULT').setOrigin(0, 0).setDisplaySize(52, 52).setVisible(false);
-        const left = 76;
-        this.nameText = this.add.text(left, 12, '', textStyle(18, '#ffffff'));
-        this.add.rectangle(left, 42, BAR_W + 4, BAR_H + 4, 0x000000, 0.7).setOrigin(0, 0).setStrokeStyle(2, 0xffffff, 0.8);
-        this.healthBar = this.add.rectangle(left + 2, 44, BAR_W, BAR_H, 0x5ee06b).setOrigin(0, 0);
-        this.healthText = this.add.text(left + BAR_W + 14, 40, '', textStyle(14, '#ffffff'));
-
-        // ---- Habilidad especial (se carga con 2 bajas), granadas y bajas
-        this.add.rectangle(left, 66, BAR_W + 4, 10, 0x000000, 0.7).setOrigin(0, 0).setStrokeStyle(1, 0xffffff, 0.6);
-        this.specialBar = this.add.rectangle(left + 2, 68, 0, 6, 0x6fd0ff).setOrigin(0, 0);
-        this.specialText = this.add.text(left + BAR_W + 14, 62, '', textStyle(12, '#6fd0ff'));
-        this.grenadeText = this.add.text(left, 82, '', textStyle(13, '#ffffff'));
-        this.killsText = this.add.text(left + 120, 82, '', textStyle(13, '#7dff8a'));
+        // ---- Bloque izquierdo: retrato, nombre, vida, habilidad, granadas y bajas
+        const left = 60;
+        this.portrait = this.add.image(0, 0, '__DEFAULT').setOrigin(0, 0).setDisplaySize(52, 52).setVisible(false);
+        this.nameText = this.add.text(left, 0, '', textStyle(18, '#ffffff'));
+        const hpFrame = this.add.rectangle(left, 30, BAR_W + 4, BAR_H + 4, 0x000000, 0.7).setOrigin(0, 0).setStrokeStyle(2, 0xffffff, 0.8);
+        this.healthBar = this.add.rectangle(left + 2, 32, BAR_W, BAR_H, 0x5ee06b).setOrigin(0, 0);
+        this.healthText = this.add.text(left + BAR_W + 14, 28, '', textStyle(14, '#ffffff'));
+        const spFrame = this.add.rectangle(left, 54, BAR_W + 4, 10, 0x000000, 0.7).setOrigin(0, 0).setStrokeStyle(1, 0xffffff, 0.6);
+        this.specialBar = this.add.rectangle(left + 2, 56, 0, 6, 0x6fd0ff).setOrigin(0, 0);
+        this.specialText = this.add.text(left + BAR_W + 14, 50, '', textStyle(12, '#6fd0ff'));
+        this.grenadeText = this.add.text(left, 70, '', textStyle(13, '#ffffff'));
+        this.killsText = this.add.text(left + 140, 70, '', textStyle(13, '#7dff8a'));
+        this.leftGroup = this.add.container(0, 0, [
+            this.portrait, this.nameText, hpFrame, this.healthBar, this.healthText,
+            spFrame, this.specialBar, this.specialText, this.grenadeText, this.killsText,
+        ]);
 
         // ---- Enemigos restantes
         this.enemiesText = this.add.text(GAME_WIDTH / 2, 16, '', textStyle(18, '#ffb3b3')).setOrigin(0.5, 0);
 
-        // ---- Botones de pausa y silencio (funcionan con ratón y táctil)
-        this.pauseBtn = this.makeIconButton(GAME_WIDTH - 40, 34, 'II', () => game.events.emit(GAME_EVENTS.REQUEST_PAUSE));
-        this.muteBtn = this.makeIconButton(GAME_WIDTH - 100, 34, '', () => audio.toggleMute());
+        // ---- Botones de la derecha (más grandes en táctil)
+        this.rightButtons = [];
+        this.pauseBtn = this.makeIconButton('II', () => game.events.emit(GAME_EVENTS.REQUEST_PAUSE));
+        this.muteBtn = this.makeIconButton('', () => audio.toggleMute());
+        if (device.fullscreenAvailable) {
+            this.fsBtn = this.makeIconButton('⛶', () => device.toggleFullscreen());
+        }
         const refreshMute = () => this.muteBtn.label.setText(audio.muted ? '🔇' : '🔊');
         refreshMute();
         audio.on('mute-changed', refreshMute);
 
-        // ---- Controles táctiles
+        // ---- Controles táctiles (ahora o con el primer toque)
         this.touch = null;
-        if (this.sys.game.device.input.touch || FORCE_TOUCH) {
-            this.touch = new MobileControls(this, content.controls.touch);
-            this.registry.set(TOUCH_REGISTRY_KEY, this.touch);
-        }
+        if (device.touch) this.createTouchControls();
+        const onTouchDetected = () => this.createTouchControls();
+        device.on('touch-detected', onTouchDetected);
+
+        // ---- Disposición según tamaño de pantalla y zonas seguras
+        this.layout();
+        const onResize = () => this.layout();
+        this.scale.on(Phaser.Scale.Events.RESIZE, onResize);
+        document.addEventListener('fullscreenchange', onResize);
 
         // ---- Suscripción a eventos de la partida
         const onHealth = (hp, max) => this.setHealth(hp, max);
@@ -81,17 +97,52 @@ export class HudScene extends Phaser.Scene {
             game.events.off(GAME_EVENTS.ENEMIES_LEFT, onEnemies);
             game.events.off(GAME_EVENTS.PLAYER_STATS, onStats);
             audio.off('mute-changed', refreshMute);
+            device.off('touch-detected', onTouchDetected);
+            this.scale.off(Phaser.Scale.Events.RESIZE, onResize);
+            document.removeEventListener('fullscreenchange', onResize);
             if (this.touch) this.touch.destroy();
             this.touch = null;
             this.registry.remove(TOUCH_REGISTRY_KEY);
         });
     }
 
-    makeIconButton(x, y, label, onClick) {
-        const bg = this.add.circle(x, y, 24, 0x000000, 0.45).setStrokeStyle(2, 0xffffff, 0.6);
-        const txt = this.add.text(x, y, label, textStyle(18)).setOrigin(0.5);
+    createTouchControls() {
+        if (this.touch) return;
+        this.touch = new MobileControls(this, this.content.controls.touch);
+        this.registry.set(TOUCH_REGISTRY_KEY, this.touch);
+        this.layout();
+    }
+
+    /** Coloca los bloques del HUD respetando las zonas seguras. */
+    layout() {
+        const safe = device.safeInsets();
+        const W = this.scale.gameSize.width;
+        this.leftGroup.setPosition(12 + safe.left, 10 + safe.top);
+        const big = device.touch;
+        const r = big ? 28 : 24;
+        const gap = big ? 66 : 60;
+        this.rightButtons.forEach((b, i) => {
+            const x = W - 16 - r - safe.right - i * gap;
+            const y = 14 + r + safe.top;
+            b.setPosition(x, y);
+            if (b.radius !== r) {
+                b.setRadius(r);
+                // La zona táctil se actualiza con el nuevo radio (los eventos del botón se conservan)
+                b.removeInteractive();
+                b.setInteractive({ hitArea: new Phaser.Geom.Circle(r, r, r), hitAreaCallback: Phaser.Geom.Circle.Contains, useHandCursor: true });
+            }
+            b.label.setPosition(x, y);
+        });
+        this.enemiesText.setY(16 + safe.top);
+        if (this.touch) this.touch.layout();
+    }
+
+    makeIconButton(label, onClick) {
+        const bg = this.add.circle(0, 0, 24, 0x000000, 0.45).setStrokeStyle(2, 0xffffff, 0.6);
+        const txt = this.add.text(0, 0, label, textStyle(18)).setOrigin(0.5);
         bg.setInteractive({ useHandCursor: true }).on('pointerup', onClick);
         bg.label = txt;
+        this.rightButtons.push(bg);
         return bg;
     }
 
@@ -107,18 +158,18 @@ export class HudScene extends Phaser.Scene {
         this.specialReady = p.specialCharge >= 1;
         this.specialBar.width = BAR_W * p.specialCharge;
         const name = p.def.ability ? p.def.ability.name : 'Habilidad';
-        this.specialText.setText(this.specialReady ? `${name.toUpperCase()} LISTA (L)` : name);
-        this.grenadeText.setText(`GRANADAS (U): ${p.grenades}`);
+        const key = device.touch ? 'HABIL.' : 'L';
+        this.specialText.setText(this.specialReady ? `${name.toUpperCase()} LISTA (${key})` : name);
+        this.grenadeText.setText(device.touch ? `GRANADAS: ${p.grenades}` : `GRANADAS (U): ${p.grenades}`);
         this.killsText.setText(`BAJAS: ${p.kills}`);
+        if (this.touch) this.touch.highlight.special = this.specialReady;
     }
 
     update(time) {
         if (this.touch) this.touch.poll();
         // La barra de habilidad parpadea cuando está lista
-        if (this.specialBar) {
-            const on = this.specialReady && Math.floor(time / 250) % 2 === 0;
-            this.specialBar.setFillStyle(on ? 0xffd34d : 0x6fd0ff);
-            this.specialText.setColor(this.specialReady ? '#ffd34d' : '#6fd0ff');
-        }
+        const on = this.specialReady && Math.floor(time / 250) % 2 === 0;
+        this.specialBar.setFillStyle(on ? 0xffd34d : 0x6fd0ff);
+        this.specialText.setColor(this.specialReady ? '#ffd34d' : '#6fd0ff');
     }
 }

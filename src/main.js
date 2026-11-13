@@ -10,8 +10,8 @@ import { CharacterSelectScene } from './scenes/CharacterSelectScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { HudScene } from './scenes/HudScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
-import { RotateDeviceScene } from './scenes/RotateDeviceScene.js';
 import { AnimViewerScene } from './scenes/AnimViewerScene.js';
+import { device } from './systems/DeviceManager.js';
 
 if (typeof window.Phaser === 'undefined') {
     document.body.textContent = 'No se pudo cargar lib/phaser.min.js';
@@ -40,10 +40,11 @@ const game = new Phaser.Game({
             debug: DEBUG,
         },
     },
-    scene: [BootScene, PreloadScene, MenuScene, CharacterSelectScene, GameScene, HudScene, PauseScene, RotateDeviceScene, AnimViewerScene],
+    scene: [BootScene, PreloadScene, MenuScene, CharacterSelectScene, GameScene, HudScene, PauseScene, AnimViewerScene],
 });
 
-RotateDeviceScene.install(game);
+// Móvil: táctil, horizontal/pantalla completa, aviso de girar, zonas seguras (ver DeviceManager)
+device.init(game);
 
 // Acceso para depuración desde la consola del navegador (solo en desarrollo)
 if (DEV_MODE) window.__game = game;

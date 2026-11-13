@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.4.0] — 2026-11-13
+
+### E2 — Móvil
+
+#### Agregado
+- `DeviceManager`: detección táctil (también con el primer toque), pantalla completa + horizontal al tocar JUGAR (Android), zonas seguras, sin zoom accidental ni menú contextual.
+- Aviso "GIRA TU DISPOSITIVO" en HTML/CSS (animado, a pantalla completa) que pausa y reanuda la partida.
+- Controles táctiles completos: joystick flotante, botones FUEGO, SALTO, GRANADA, HABIL. y ARMA (atenuado hasta H-039), deslizar entre botones, vibración, HABIL. parpadea cuando está lista. Disposición anclada a los bordes en `controls.json`.
+- HUD adaptado: respeta la muesca, botones más grandes en táctil, botón ⛶ de pantalla completa.
+- `manifest.webmanifest` e íconos para "Añadir a pantalla de inicio" (horizontal, pantalla completa).
+- README: cómo jugar desde el teléfono en la red local.
+
+#### Eliminado
+- `RotateDeviceScene` (reemplazada por el aviso HTML de `DeviceManager`, ADR-010).
+
 ## [0.3.0] — 2026-11-13
 
 ### E4 — Combate

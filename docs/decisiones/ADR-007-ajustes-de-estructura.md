@@ -25,6 +25,8 @@ El prompt inicial define una estructura y pide justificar cualquier ajuste en un
 | `.htaccess` (raíz) | En Apache, evita servir `assets-originales/`, `tools/`, `docs/`, `openspec/` y `.md` |
 | `src/scenes/CharacterSelectScene.js` | Pantalla de selección de protagonista (E3) |
 | `content/characters/<id>/portrait.png` | Retrato generado por `sprite-cutter.php` |
+| `src/systems/DeviceManager.js` (y eliminación de `src/scenes/RotateDeviceScene.js`) | Lógica móvil centralizada; el aviso de girar pasa a HTML (ADR-010) |
+| `manifest.webmanifest`, `icons/` | Instalación en pantalla de inicio en horizontal |
 | `favicon.png` | Evita el error 404 de `favicon.ico` en consola (derivado del sprite de Plata) |
 
 ## Consecuencias

@@ -5,6 +5,7 @@ import { GAME_WIDTH, GAME_HEIGHT, DEV_MODE, DEFAULTS } from '../config.js';
 import { audio } from '../systems/AudioManager.js';
 import { textureKey, animKey } from '../systems/ContentLoader.js';
 import { bindGlobalKeys } from '../input/KeyboardControls.js';
+import { device } from '../systems/DeviceManager.js';
 import { makeButton, makeVerticalMenu, textStyle } from './ui.js';
 
 export class MenuScene extends Phaser.Scene {
@@ -34,7 +35,11 @@ export class MenuScene extends Phaser.Scene {
         }
 
         const buttons = [
-            makeButton(this, cx, 240, 'JUGAR', () => this.scene.start('CharacterSelect')),
+            makeButton(this, cx, 240, 'JUGAR', () => {
+                // En móvil: pantalla completa y horizontal (necesita este gesto del usuario)
+                device.enterLandscapeFullscreen();
+                this.scene.start('CharacterSelect');
+            }),
         ];
         if (DEV_MODE) {
             buttons.push(makeButton(this, cx, 304, 'VISOR DE ANIMACIONES', () => this.scene.start('AnimViewer'), { size: 20 }));
@@ -53,12 +58,14 @@ export class MenuScene extends Phaser.Scene {
             .text(
                 cx,
                 GAME_HEIGHT - 50,
-                'Mover: ←→ / A D   Saltar: Espacio / K   Disparar: J   Agacharse: ↓ / S   Apuntar arriba: ↑ / W\nGranada: U   Habilidad: L (se carga con 2 bajas)   Pausa: Esc / P   Silencio: M',
+                device.touch
+                    ? 'Joystick (izquierda): mover · abajo agacharse · arriba apuntar\nBotones: FUEGO · SALTO · GRANADA · HABIL. (se carga con 2 bajas)'
+                    : 'Mover: ←→ / A D   Saltar: Espacio / K   Disparar: J   Agacharse: ↓ / S   Apuntar arriba: ↑ / W\nGranada: U   Habilidad: L (se carga con 2 bajas)   Pausa: Esc / P   Silencio: M',
                 textStyle(14, '#9fb0cc', { align: 'center', strokeThickness: 2 })
             )
             .setOrigin(0.5);
         this.add
-            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.3.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
+            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.4.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
             .setOrigin(1, 1);
     }
 }

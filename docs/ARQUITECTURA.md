@@ -13,7 +13,7 @@ index.php ──> lib/phaser.min.js (global Phaser)
     │          └─ encola spritesheets, tilesets, fondos, audio; crea animaciones
     └─ ContentLoader.loadAll(): catálogo (api/catalog.php → respaldo content/catalog.json),
        character.json, map.json, controls.json, audio.json
-RotateDevice: superposición automática en móviles en vertical.
+DeviceManager (sin escena): táctil, pantalla completa/horizontal, aviso HTML "Gira tu dispositivo", zonas seguras.
 ```
 
 ## Flujo de datos del contenido

@@ -8,6 +8,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, DEFAULTS } from '../config.js';
 import { textureKey, animKey, portraitKey } from '../systems/ContentLoader.js';
 import { audio } from '../systems/AudioManager.js';
+import { device } from '../systems/DeviceManager.js';
 import { makeButton, textStyle } from './ui.js';
 
 const COLS = 5;
@@ -135,6 +136,7 @@ export class CharacterSelectScene extends Phaser.Scene {
         const def = this.chars[this.index];
         this.registry.set(LAST_CHOICE_KEY, def.id);
         audio.sfx('ui');
+        device.enterLandscapeFullscreen(); // por si se salió de la pantalla completa
         this.scene.start('Game', { characterId: def.id, mapId: DEFAULTS.mapId });
     }
 }

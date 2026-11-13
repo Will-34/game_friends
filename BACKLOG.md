@@ -3,7 +3,7 @@
 Estados: `Pendiente` · `En progreso` · `Hecho` · `Bloqueado`
 Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
-**Hecho:** E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **Siguiente:** E2 — Móvil (propuesta en `openspec/changes/e2-movil/`, pendiente de aprobación) o H-039 (armas).
+**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **Pendiente en E4:** H-039 (armas) y H-044 (IA avanzada). **Siguiente épica:** E5 — Mapas.
 
 ### Decisiones del usuario (2026-11-13)
 1. Las láminas sin transparencia se usan tal cual: la herramienta quitará el fondo pintado (H-045).
@@ -153,16 +153,18 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
 | ID | Historia | Estado |
 | --- | --- | --- |
-| H-030 | Controles táctiles completos (granada, habilidad, cambio de arma, pausa) | Pendiente |
-| H-031 | Jugar en horizontal: pantalla completa, bloqueo de orientación y aviso "gira tu dispositivo" | Pendiente |
-| H-032 | HUD adaptado a móvil y zonas seguras (muesca) | Pendiente |
-| H-033 | Pruebas en Android (Chrome) | Pendiente |
-| H-034 | Pruebas en iPhone/iPad (Safari), incluido desbloqueo de audio | Pendiente |
+| H-030 | Controles táctiles completos (granada, habilidad, cambio de arma, pausa) | Hecho |
+| H-031 | Jugar en horizontal: pantalla completa, bloqueo de orientación y aviso "gira tu dispositivo" | Hecho |
+| H-032 | HUD adaptado a móvil y zonas seguras (muesca) | Hecho |
+| H-033 | Pruebas en Android (Chrome) | En progreso (prueba del usuario) |
+| H-034 | Pruebas en iPhone/iPad (Safari), incluido desbloqueo de audio | En progreso (prueba del usuario) |
+| H-029 | Aprovechar pantallas más alargadas que 16:9 (sin franjas negras) | Pendiente |
 
 - H-030: botones táctiles para todas las acciones, tamaño y posición configurables en `controls.json`, sin activaciones fantasma; probado multitáctil.
 - H-031: en Android, pantalla completa + bloqueo en horizontal al pulsar JUGAR; en iPhone (no permite bloquear) aviso a pantalla completa; manifiesto web con orientación horizontal.
 - H-032: respetar `env(safe-area-inset-*)`, HUD legible en pantallas pequeñas.
-- H-033/H-034: el desarrollador prueba con emulación; el usuario confirma en sus teléfonos con `docs/pruebas/CHECKLIST.md`.
+- H-033/H-034: probado con emulación (ver CHECKLIST, registro 0.4.0); falta que el usuario confirme en sus teléfonos (CHECKLIST D, README → "Jugar desde el teléfono").
+- H-029: hoy el escalado FIT deja franjas negras en teléfonos 19.5:9. Opción: escalado EXPAND con HUD y menús anclados a los bordes; requiere revisar todas las escenas.
 
 ## E3 — Personajes
 

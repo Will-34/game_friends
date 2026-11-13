@@ -72,25 +72,33 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | F7 | Esperar cerca de enemigos | De vez en cuando UN enemigo usa su habilidad (aviso en rojo); nunca dos a la vez |
 | F8 | Enemigo difícil (nombre rojo) a media distancia | A veces lanza granadas |
 
-## D. Móvil (táctil o simulación del navegador)
+## D. Móvil (E2)
 
-En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono en horizontal. También `?touch=1` en PC.
+En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para pruebas reales ver README → "Jugar desde el teléfono".
 
 | # | Caso | Esperado |
 | --- | --- | --- |
-| D1 | Partida en dispositivo táctil | Joystick a la izquierda y botones FUEGO/SALTO a la derecha |
-| D2 | Joystick a la derecha + FUEGO a la vez | Corre y dispara simultáneamente (multitáctil) |
-| D3 | Joystick abajo / arriba | Agacharse / apuntar arriba |
-| D4 | Botón II del HUD | Pausa |
-| D5 | Botón 🔊 del HUD | Silencia |
-| D6 | Girar a vertical | Aviso "GIRA TU DISPOSITIVO" y la partida se pausa; al volver a horizontal desaparece |
-| D7 | Primer toque | El audio se desbloquea (iOS/Chrome) |
+| D1 | Partida en dispositivo táctil | Joystick (guía tenue a la izquierda) y botones FUEGO, SALTO, GRANADA, HABIL. y ARMA (atenuado) a la derecha |
+| D2 | Apoyar el pulgar en cualquier punto de la mitad izquierda y deslizar | La base del joystick aparece bajo el pulgar; el personaje se mueve |
+| D3 | Joystick a la derecha + FUEGO a la vez | Corre y dispara (multitáctil) |
+| D4 | Mantener FUEGO y deslizar hasta SALTO sin levantar | Deja de disparar y salta |
+| D5 | Joystick abajo / arriba | Agacharse / apuntar arriba |
+| D6 | GRANADA / HABIL. (con 2 bajas: el botón parpadea) | Lanza granada / activa la habilidad |
+| D7 | Botones II, 🔊 y ⛶ del HUD | Pausa, silencio, pantalla completa (⛶ no aparece en iPhone) |
+| D8 | Teléfono en vertical | Aviso "GIRA TU DISPOSITIVO" a pantalla completa; la partida se pausa; al girar se reanuda |
+| D9 | Android: tocar JUGAR | Pantalla completa y orientación horizontal bloqueada |
+| D10 | iPhone con muesca, en horizontal | El retrato/vida y el joystick no quedan bajo la muesca |
+| D11 | Primer toque | El audio se desbloquea (iOS/Chrome); vibración corta al pulsar botones (Android) |
+| D12 | Doble toque rápido / pellizco | No hace zoom |
+| D13 | Activar la emulación móvil con la página ya abierta y tocar | Aparecen los controles táctiles sin recargar |
+| D14 | "Añadir a pantalla de inicio" y abrir desde el ícono | Se abre sin barras del navegador (Android: siempre en horizontal) |
 
 ## Registro de ejecuciones
 
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 0.4.0 | Edge sin interfaz, emulación táctil 412×915 / 915×412, PHP 8.0.30 | D1–D3, D5, D7 (II y 🔊), D8, D13 ✅. Sin errores en consola. Pendientes de prueba en teléfono real: D4, D6, D9–D12, D14. |
 | 2026-11-13 | 0.3.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | F1–F7 ✅ (las 10 habilidades activadas; granada con daño en área; "+1" y carga; habilidad enemiga). Partida automática de ~45 s sin errores en consola. F8 y la sensación de dificultad: pendientes de prueba humana. |
 | 2026-11-13 | 0.2.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | E1–E6 ✅ (los 10 personajes probados: disparo de pie, agachado, arriba y salto; enemigos aleatorios correctos). Sin errores en consola. E7, E8: pendientes de prueba humana. |
 | 2026-11-13 | 0.1.0 | — | **Pendiente de prueba humana:** escucha real de los sonidos (A4, B6), B15, A6, D5, D7 y dispositivos reales Android/iPhone (E2). Nota D6: en vertical el texto del aviso se ve pequeño (H-031). |

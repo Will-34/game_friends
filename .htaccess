@@ -9,3 +9,6 @@ RedirectMatch 404 \.md$
 AddType text/javascript .js
 AddType audio/ogg .ogg
 AddType audio/mpeg .mp3
+
+# Manifiesto web (instalación en pantalla de inicio)
+AddType application/manifest+json .webmanifest
