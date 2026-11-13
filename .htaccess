@@ -1,0 +1,11 @@
+# Producción (Apache): no servir carpetas de trabajo ni archivos internos.
+Options -Indexes
+DirectoryIndex index.php
+RedirectMatch 404 /(assets-originales|tools|docs|openspec|\.git)(/|$)
+RedirectMatch 404 /api/lib/
+RedirectMatch 404 \.md$
+
+# Tipos MIME para audio y módulos JS
+AddType text/javascript .js
+AddType audio/ogg .ogg
+AddType audio/mpeg .mp3

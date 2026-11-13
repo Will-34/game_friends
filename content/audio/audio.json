@@ -1,0 +1,11 @@
+{
+  "_comment": "Audio del juego. Ver docs/AUDIO.md. Cada archivo debe registrarse en CREDITS.md. Si un efecto no tiene archivo, se usa su versión sintetizada provisional.",
+  "musicVolume": 0.5,
+  "sfxVolume": 0.8,
+  "music": {},
+  "sfx": {},
+  "sceneMusic": {
+    "Menu": "menu",
+    "Game": "level1"
+  }
+}

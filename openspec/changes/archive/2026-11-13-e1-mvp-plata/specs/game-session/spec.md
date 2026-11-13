@@ -1,0 +1,59 @@
+# Delta de especificación: Partida (mapa, cámara, HUD, pausa)
+
+## AGREGADO
+
+### Requisito: Mapa Tiled
+La partida DEBE construirse desde `content/maps/<id>/map.json` (Tiled): capa `ground` con colisión por la propiedad `collides`, plataformas `oneWay` atravesables desde abajo, apariciones de la capa `spawns` y fondos parallax de las capas de imagen.
+
+#### Escenario: Plataforma atravesable
+- DADO una plataforma con `oneWay`
+- CUANDO el jugador salta desde debajo
+- ENTONCES la atraviesa y puede aterrizar encima
+
+### Requisito: Cámara lateral
+La cámara DEBE seguir al protagonista dentro de los límites del mapa con una zona muerta.
+
+#### Escenario: Avanzar por el nivel
+- DADO el protagonista corriendo a la derecha
+- CUANDO sale de la zona muerta
+- ENTONCES la cámara lo sigue y los fondos se desplazan más lento
+
+### Requisito: HUD
+El HUD DEBE mostrar el nombre y la vida del protagonista, los enemigos restantes y botones de pausa y silencio.
+
+#### Escenario: Recibir daño
+- DADO el protagonista con 100 de vida
+- CUANDO recibe una bala enemiga
+- ENTONCES la barra muestra 90 / 100
+
+### Requisito: Pausa
+La partida DEBE pausarse con la acción `pause`, el botón del HUD o al ocultarse la pestaña, y DEBE poder reanudarse o salir al menú.
+
+#### Escenario: Pausa con teclado
+- DADO una partida en curso
+- CUANDO se pulsa Esc
+- ENTONCES aparece "PAUSA" y una segunda pulsación reanuda
+
+### Requisito: Fin de partida
+Al eliminar a todos los enemigos la partida DEBE mostrar "¡ZONA DESPEJADA!" y la pose de victoria; al morir el protagonista DEBE mostrar "HAS CAÍDO" y permitir reintentar.
+
+#### Escenario: Derrota
+- DADO el protagonista con vida 0
+- CUANDO termina su animación de muerte
+- ENTONCES aparece "HAS CAÍDO" y Espacio/J/toque reinicia la partida
+
+### Requisito: Orientación en móvil
+En dispositivos táctiles en vertical el juego DEBE mostrar "GIRA TU DISPOSITIVO" y pausar la partida.
+
+#### Escenario: Girar a vertical
+- DADO una partida en un teléfono en horizontal
+- CUANDO se gira a vertical
+- ENTONCES aparece el aviso y la partida queda pausada hasta volver a horizontal
+
+## MODIFICADO
+
+(ninguno)
+
+## ELIMINADO
+
+(ninguno)

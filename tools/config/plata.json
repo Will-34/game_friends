@@ -1,0 +1,239 @@
+{
+  "_comment": "Parámetros de recorte de la lámina de Plata. La lámina dibuja cada fila a distinto tamaño; \"scale\" por animación iguala la altura de pie a la de \"fire\" (~77 px), solo reduciendo. Regiones en píxeles de la lámina original: [x, y, ancho, alto]. Ver docs/COMO-AGREGAR-PERSONAJE.md",
+  "source": "assets-originales/plata/plata-hoja.png",
+  "output": "content/characters/plata/spritesheet.png",
+  "characterJson": "content/characters/plata/character.json",
+  "alphaThreshold": 60,
+  "minFrameArea": 1500,
+  "minDetailArea": 12,
+  "attachMargin": 8,
+  "scale": 1,
+  "frameWidth": 144,
+  "frameHeight": 104,
+  "bottomPadding": 2,
+  "columns": 8,
+  "animations": {
+    "idle": {
+      "region": [
+        405,
+        0,
+        400,
+        108
+      ],
+      "expected": 4,
+      "scale": 0.83,
+      "fps": 6,
+      "loop": true
+    },
+    "run": {
+      "region": [
+        398,
+        110,
+        505,
+        105
+      ],
+      "expected": 8,
+      "scale": 0.92,
+      "fps": 12,
+      "loop": true,
+      "note": "La lámina indica 8 cuadros pero solo dibuja 7."
+    },
+    "jump": {
+      "region": [
+        400,
+        215,
+        250,
+        110
+      ],
+      "expected": 3,
+      "scale": 0.92,
+      "fps": 10,
+      "loop": false
+    },
+    "fall": {
+      "region": [
+        385,
+        335,
+        140,
+        100
+      ],
+      "expected": 2,
+      "fps": 8,
+      "loop": true
+    },
+    "crouch": {
+      "region": [
+        1085,
+        10,
+        220,
+        100
+      ],
+      "expected": 2,
+      "scale": 0.83,
+      "fps": 6,
+      "loop": false
+    },
+    "crouch_fire": {
+      "region": [
+        1080,
+        112,
+        450,
+        100
+      ],
+      "expected": 4,
+      "scale": 0.92,
+      "fps": 16,
+      "loop": true,
+      "attachDetails": true
+    },
+    "fire": {
+      "region": [
+        398,
+        440,
+        360,
+        95
+      ],
+      "expected": 4,
+      "fps": 16,
+      "loop": true,
+      "attachDetails": true
+    },
+    "fire_up": {
+      "placeholderFrom": "idle",
+      "placeholderFrames": [
+        0
+      ],
+      "fps": 1,
+      "loop": true,
+      "note": "La lámina no tiene disparo hacia arriba; se usa el cuadro 0 de 'idle' como provisional."
+    },
+    "grenade": {
+      "region": [
+        930,
+        215,
+        420,
+        110
+      ],
+      "expected": 4,
+      "scale": 0.86,
+      "fps": 10,
+      "loop": false
+    },
+    "hurt": {
+      "region": [
+        655,
+        335,
+        240,
+        100
+      ],
+      "expected": 3,
+      "fps": 10,
+      "loop": false,
+      "attachDetails": true
+    },
+    "special": {
+      "region": [
+        1062,
+        335,
+        470,
+        100
+      ],
+      "expected": 6,
+      "fps": 10,
+      "loop": false,
+      "attachDetails": true
+    },
+    "death": {
+      "region": [
+        950,
+        440,
+        580,
+        100
+      ],
+      "expected": 6,
+      "fps": 8,
+      "loop": false,
+      "anchor": "bbox",
+      "note": "La lámina indica 6 cuadros pero solo dibuja 5."
+    },
+    "victory": {
+      "region": [
+        400,
+        540,
+        430,
+        110
+      ],
+      "expected": 6,
+      "scale": 0.85,
+      "fps": 8,
+      "loop": true,
+      "attachDetails": true,
+      "note": "La lámina indica 6 cuadros pero solo dibuja 5."
+    }
+  },
+  "effects": {
+    "output": "content/characters/plata/effects.png",
+    "cellSize": 80,
+    "columns": 7,
+    "items": {
+      "drone": {
+        "rect": [
+          890,
+          585,
+          78,
+          70
+        ]
+      },
+      "laser": {
+        "rect": [
+          990,
+          610,
+          66,
+          26
+        ]
+      },
+      "muzzle": {
+        "rect": [
+          1158,
+          604,
+          50,
+          40
+        ]
+      },
+      "explosion": {
+        "rect": [
+          1218,
+          588,
+          66,
+          66
+        ]
+      },
+      "smoke": {
+        "rect": [
+          1294,
+          584,
+          64,
+          68
+        ]
+      },
+      "grenade": {
+        "rect": [
+          1371,
+          596,
+          40,
+          46
+        ]
+      }
+    }
+  },
+  "portrait": {
+    "rect": [
+      16,
+      16,
+      170,
+      160
+    ],
+    "size": 96,
+    "output": "content/characters/plata/portrait.png"
+  }
+}

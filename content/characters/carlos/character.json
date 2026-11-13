@@ -1,0 +1,307 @@
+{
+    "id": "carlos",
+    "name": "Carlos",
+    "archetype": "Apoyo / Estratégico",
+    "description": "Gafas, mochila con muñeca rubia, traje amarillo.",
+    "placeholder": false,
+    "credits": "Arte: lámina Hoja de sprites pixel art de Carlos.png aportada por el equipo del proyecto. Fondo eliminado y recorte automático con tools/sprite-cutter.php.",
+    "stats": {
+        "maxHealth": 100,
+        "speed": 190,
+        "jumpVelocity": 640,
+        "fireRateMs": 180,
+        "bulletSpeed": 620,
+        "bulletDamage": 10
+    },
+    "ability": {
+        "id": "motivacion-de-equipo",
+        "name": "Motivación de Equipo",
+        "description": "Aumenta la velocidad y el daño de los aliados cercanos por un tiempo.",
+        "implemented": false
+    },
+    "enemyAbility": null,
+    "body": {
+        "width": 32,
+        "height": 71
+    },
+    "crouchBody": {
+        "width": 38,
+        "height": 59
+    },
+    "muzzle": {
+        "stand": {
+            "x": 43,
+            "y": -39
+        },
+        "crouch": {
+            "x": 46,
+            "y": -34
+        },
+        "up": {
+            "x": 6,
+            "y": -84
+        }
+    },
+    "spritesheet": "spritesheet.png",
+    "frameWidth": 144,
+    "frameHeight": 104,
+    "portrait": "portrait.png",
+    "animations": {
+        "idle": {
+            "frames": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "fps": 6,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "run": {
+            "frames": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "fps": 12,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "jump": {
+            "frames": [
+                11,
+                12,
+                13
+            ],
+            "fps": 10,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fall": {
+            "frames": [
+                14,
+                15
+            ],
+            "fps": 8,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "crouch": {
+            "frames": [
+                16,
+                17
+            ],
+            "fps": 6,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "crouch_fire": {
+            "frames": [
+                18,
+                19,
+                20,
+                21
+            ],
+            "fps": 16,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fire": {
+            "frames": [
+                22,
+                23,
+                24,
+                25
+            ],
+            "fps": 16,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fire_up": {
+            "frames": [
+                0
+            ],
+            "fps": 1,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": true,
+            "note": "La lámina no tiene disparo hacia arriba; se usa el cuadro 0 de idle como provisional."
+        },
+        "grenade": {
+            "frames": [
+                26,
+                27,
+                28,
+                29
+            ],
+            "fps": 10,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "hurt": {
+            "frames": [
+                30,
+                31,
+                32
+            ],
+            "fps": 10,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "special": {
+            "frames": [
+                33,
+                34,
+                35,
+                36,
+                37,
+                38
+            ],
+            "fps": 10,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "death": {
+            "frames": [
+                39,
+                40,
+                41,
+                42,
+                43
+            ],
+            "fps": 8,
+            "loop": false,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "victory": {
+            "frames": [
+                44,
+                45,
+                46,
+                47,
+                48
+            ],
+            "fps": 8,
+            "loop": true,
+            "origin": [
+                0.5,
+                0.9808
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        }
+    },
+    "effects": {
+        "image": "effects.png",
+        "frameWidth": 80,
+        "frameHeight": 80,
+        "frames": {
+            "muzzle": 0,
+            "explosion": 1,
+            "smoke": 2
+        }
+    }
+}

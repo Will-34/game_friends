@@ -1,0 +1,244 @@
+{
+  "_comment": "Recorte de la lámina de Henry (opaca: el fondo se elimina por color). Generado a partir de plata.json; ver docs/COMO-AGREGAR-PERSONAJE.md",
+  "source": "assets-originales/henry/Hoja de sprites pixel art de Henry.png",
+  "output": "content/characters/henry/spritesheet.png",
+  "characterJson": "content/characters/henry/character.json",
+  "background": {
+    "mode": "color"
+  },
+  "minFrameArea": 1500,
+  "minDetailArea": 12,
+  "attachMargin": 8,
+  "scale": 1,
+  "frameWidth": 144,
+  "frameHeight": 104,
+  "bottomPadding": 2,
+  "columns": 8,
+  "autoScale": {
+    "target": "fire",
+    "groups": {
+      "idle": [
+        "idle",
+        "crouch"
+      ],
+      "run": [
+        "run",
+        "crouch_fire"
+      ],
+      "jump": [
+        "jump",
+        "grenade"
+      ],
+      "hurt": [
+        "fall",
+        "hurt",
+        "special"
+      ],
+      "fire": [
+        "fire",
+        "death"
+      ],
+      "victory": [
+        "victory"
+      ]
+    }
+  },
+  "portrait": {
+    "rect": [
+      16,
+      16,
+      170,
+      160
+    ],
+    "size": 96,
+    "output": "content/characters/henry/portrait.png"
+  },
+  "animations": {
+    "idle": {
+      "region": [
+        405,
+        0,
+        400,
+        108
+      ],
+      "expected": 4,
+      "fps": 6,
+      "loop": true
+    },
+    "run": {
+      "region": [
+        398,
+        110,
+        505,
+        105
+      ],
+      "expected": 7,
+      "fps": 12,
+      "loop": true
+    },
+    "jump": {
+      "region": [
+        400,
+        215,
+        250,
+        110
+      ],
+      "expected": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "fall": {
+      "region": [
+        385,
+        335,
+        140,
+        100
+      ],
+      "expected": 2,
+      "fps": 8,
+      "loop": true
+    },
+    "crouch": {
+      "region": [
+        1085,
+        10,
+        220,
+        100
+      ],
+      "expected": 2,
+      "fps": 6,
+      "loop": false
+    },
+    "crouch_fire": {
+      "region": [
+        1080,
+        112,
+        450,
+        100
+      ],
+      "expected": 4,
+      "fps": 16,
+      "loop": true,
+      "attachDetails": true,
+      "maxFrameWidth": 160,
+      "splitX": [
+        1306,
+        1419
+      ]
+    },
+    "fire": {
+      "region": [
+        398,
+        440,
+        360,
+        95
+      ],
+      "expected": 4,
+      "fps": 16,
+      "loop": true,
+      "attachDetails": true,
+      "splitX": [
+        588
+      ]
+    },
+    "fire_up": {
+      "placeholderFrom": "idle",
+      "placeholderFrames": [
+        0
+      ],
+      "fps": 1,
+      "loop": true,
+      "note": "La lámina no tiene disparo hacia arriba; se usa el cuadro 0 de idle como provisional."
+    },
+    "grenade": {
+      "region": [
+        930,
+        215,
+        420,
+        110
+      ],
+      "expected": 4,
+      "fps": 10,
+      "loop": false
+    },
+    "hurt": {
+      "region": [
+        655,
+        335,
+        240,
+        100
+      ],
+      "expected": 3,
+      "fps": 10,
+      "loop": false,
+      "attachDetails": true
+    },
+    "special": {
+      "region": [
+        1062,
+        335,
+        470,
+        100
+      ],
+      "expected": 6,
+      "fps": 10,
+      "loop": false,
+      "attachDetails": true
+    },
+    "death": {
+      "region": [
+        950,
+        440,
+        580,
+        100
+      ],
+      "expected": 5,
+      "fps": 8,
+      "loop": false,
+      "anchor": "bbox"
+    },
+    "victory": {
+      "region": [
+        400,
+        540,
+        430,
+        110
+      ],
+      "expected": 5,
+      "fps": 8,
+      "loop": true,
+      "attachDetails": true
+    }
+  },
+  "effects": {
+    "output": "content/characters/henry/effects.png",
+    "cellSize": 80,
+    "columns": 4,
+    "items": {
+      "muzzle": {
+        "region": [
+          1150,
+          598,
+          66,
+          44
+        ]
+      },
+      "explosion": {
+        "region": [
+          1220,
+          584,
+          66,
+          72
+        ]
+      },
+      "smoke": {
+        "region": [
+          1293,
+          580,
+          68,
+          78
+        ]
+      }
+    }
+  }
+}

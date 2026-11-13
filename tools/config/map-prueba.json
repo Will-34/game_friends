@@ -1,0 +1,40 @@
+{
+  "_comment": "Definición del mapa de prueba. tools/build-test-map.php la convierte a formato Tiled JSON. Columnas/filas en tiles de 32 px; fila 0 = arriba.",
+  "id": "prueba",
+  "output": "content/maps/prueba",
+  "name": "Zona de pruebas",
+  "tileSize": 32,
+  "width": 120,
+  "height": 17,
+  "properties": {
+    "name": "Zona de pruebas",
+    "music": "level1",
+    "backgroundColor": "#1d2b3a",
+    "placeholder": true
+  },
+  "ground": [
+    { "from": 0,  "to": 39,  "top": 14 },
+    { "from": 40, "to": 59,  "top": 12 },
+    { "from": 60, "to": 119, "top": 14 }
+  ],
+  "platforms": [
+    { "col": 10, "row": 10, "length": 5 },
+    { "col": 18, "row": 7,  "length": 4 },
+    { "col": 28, "row": 10, "length": 6 },
+    { "col": 48, "row": 8,  "length": 5 },
+    { "col": 68, "row": 10, "length": 4 },
+    { "col": 75, "row": 7,  "length": 5 },
+    { "col": 90, "row": 10, "length": 6 },
+    { "col": 100, "row": 7, "length": 4 }
+  ],
+  "crates": [
+    [24, 13], [25, 13], [25, 12], [84, 13], [85, 13], [86, 13], [85, 12]
+  ],
+  "spawns": [
+    { "type": "player", "col": 3,  "row": 13 },
+    { "type": "enemy",  "col": 33, "row": 13, "characterId": "random", "patrol": 5 },
+    { "type": "enemy",  "col": 54, "row": 11, "characterId": "random", "patrol": 4 },
+    { "type": "enemy",  "col": 78, "row": 6,  "characterId": "random", "patrol": 1 },
+    { "type": "enemy",  "col": 100, "row": 13, "characterId": "random", "patrol": 6 }
+  ]
+}

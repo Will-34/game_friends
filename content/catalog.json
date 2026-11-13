@@ -1,0 +1,73 @@
+{
+    "version": 1,
+    "characters": [
+        {
+            "id": "carlos",
+            "name": "Carlos",
+            "path": "content/characters/carlos/",
+            "placeholder": false
+        },
+        {
+            "id": "domeki",
+            "name": "Domeki",
+            "path": "content/characters/domeki/",
+            "placeholder": false
+        },
+        {
+            "id": "henry",
+            "name": "Henry",
+            "path": "content/characters/henry/",
+            "placeholder": false
+        },
+        {
+            "id": "ignacio",
+            "name": "Ignacio",
+            "path": "content/characters/ignacio/",
+            "placeholder": false
+        },
+        {
+            "id": "pablo",
+            "name": "Pablo",
+            "path": "content/characters/pablo/",
+            "placeholder": false
+        },
+        {
+            "id": "plata",
+            "name": "Plata",
+            "path": "content/characters/plata/",
+            "placeholder": false
+        },
+        {
+            "id": "reymar",
+            "name": "Reymar",
+            "path": "content/characters/reymar/",
+            "placeholder": false
+        },
+        {
+            "id": "ruddy",
+            "name": "Ruddy",
+            "path": "content/characters/ruddy/",
+            "placeholder": false
+        },
+        {
+            "id": "sergio",
+            "name": "Sergio",
+            "path": "content/characters/sergio/",
+            "placeholder": false
+        },
+        {
+            "id": "will",
+            "name": "Will",
+            "path": "content/characters/will/",
+            "placeholder": false
+        }
+    ],
+    "maps": [
+        {
+            "id": "prueba",
+            "name": "Zona de pruebas",
+            "path": "content/maps/prueba/"
+        }
+    ],
+    "warnings": []
+}

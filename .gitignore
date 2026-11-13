@@ -1,0 +1,13 @@
+# Salidas de depuración de las herramientas (se regeneran)
+tools/output/
+
+# Sistema operativo / editores
+Thumbs.db
+.DS_Store
+desktop.ini
+.vscode/
+*.log
+
+# Copias duplicadas de las láminas en la raíz (los originales están en assets-originales/)
+/Hoja de sprites pixel art de Plata.png
+/Hoja de sprites pixel art de personajes.png

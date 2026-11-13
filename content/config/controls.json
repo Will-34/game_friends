@@ -1,0 +1,26 @@
+{
+  "_comment": "Asignación de teclas a acciones abstractas. Nombres de tecla de Phaser.Input.Keyboard.KeyCodes. Ver docs/ARQUITECTURA.md",
+  "keyboard": {
+    "left": ["LEFT", "A"],
+    "right": ["RIGHT", "D"],
+    "crouch": ["DOWN", "S"],
+    "aimUp": ["UP", "W"],
+    "jump": ["SPACE", "K"],
+    "shoot": ["J"],
+    "grenade": ["U"],
+    "special": ["L"],
+    "switchWeapon": ["Q"],
+    "pause": ["ESC", "P"]
+  },
+  "global": {
+    "mute": ["M"]
+  },
+  "touch": {
+    "_comment": "Botones táctiles (E1 básico; E2 completa). Posición en coordenadas lógicas 960x540.",
+    "stick": { "x": 130, "y": 420, "radius": 70 },
+    "buttons": [
+      { "action": "jump", "label": "SALTO", "x": 870, "y": 440, "radius": 46 },
+      { "action": "shoot", "label": "FUEGO", "x": 760, "y": 470, "radius": 46 }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+/* Estilos de la página contenedora del juego. Sin barras de desplazamiento. */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0b0f17;
+    color: #e8ecf3;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    /* Evita selección, menú contextual y zoom por doble toque en móviles */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    overscroll-behavior: none;
+}
+
+#game {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* Las zonas seguras (muesca de iPhone) se ajustarán en E2 desde el HUD táctil. */
+}
+
+#game canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+noscript {
+    display: block;
+    padding: 2rem;
+    text-align: center;
+}
