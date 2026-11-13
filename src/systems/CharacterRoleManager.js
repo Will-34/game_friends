@@ -124,6 +124,7 @@ export class CharacterRoleManager {
             weapons: deps.weapons,
             title: deps.title,
             scale: deps.scale,
+            passiveRegen: deps.passiveRegen,
         });
         if (mods.tint !== null) fighter.setTint(mods.tint);
         return fighter;

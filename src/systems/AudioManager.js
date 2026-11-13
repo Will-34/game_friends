@@ -55,25 +55,64 @@ export class AudioManager extends Phaser.Events.EventEmitter {
         }
     }
 
+    /**
+     * Desbloqueo del audio en móviles:
+     * - iOS/Android solo permiten sonar tras un gesto del usuario; se intenta en cada toque/tecla
+     *   (touchstart, touchend, pointerup, click…) hasta que el contexto quede en "running".
+     * - En cada intento se reproduce un búfer silencioso (truco necesario en iOS Safari).
+     * - En iPhone, el interruptor de silencio apaga Web Audio; audioSession "playback" lo evita (iOS 17+).
+     * - Al volver a la pestaña o tras una llamada, el contexto se reanuda.
+     */
     _installUnlock() {
-        const events = ['pointerdown', 'keydown', 'touchend'];
+        try {
+            if (navigator.audioSession) navigator.audioSession.type = 'playback';
+        } catch (e) { /* no soportado */ }
+        const events = ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'mousedown', 'click', 'keydown'];
         const unlock = () => {
             const ctx = this._ensureContext();
-            if (ctx && ctx.state === 'suspended') ctx.resume();
-            this.unlocked = true;
-            events.forEach((e) => window.removeEventListener(e, unlock, true));
-            this.emit('unlocked');
-            // Si una escena pidió música antes del desbloqueo, se inicia ahora.
-            if (this.currentMusicId && !this.currentMusic) this._startMusic(this.currentMusicId);
+            if (!ctx) return;
+            this._kick(ctx);
+            if (this.game && this.game.sound && this.game.sound.context && this.game.sound.context !== ctx) {
+                this._kick(this.game.sound.context);
+            }
+            if (!this.unlocked) {
+                this.unlocked = true;
+                this.emit('unlocked');
+                // Si una escena pidió música antes del desbloqueo, se inicia ahora.
+                if (this.currentMusicId && !this.currentMusic) this._startMusic(this.currentMusicId);
+            }
+            if (ctx.state === 'running') events.forEach((e) => window.removeEventListener(e, unlock, true));
         };
         events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }));
+        // Si el sistema suspende el audio (pantalla apagada, llamada), se vuelve a pedir un gesto.
+        const rearm = () => {
+            if (document.visibilityState !== 'visible' || !this.ctx) return;
+            this.ctx.resume().catch(() => {});
+            if (this.ctx.state !== 'running') events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }));
+        };
+        document.addEventListener('visibilitychange', rearm);
+        window.addEventListener('pageshow', rearm);
     }
 
+    /** Reanuda un contexto y reproduce un búfer silencioso (desbloqueo en iOS). */
+    _kick(ctx) {
+        try {
+            if (ctx.state !== 'running') ctx.resume().catch(() => {});
+            const buf = ctx.createBuffer(1, 1, 22050);
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            src.connect(ctx.destination);
+            src.start(0);
+        } catch (e) { /* ignorar */ }
+    }
+
+    /** Usa el contexto de Phaser si existe (un solo AudioContext); si no, crea uno propio. */
     _ensureContext() {
         if (this.ctx) return this.ctx;
+        const phaserCtx = this.game && this.game.sound && this.game.sound.context;
         const AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return null;
-        this.ctx = new AC();
+        if (!phaserCtx && !AC) return null;
+        this.ctx = phaserCtx || new AC();
         this.sfxBus = this.ctx.createGain();
         this.sfxBus.gain.value = this.muted ? 0 : this.sfxVolume;
         this.sfxBus.connect(this.ctx.destination);
@@ -95,7 +134,13 @@ export class AudioManager extends Phaser.Events.EventEmitter {
         }
         const synth = SYNTH_SFX[name];
         const ctx = this.ctx;
-        if (synth && ctx && ctx.state === 'running') synth(ctx, this.sfxBus);
+        if (!synth || !ctx) return;
+        if (ctx.state !== 'running') {
+            // iOS puede dejarlo "suspended"/"interrupted": se intenta reanudar y se omite este efecto.
+            ctx.resume().catch(() => {});
+            return;
+        }
+        synth(ctx, this.sfxBus);
     }
 
     /** Cambia la música según la escena (clave en audio.json → sceneMusic) o un id explícito. */

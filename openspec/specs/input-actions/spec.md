@@ -23,7 +23,7 @@ La asignación de teclas DEBE leerse de `content/config/controls.json`.
 - ENTONCES se producen respectivamente `moveX`, `crouch`, `aimUp`, `jump`, `shoot` y `pause`; U produce `grenade`, L `special` y Q `switchWeapon` 
 
 ### Requisito: Controles táctiles multitáctiles
-En dispositivos táctiles (o con `?touch=1`) el HUD DEBE mostrar un joystick flotante en la mitad izquierda y botones para FUEGO, SALTO, GRANADA, HABILIDAD y CAMBIAR ARMA, configurables en `controls.json` (posición relativa a los bordes, tamaño, `enabled`), que produzcan las mismas acciones que el teclado, admitiendo varios dedos a la vez y el deslizamiento entre botones. Los botones con `enabled: false` DEBEN verse atenuados y no producir acción.
+En dispositivos táctiles (o con `?touch=1`) el HUD DEBE mostrar un joystick flotante en la mitad izquierda y botones para FUEGO, SALTO, GRANADA, HABILIDAD y DRON (sin botón de cambiar arma: en móvil se usa el arma recogida), configurables en `controls.json` (posición relativa a los bordes, tamaño, `enabled`), que produzcan las mismas acciones que el teclado, admitiendo varios dedos a la vez y el deslizamiento entre botones. Los botones con `enabled: false` DEBEN verse atenuados y no producir acción.
 
 #### Escenario: Correr y disparar a la vez
 - DADO un dispositivo táctil en partida
@@ -41,9 +41,9 @@ En dispositivos táctiles (o con `?touch=1`) el HUD DEBE mostrar un joystick flo
 - ENTONCES deja de disparar y salta
 
 #### Escenario: Acción reservada
-- DADO el botón ARMA con `enabled: false`
+- DADO un botón con `enabled: false`
 - CUANDO se toca
-- ENTONCES no se produce la acción `switchWeapon` y el botón se ve atenuado
+- ENTONCES no se produce su acción y el botón se ve atenuado
 
 ### Requisito: Independencia del controlador
 Las entidades NO DEBEN conocer el origen de sus acciones; un controlador DEBE poder combinar varias fuentes.

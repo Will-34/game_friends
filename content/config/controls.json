@@ -47,7 +47,7 @@
     ]
   },
   "touch": {
-    "_comment": "Controles táctiles. Coordenadas lógicas (960x540). Joystick: zona izquierda (zoneWidth = fracción del ancho), flotante. Botones anclados a la esquina inferior derecha (right/bottom); enabled:false = atenuado y sin acción (todas activas desde E4).",
+    "_comment": "Controles táctiles. Coordenadas lógicas (960x540). Joystick: zona izquierda (zoneWidth = fracción del ancho), flotante. Botones anclados a la esquina inferior derecha (right/bottom); enabled:false = atenuado y sin acción (todas activas desde E4). Sin botón ARMA: en móvil se usa el arma que se recoge del piso (se equipa sola; al acabarse la munición vuelve la pistola).",
     "opacity": 0.85,
     "vibrateMs": 12,
     "stick": {
@@ -85,14 +85,6 @@
         "right": 170,
         "bottom": 195,
         "radius": 36
-      },
-      {
-        "action": "switchWeapon",
-        "label": "ARMA",
-        "right": 275,
-        "bottom": 170,
-        "radius": 28,
-        "enabled": true
       },
       {
         "action": "drone",

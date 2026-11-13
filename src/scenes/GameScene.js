@@ -30,6 +30,8 @@ import { textStyle } from './ui.js';
 
 /** Granadas iniciales del protagonista. */
 const PLAYER_GRENADES = 5;
+/** Regeneración del jugador: +5 de vida cada 2 s, tras 2,5 s sin recibir daño. */
+const PLAYER_REGEN = { amount: 5, everyMs: 2000, afterHitMs: 2500 };
 /** Tiempo mínimo entre gestos de un mismo enemigo. */
 const EMOTE_COOLDOWN_MS = 2500;
 /** Separación horizontal entre enemigos de un mismo grupo. */
@@ -165,6 +167,7 @@ export class GameScene extends Phaser.Scene {
             grenadeCount: PLAYER_GRENADES,
             weapons: this.content.weapons,
             nameColor: NAME_COLORS.hero,
+            passiveRegen: PLAYER_REGEN,
         });
         this.player.on(FIGHTER_EVENTS.DAMAGED, (f) => this.events.emit(GAME_EVENTS.PLAYER_HEALTH, f.health, f.stats.maxHealth));
         this.player.on(FIGHTER_EVENTS.STATS, (f) => this.events.emit(GAME_EVENTS.PLAYER_STATS, f));

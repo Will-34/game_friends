@@ -4,6 +4,13 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 
 ## [Sin publicar]
 
+### Arreglado
+- **Sonido en celulares**: el audio se desbloquea en cualquier toque hasta quedar activo (antes podía quedar suspendido en iOS/Android), con truco de búfer silencioso, `audioSession` "playback" y reanudación al volver a la pestaña.
+
+### Cambiado
+- Sin botón **ARMA** en los controles táctiles: se usa el arma recogida del piso.
+- El jugador **regenera vida** (+5 cada 2 s tras 2,5 s sin daño).
+
 ### Agregado
 - Despliegue en cPanel: `.cpanel.yml` y GitHub Action `deploy.yml` (pull + deploy automático al hacer push a `main`). Ver `docs/DESPLIEGUE-CPANEL.md`.
 - Vista previa al compartir el enlace (WhatsApp, Facebook…): etiquetas Open Graph "Game Ficct" e imagen `icons/share.jpg` generada con `tools/build-share-image.php`.

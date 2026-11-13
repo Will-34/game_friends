@@ -40,7 +40,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
      * @param {number} x
      * @param {number} y  posición de los PIES
      * @param {object} def  character.json
-     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor, weapons, title, scale }
+     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor, weapons, title, scale, passiveRegen }
      */
     constructor(scene, x, y, def, opts) {
         super(scene, x, y, textureKey(def.id), def.animations.idle ? def.animations.idle.frames[0] : 0);
@@ -85,6 +85,10 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         this.inventory = [{ id: (opts.weapons && opts.weapons.default) || 'pistola', ammo: Number.POSITIVE_INFINITY }];
         this.weaponIdx = 0;
         this.specialCharge = 0;
+        // Regeneración pasiva (solo el jugador): { amount, everyMs, afterHitMs }
+        this.passiveRegen = opts.passiveRegen || null;
+        this.lastHitAt = Number.NEGATIVE_INFINITY;
+        this.nextRegenAt = 0;
         // Dron propio (acción DRON): listo al empezar, luego con recarga
         this.droneReadyAt = 0;
         this.droneCooldownMs = (def.drone && def.drone.cooldownMs) || 20000;
@@ -164,6 +168,15 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         return this.buffs.some((b) => b[field]);
     }
 
+    /** Recupera vida poco a poco (passiveRegen.amount cada everyMs), tras afterHitMs sin recibir daño. */
+    updatePassiveRegen(time) {
+        const r = this.passiveRegen;
+        if (!r || this.health >= this.stats.maxHealth) return;
+        if (time - this.lastHitAt < (r.afterHitMs || 0) || time < this.nextRegenAt) return;
+        this.nextRegenAt = time + r.everyMs;
+        this.heal(r.amount);
+    }
+
     heal(amount) {
         if (this.dead) return;
         this.health = Math.min(this.stats.maxHealth, this.health + amount);
@@ -210,6 +223,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         if (this.buffs.length) this.buffs = this.buffs.filter((b) => time < b.until);
         const regen = this.buffValue('regenPerSec');
         if (regen > 0 && this.health < this.stats.maxHealth) this.heal((regen * delta) / 1000);
+        this.updatePassiveRegen(time);
 
         const a = this.controller.actions;
         const body = this.body;
@@ -476,6 +490,8 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
             this.lastAttacker = attacker;
             attacker.emit(FIGHTER_EVENTS.HIT, attacker, this);
         }
+        this.lastHitAt = now;
+        this.nextRegenAt = 0;
         this.health = Math.max(0, this.health - amount * this.buffValue('damageTakenMul'));
         this.emit(FIGHTER_EVENTS.DAMAGED, this, amount);
         if (this.health <= 0) {
