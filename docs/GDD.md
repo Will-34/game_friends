@@ -60,13 +60,28 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 | Disparar | J | Botón FUEGO |
 | Granada | U | (E2) |
 | Habilidad especial | L | (E2) |
-| Cambiar arma | Q | (E2) |
+| Cambiar arma | Q | Botón ARMA |
+| Dron | E | Botón DRON |
 | Pausa | Esc / P | Botón II |
 
 ## 5. Combate
 
 - Disparo horizontal (de pie y agachado) y hacia arriba.
 - **Granadas** (U): 5 al empezar; daño en área. Los enemigos difíciles también las lanzan.
+- **Dron** (E / botón DRON): **todos** los personajes lanzan su propio dron, que los sigue y dispara solo al enemigo más cercano durante ~8 s. Listo al empezar; recarga de 20 s. Cada dron va acorde a su personaje (`character.json → drone`, sprite generado con `tools/build-drones.php`):
+  | Personaje | Dron | Detalle |
+  | --- | --- | --- |
+  | Carlos | Puro-Dron | Amarillo con gafas oscuras y puro |
+  | Domeki | Canasta Voladora | Su cesta de ropa con hélice |
+  | Henry | Dron Arcoíris | Lleva su bandera arcoíris; balas de colores |
+  | Ignacio | Olla Voladora | Olla con gorro de chef y vapor |
+  | Pablo | Lata Voladora | Su lata energética verde con cinta; dispara más rápido |
+  | Plata | Dron Token | Negro con chip dorado (además de su habilidad ChatGPT Attack) |
+  | Reymar | Capucha Sombra | Capucha morada con ojos enojados; más lento y fuerte |
+  | Ruddy | Dron Llorón J&J | Carita que llora con banderita J&J |
+  | Sergio | Bota Voladora | Su bota verde brillante; dura más |
+  | Will | Dron AFK | Gorra AFK, auriculares y capa roja |
+  Los aliados también lanzan su dron; los enemigos no.
 - **Habilidad especial** (L): se carga con **2 bajas**. Cada personaje tiene la suya (tabla de la sección 2):
   | Personaje | Efecto en el juego |
   | --- | --- |
@@ -108,7 +123,7 @@ Flujo: Menú → protagonista → **mapa** → **historia** (texto del nivel) �
 | 3 | **Lomas de Arena** | Atardecer: dunas rosadas, monte, árboles secos | Curichis (daño), arena movediza (lento), llantas (rebote) | El Rey de las Dunas |
 
 - **Progresión:** más enemigos y más difíciles en cada nivel (Fácil/Normal/Difícil 60/30/10 → 40/40/20 → 25/40/35); vida del jefe ×5 → ×7 → ×9.
-- **Arena del jefe:** una barrera ("NO PASAR") cierra la arena hasta eliminar a todos los enemigos del nivel. Al entrar: cámara fija, el jefe cae con su frase, llegan sus escoltas.
+- **Arena del jefe:** no hace falta eliminar a todos: se puede **esquivar** a los enemigos (no hay choque entre personajes) y llegar al jefe. Al llegar al centro de la arena: cámara fija, la arena se cierra por la izquierda, el jefe cae con su frase y llegan sus escoltas. Los enemigos que quedaron atrás no entran y caen al vencer al jefe.
 - **Jefe:** un amigo "hackeado" al azar, más grande (×1,5), con barra de vida propia. **Fase 2** (≤ 50 % de vida): se enfurece ("¡… SE PICÓ!"), dispara más, usa su habilidad y llegan refuerzos. Al caer, las escoltas se desconectan.
 - **Aliados:** en el combate del jefe llegan **2 aliados al azar** (nunca el protagonista, Henry ni el jefe). Siguen al protagonista y atacan al enemigo más cercano. Si caen, **vuelven a los 5-10 s, como máximo 2 veces cada uno**. El HUD muestra su estado.
 - **Reintento:** si caes en la arena, puedes reintentar **desde el jefe**.

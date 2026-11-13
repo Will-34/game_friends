@@ -40,10 +40,11 @@ export class HudScene extends Phaser.Scene {
         this.grenadeText = this.add.text(left, 70, '', textStyle(13, '#ffffff'));
         this.killsText = this.add.text(left + 140, 70, '', textStyle(13, '#7dff8a'));
         this.weaponText = this.add.text(left, 88, '', textStyle(13, '#ffffff'));
-        this.alliesText = this.add.text(left - 48, 108, '', textStyle(13, '#7dff8a'));
+        this.droneText = this.add.text(left, 106, '', textStyle(13, '#6fe8ff'));
+        this.alliesText = this.add.text(left - 48, 126, '', textStyle(13, '#7dff8a'));
         this.leftGroup = this.add.container(0, 0, [
             this.portrait, this.nameText, hpFrame, this.healthBar, this.healthText,
-            spFrame, this.specialBar, this.specialText, this.grenadeText, this.killsText, this.weaponText, this.alliesText,
+            spFrame, this.specialBar, this.specialText, this.grenadeText, this.killsText, this.weaponText, this.droneText, this.alliesText,
         ]);
 
         // ---- Enemigos restantes
@@ -234,6 +235,20 @@ export class HudScene extends Phaser.Scene {
 
     update(time) {
         if (this.touch) this.touch.poll();
+        // Dron: listo o segundos que faltan (se lee del protagonista; solo se redibuja si cambia)
+        const game = this.scene.get('Game');
+        const p = game && game.player;
+        if (p && p.active) {
+            const left = p.droneSecondsLeft(game.time.now);
+            if (left !== this.lastDroneLeft) {
+                this.lastDroneLeft = left;
+                const name = (p.def.drone && p.def.drone.name) || 'Dron';
+                const key = device.touch ? 'DRON' : 'E';
+                this.droneText.setText(left === 0 ? `${name.toUpperCase()} LISTO (${key})` : `${name}: ${left} s`);
+                this.droneText.setColor(left === 0 ? '#6fe8ff' : '#7f93ad');
+                if (this.touch) this.touch.highlight.drone = left === 0;
+            }
+        }
         // La barra de habilidad parpadea cuando está lista
         const on = this.specialReady && Math.floor(time / 250) % 2 === 0;
         this.specialBar.setFillStyle(on ? 0xffd34d : 0x6fd0ff);

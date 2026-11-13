@@ -129,6 +129,7 @@ export class CharacterSelectScene extends Phaser.Scene {
         const ab = def.ability;
         const lines = ab ? [`Habilidad: ${ab.name}`, ab.description] : [];
         if (ab && !ab.implemented) lines.push('(se activa en una próxima versión)');
+        if (def.drone) lines.push(`Dron (E): ${def.drone.name}`);
         this.abilityText.setText(lines);
     }
 

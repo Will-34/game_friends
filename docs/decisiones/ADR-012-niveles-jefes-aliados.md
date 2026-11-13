@@ -14,7 +14,8 @@ E5 pedía 3 niveles con parallax, obstáculos y progresión. El usuario pidió a
 3. **Terreno especial como propiedades de tile** (`hazard`, `slow`, `bounce`), aplicado por `GameScene.applyTerrain` a cualquier `Fighter`. La IA trata los peligros como un borde (no los pisa).
 4. **El jefe es un personaje existente** (un amigo "hackeado" al azar) con escala ×1,5, tinte, más vida y 2 fases, en vez de un sprite nuevo (respeta la regla de no inventar arte de personajes). El Robot Guardián queda para E6.
 5. **Aliados con la misma IA** (`EnemyAI`) en modo "seguir al líder"; todas las IA apuntan al hostil más cercano. Reaparición de 5 a 10 s, máximo `allyRespawns` veces.
-6. **Arena con barrera:** solo se entra al jefe con el nivel despejado. Así no quedan enemigos rezagados fuera de los límites reducidos del mundo, y el combate empieza limpio. Al morir en la arena se reintenta desde el jefe (`checkpoint: 'boss'`).
+6. **Arena sin barrera** (corrección del usuario, misma fecha): al principio la arena tenía una barrera hasta despejar el nivel; se quitó para poder esquivar a los enemigos. En lugar de reducir los límites del mundo (que encerraría a los rezagados), una pared invisible cierra la arena solo para el protagonista, los aliados y el bando del jefe. Al morir en la arena se reintenta desde el jefe (`checkpoint: 'boss'`).
+7. **Drones temáticos** (`tools/build-drones.php`): accesorios, no personajes; se generan con GD a partir de los rasgos de cada lámina, como pidió el usuario.
 
 ## Consecuencias
 

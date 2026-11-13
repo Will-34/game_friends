@@ -313,5 +313,22 @@
             "explosion": 1,
             "smoke": 2
         }
+    },
+    "drone": {
+        "name": "Canasta Voladora",
+        "description": "Su cesta de ropa con hélice: dispara desde el montón de ropa.",
+        "bulletColor": "#ff8fc8",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

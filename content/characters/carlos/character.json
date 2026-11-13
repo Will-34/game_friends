@@ -313,5 +313,22 @@
             "explosion": 1,
             "smoke": 2
         }
+    },
+    "drone": {
+        "name": "Puro-Dron",
+        "description": "Dron amarillo con gafas oscuras y su puro encendido.",
+        "bulletColor": "#ffd34d",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

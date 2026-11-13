@@ -20,6 +20,7 @@ export const BUTTON_ACTIONS = Object.freeze([
     'grenade',
     'special',
     'switchWeapon',
+    'drone',
     'pause',
 ]);
 

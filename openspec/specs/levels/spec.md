@@ -44,12 +44,17 @@ Cada mapa DEBE poder definir los pesos de dificultad de sus enemigos (`difficult
 - ENTONCES hay más enemigos difíciles (nombre rojo) que en Casco Viejo
 
 ### Requisito: Arena del jefe
-Un mapa con objetos `arena` y `boss` DEBE cerrar la arena con una barrera mientras queden enemigos del nivel; al eliminarlos, la barrera DEBE abrirse. Cuando el protagonista llega al centro de la arena, la cámara y los límites del mundo DEBEN fijarse en ella y DEBE aparecer el jefe con sus escoltas.
+Un mapa con objetos `arena` y `boss` DEBE permitir llegar al jefe sin eliminar a los enemigos del nivel (se pueden esquivar). Cuando el protagonista llega al centro de la arena, la cámara DEBE fijarse en ella, una pared DEBE cerrarla por la izquierda para el protagonista, los aliados y el bando del jefe (no para los enemigos del nivel que quedaron atrás) y DEBE aparecer el jefe con sus escoltas. Durante el combate, el HUD DEBE contar solo a los enemigos del combate; al vencer al jefe DEBEN caer todos los enemigos restantes.
 
-#### Escenario: Barrera
-- DADO un nivel con enemigos vivos
-- CUANDO el protagonista camina hacia la arena
-- ENTONCES se detiene en la barrera y aparece "¡Faltan N, chango! …"
+#### Escenario: Esquivar y llegar al jefe
+- DADO un nivel con 10 enemigos vivos
+- CUANDO el protagonista los esquiva y llega al centro de la arena
+- ENTONCES empieza el combate contra el jefe y el HUD muestra solo al jefe y sus escoltas
+
+#### Escenario: No salir de la arena
+- DADO el combate contra el jefe empezado
+- CUANDO el protagonista camina hacia la izquierda
+- ENTONCES se detiene en el borde de la arena
 
 ### Requisito: Jefe
 El jefe DEBE ser un personaje al azar (nunca el protagonista, Henry ni los aliados), con escala ×1,5, vida = vida base × `bossHealth`, barra en el HUD y frase `bossTaunt`. Al bajar al 50 % DEBE enfurecerse (más agresivo, usa su habilidad) y llamar `bossReinforcements` refuerzos. Al vencerlo, las escoltas restantes DEBEN caer y el nivel DEBE darse por superado.

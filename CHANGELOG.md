@@ -2,6 +2,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.7.0] — 2026-11-13
+
+### E5 — Arena libre y drones
+
+#### Agregado
+- **Dron para todos** (tecla **E** / botón **DRON**): cada personaje lanza su dron temático (Puro-Dron, Canasta Voladora, Dron Arcoíris, Olla Voladora, Lata Voladora, Dron Token, Capucha Sombra, Dron Llorón J&J, Bota Voladora, Dron AFK), con recarga de 20 s. Sprites generados con `tools/build-drones.php`. Los aliados también lo usan.
+- El HUD muestra el estado del dron; la selección de personaje muestra su nombre.
+
+#### Cambiado
+- **Sin barrera** antes del jefe: se puede esquivar a los enemigos y llegar a la arena; el HUD cuenta solo los enemigos del combate.
+
+#### Eliminado
+- Barrera "NO PASAR" y el aviso "¡Faltan N, chango!".
+
 ## [0.6.0] — 2026-11-13
 
 ### E5 — Mapas de Santa Cruz

@@ -320,5 +320,22 @@
             "grenade": 5
         }
     },
-    "portrait": "portrait.png"
+    "portrait": "portrait.png",
+    "drone": {
+        "name": "Dron Token",
+        "description": "Dron negro de empresario tech con chip dorado de TOKEN.",
+        "bulletColor": "#6fe8ff",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
+    }
 }
