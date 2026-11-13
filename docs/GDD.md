@@ -60,7 +60,7 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 | Disparar | J | Botón FUEGO |
 | Granada | U | (E2) |
 | Habilidad especial | L | (E2) |
-| Cambiar arma | Q | Botón ARMA |
+| Cambiar arma | Q | — (en móvil se usa el arma recogida del piso) |
 | Dron | E | Botón DRON |
 | Pausa | Esc / P | Botón II |
 
@@ -98,7 +98,8 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 - **Bajas**: al eliminar a un enemigo aparece "+1" con el símbolo del personaje (Will "AFK", Ignacio 🎂, Carlos 👩, Reymar 😠, Pablo lata verde, Henry 🧔, Sergio bota verde, Plata "TOKEN", Ruddy 😭, Domeki 🧹).
 - **Enemigos**: aparecen en grupos de 2-3, cada uno con dificultad aleatoria (Fácil verde, Normal amarillo, Difícil rojo). Al acertarte hacen su gesto (su símbolo). Usan su habilidad de vez en cuando, **nunca dos a la vez**.
 - Todos los personajes muestran su nombre encima; los enemigos, también una mini barra de vida.
-- **Armas** (Q / botón ARMA para cambiar):
+- **Regeneración del jugador**: +5 de vida cada 2 s tras 2,5 s sin recibir daño.
+- **Armas** (Q para cambiar en PC; en móvil, el arma recogida se equipa sola y al acabarse la munición vuelve la pistola):
   | Arma | Munición | Características |
   | --- | --- | --- |
   | Pistola | Infinita | Usa los stats de cada personaje |

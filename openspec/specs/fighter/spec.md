@@ -87,7 +87,9 @@ Todo Fighter DEBE mostrar su nombre sobre la cabeza; los que no son el protagoni
 - ENTONCES se ve "WILL" en rojo sobre él con su barra de vida
 
 ### Requisito: Armas e inventario
-Un Fighter DEBE disparar con su arma actual (valores de `weapons.json`; la pistola con sus propios stats), gastar munición si es limitada, volver a la pistola al agotarla y cambiar de arma con `switchWeapon`. Todas las armas DEBEN ser de largo alcance (pistola, metralleta, láser y rifle de plasma).
+Un Fighter DEBE disparar con su arma actual (valores de `weapons.json`; la pistola con sus propios stats), gastar munición si es limitada, volver a la pistola al agotarla y cambiar de arma con `switchWeapon`. Todas las armas DEBEN ser de largo alcance (pistola, metralleta, láser y rifle de plasma). El arma recogida DEBE equiparse sola.
+
+El personaje del jugador DEBE regenerar vida poco a poco (+5 cada 2 s) tras 2,5 s sin recibir daño, sin superar su vida máxima.
 
 #### Escenario: Láser
 - DADO el protagonista con el láser (60 cargas)

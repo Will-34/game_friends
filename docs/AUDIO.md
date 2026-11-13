@@ -5,7 +5,7 @@
 - **Efectos provisionales sintetizados** con Web Audio API (`src/systems/SynthSfx.js`): `shoot`, `jump`, `hit`, `explosion`, `death`, `ui`, `victory`. No usan archivos.
 - **Música:** preparada pero sin archivos todavía (las escenas quedan en silencio).
 - Silencio global: tecla **M**, botón 🔊 del HUD o "SONIDO" en el menú.
-- El audio se desbloquea con el primer toque, clic o tecla (requisito de iOS y Chrome).
+- El audio se desbloquea con un toque, clic o tecla (requisito de iOS y Chrome). Se reintenta en cada gesto hasta que el contexto quede activo, con búfer silencioso para iOS, `navigator.audioSession.type = "playback"` (el interruptor de silencio del iPhone no lo apaga en iOS 17+) y reanudación al volver a la pestaña. Los efectos usan el mismo AudioContext de Phaser.
 
 ## Prohibido
 

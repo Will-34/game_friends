@@ -7,7 +7,7 @@ Música y efectos legales, controlables y compatibles con las restricciones de l
 ## Requisitos
 
 ### Requisito: Desbloqueo
-El audio DEBE desbloquearse con el primer toque, clic o tecla.
+El audio DEBE desbloquearse con un toque, clic o tecla, reintentando en cada gesto hasta que el AudioContext esté en ejecución (también en iOS y Android), y DEBE reanudarse al volver a la página.
 
 #### Escenario: iOS
 - DADO un iPhone recién cargado el juego
