@@ -71,9 +71,9 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | F6 | Dejarse disparar | El enemigo que acierta muestra su símbolo (como mucho cada 2,5 s) |
 | F7 | Esperar cerca de enemigos | De vez en cuando UN enemigo usa su habilidad (aviso en rojo); nunca dos a la vez |
 | F8 | Enemigo difícil (★★) a media distancia | A veces lanza granadas |
-| F9 | Recoger una caja de arma (M, E, L) | Se equipa; el HUD muestra nombre y munición; Q cambia entre las armas |
+| F9 | Recoger una caja de arma (M, L, P) | Se equipa; el HUD muestra nombre y munición; Q cambia entre las armas |
 | F10 | Gastar toda la munición | Vuelve a la pistola |
-| F11 | Lanzallamas contra un grupo | Las llamas crecen y atraviesan, dañando a varios |
+| F11 | Láser contra un grupo alineado | El rayo atraviesa y daña a varios; Rifle de Plasma: esfera lila lenta y potente |
 | F12 | Recoger vida / granadas | +30 vida / +3 granadas con aviso flotante |
 | F13 | Subirse a una plataforma sobre un enemigo | Te persigue o te dispara hacia arriba; salta paredes |
 | F14 | Ganar o perder | El cartel muestra personaje, bajas y tiempo |

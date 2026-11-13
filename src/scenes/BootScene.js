@@ -100,14 +100,17 @@ export class BootScene extends Phaser.Scene {
             g.fillStyle(0xff9a1f, 1).fillRoundedRect(0, 0, 18, 7, 3);
             g.fillStyle(0xfff3a0, 1).fillRect(10, 2, 7, 3);
         });
-        make('projectile-pellet', 7, 7, (g) => {
-            g.fillStyle(0xffe066, 1).fillCircle(3.5, 3.5, 3.5);
-            g.fillStyle(0xffffff, 1).fillCircle(3, 3, 1.5);
+        // Láser: rayo largo y fino con brillo (atraviesa enemigos)
+        make('projectile-laser', 36, 6, (g) => {
+            g.fillStyle(0x4dfcff, 0.35).fillRoundedRect(0, 0, 36, 6, 3);
+            g.fillStyle(0x4dfcff, 1).fillRect(2, 1, 32, 4);
+            g.fillStyle(0xffffff, 1).fillRect(6, 2, 26, 2);
         });
-        make('projectile-flame', 16, 16, (g) => {
-            g.fillStyle(0xff4d1a, 0.85).fillCircle(8, 8, 8);
-            g.fillStyle(0xff9a1f, 0.95).fillCircle(8, 8, 5.5);
-            g.fillStyle(0xfff0a0, 1).fillCircle(8, 8, 2.5);
+        // Plasma: esfera de energía lila
+        make('projectile-plasma', 16, 16, (g) => {
+            g.fillStyle(0x9b4dff, 0.45).fillCircle(8, 8, 8);
+            g.fillStyle(0xc77dff, 1).fillCircle(8, 8, 5.5);
+            g.fillStyle(0xffffff, 1).fillCircle(7, 7, 2.5);
         });
     }
 

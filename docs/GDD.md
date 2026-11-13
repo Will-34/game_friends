@@ -103,8 +103,9 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
   | --- | --- | --- |
   | Pistola | Infinita | Usa los stats de cada personaje |
   | Metralleta | 150 | Muy rápida, poco daño, algo de dispersión |
-  | Escopeta | 24 | 6 perdigones en abanico, corto alcance |
-  | Lanzallamas | 160 | Corto alcance, atraviesa enemigos |
+  | Láser | 60 | Rayo muy rápido de largo alcance; atraviesa enemigos |
+  | Rifle de Plasma | 30 | Disparo lento, mucho daño, largo alcance |
+  Solo armas de **largo alcance** (decisión del usuario: sin escopeta ni lanzallamas).
   Al agotar la munición se vuelve a la pistola. Valores en `content/config/weapons.json`.
 - **Objetos**: los enemigos sueltan a veces (40 %) una caja de arma, vida (+30) o granadas (+3).
 - **IA**: los enemigos patrullan, reaccionan al verte (más rápido cuanto más difíciles), te persiguen sin abandonar su zona, saltan y te disparan hacia arriba si estás encima.

@@ -1,5 +1,5 @@
 {
-  "_comment": "Armas y objetos que sueltan los enemigos. Ver docs/GDD.md (Combate) y src/entities/Fighter.js. La pistola usa los stats de cada personaje (character.json); el resto tiene munición limitada.",
+  "_comment": "Armas y objetos que sueltan los enemigos. Solo armas de largo alcance (decisión del usuario 2026-11-13). Ver docs/GDD.md (Combate) y src/entities/Fighter.js. La pistola usa los stats de cada personaje (character.json); el resto tiene munición limitada.",
   "default": "pistola",
   "weapons": {
     "pistola": {
@@ -20,42 +20,52 @@
       "texture": "projectile-heavy",
       "lifespanMs": 1200
     },
-    "escopeta": {
-      "name": "Escopeta",
-      "letter": "E",
-      "color": "#ff6b6b",
-      "fireRateMs": 620,
-      "damage": 9,
-      "bulletSpeed": 600,
-      "spreadDeg": 22,
-      "pellets": 6,
-      "ammo": 24,
-      "texture": "projectile-pellet",
-      "lifespanMs": 380
-    },
-    "lanzallamas": {
-      "name": "Lanzallamas",
+    "laser": {
+      "name": "Láser",
       "letter": "L",
-      "color": "#ff8a1f",
-      "fireRateMs": 55,
-      "damage": 3,
-      "bulletSpeed": 330,
-      "spreadDeg": 8,
+      "color": "#4dfcff",
+      "fireRateMs": 150,
+      "damage": 9,
+      "bulletSpeed": 1300,
+      "spreadDeg": 0,
       "pellets": 1,
-      "ammo": 160,
-      "texture": "projectile-flame",
-      "lifespanMs": 420,
-      "pierce": true,
-      "grow": 2.4
+      "ammo": 60,
+      "texture": "projectile-laser",
+      "lifespanMs": 1100,
+      "pierce": true
+    },
+    "plasma": {
+      "name": "Rifle de Plasma",
+      "letter": "P",
+      "color": "#c77dff",
+      "fireRateMs": 480,
+      "damage": 28,
+      "bulletSpeed": 900,
+      "spreadDeg": 0,
+      "pellets": 1,
+      "ammo": 30,
+      "texture": "projectile-plasma",
+      "lifespanMs": 1500
     }
   },
   "drops": {
     "chance": 0.4,
     "lifetimeMs": 15000,
     "table": [
-      { "type": "weapon", "weight": 4 },
-      { "type": "health", "weight": 3, "amount": 30 },
-      { "type": "grenades", "weight": 3, "amount": 3 }
+      {
+        "type": "weapon",
+        "weight": 4
+      },
+      {
+        "type": "health",
+        "weight": 3,
+        "amount": 30
+      },
+      {
+        "type": "grenades",
+        "weight": 3,
+        "amount": 3
+      }
     ]
   }
 }
