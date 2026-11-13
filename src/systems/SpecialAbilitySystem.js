@@ -6,6 +6,8 @@
  * La carga (2 bajas) la gestiona el Fighter; la frecuencia de los enemigos, EnemyAbilityDirector.
  */
 import { getAbility } from '../abilities/registry.js';
+import { DroneAbility } from '../abilities/drone.js';
+import { droneKey, animKey } from './ContentLoader.js';
 import { showAbilityBanner } from './FloatingText.js';
 import { audio } from './AudioManager.js';
 
@@ -23,6 +25,34 @@ export class SpecialAbilitySystem {
     canUse(fighter) {
         const ab = this.abilityOf(fighter);
         return !!(ab && getAbility(ab.type));
+    }
+
+    /** Dron por defecto si el personaje no define el suyo en character.json → "drone". */
+    static get DEFAULT_DRONE() {
+        return { name: 'Dron', bulletColor: '#7dffb0', cooldownMs: 20000, params: { durationMs: 8000, fireRateMs: 320, range: 460, damage: 7 } };
+    }
+
+    /** Dron propio del personaje (acción DRON, todos los personajes). */
+    droneOf(fighter) {
+        return fighter.def.drone || SpecialAbilitySystem.DEFAULT_DRONE;
+    }
+
+    /** Lanza el dron del personaje; devuelve true si salió. */
+    activateDrone(fighter) {
+        const d = this.droneOf(fighter);
+        const id = fighter.def.id;
+        const ok = DroneAbility.activate(fighter, {
+            ...(d.params || {}),
+            bulletColor: d.bulletColor,
+            texture: d.image ? droneKey(id) : null,
+            anim: d.image ? animKey(id, 'drone') : null,
+            slot: 1,
+        });
+        if (ok) {
+            showAbilityBanner(this.scene, fighter, d.name || 'Dron', fighter.role === 'ENEMY' ? '#ff8a8a' : '#6fe8ff');
+            audio.sfx('special');
+        }
+        return ok;
     }
 
     /** Activa la habilidad; devuelve true si se activó. */

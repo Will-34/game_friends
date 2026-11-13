@@ -68,6 +68,11 @@ EnemyAI ──────────┘
 - El jefe es un personaje al azar con rol `ENEMY`, escala ×1,5 (`Fighter` escala la boca del arma, el nombre y el aura; el cuerpo de Arcade escala solo) y 2 fases.
 - Los aliados son `ALLY` (bando `heroes`) con la misma `EnemyAI` en modo "seguir al líder". Todas las IA apuntan al **hostil más cercano** (`GameScene.nearestHostile`).
 - `EnemyAbilityDirector` se usa dos veces: una para enemigos y otra para aliados.
+- La arena no tiene barrera: el combate empieza al llegar a su centro; `closeArena` crea una pared invisible a la izquierda que no afecta a los enemigos del nivel (`isLevelEnemy`).
+
+## Drones
+
+- Acción abstracta `drone` → `Fighter.tryUseDrone` (recarga `cooldownMs`) → `SpecialAbilitySystem.activateDrone` → `DroneAbility` (`src/abilities/drone.js`) con el sprite `drone:<id>` y la animación `<id>_drone`, cargados por `ContentLoader` desde `character.json → drone`. La habilidad de Plata usa el mismo `DroneAbility`.
 
 ## Audio
 

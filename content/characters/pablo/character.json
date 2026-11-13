@@ -314,5 +314,22 @@
             "explosion": 1,
             "smoke": 2
         }
+    },
+    "drone": {
+        "name": "Lata Voladora",
+        "description": "Su lata energética verde con hélice y cinta en la cabeza; dispara rápido.",
+        "bulletColor": "#7dff5a",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 270,
+            "range": 460,
+            "damage": 6,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

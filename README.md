@@ -74,6 +74,7 @@ Las teclas se configuran en [content/config/controls.json](content/config/contro
 ```bash
 php tools/sprite-cutter.php tools/config/<id>.json [--debug]    # lámina → spritesheet, retrato, efectos y character.json
 php tools/build-level.php --all                                 # niveles de Santa Cruz (Tiled + arte generado)
+php tools/build-drones.php                                      # drones temáticos de cada personaje
 php tools/build-test-map.php tools/config/map-prueba.json       # mapa de prueba en formato Tiled
 php tools/build-catalog.php                                     # regenera content/catalog.json (respaldo)
 ```

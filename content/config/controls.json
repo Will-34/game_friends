@@ -33,6 +33,9 @@
     "switchWeapon": [
       "Q"
     ],
+    "drone": [
+      "E"
+    ],
     "pause": [
       "ESC",
       "P"
@@ -90,6 +93,13 @@
         "bottom": 170,
         "radius": 28,
         "enabled": true
+      },
+      {
+        "action": "drone",
+        "label": "DRON",
+        "right": 262,
+        "bottom": 262,
+        "radius": 30
       }
     ]
   }

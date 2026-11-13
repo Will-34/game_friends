@@ -70,6 +70,7 @@ Genera `content/characters/<id>/spritesheet.png`, `effects.png`, `portrait.png` 
 
 - `body`, `crouchBody` y `muzzle` se miden desde los **pies** (origen). Ajústalos con el visor (`?debug=1` → Visor de animaciones): el rectángulo verde es el cuerpo y los puntos amarillos son las bocas del arma.
 - `canBeEnemy: false` impide que aparezca como enemigo aleatorio (Henry).
+- `drone` (opcional): su dron propio para la acción DRON (E): `name`, `description`, `bulletColor` (`#rrggbb` o `rainbow`), `cooldownMs`, `params` (`durationMs`, `fireRateMs`, `range`, `damage`, `bulletSpeed`) y el sprite `image` (`frameWidth`, `frameHeight`, `frameCount`). Para dibujarlo, añade su diseño en `tools/lib/drone-art.php` y ejecuta `php tools/build-drones.php <id>` (respeta los campos de diseño que ya existan). Sin `drone`, usa un dron genérico.
 - Animaciones que usa el juego: `idle`, `run`, `jump`, `fall`, `crouch`, `crouch_fire`, `fire`, `fire_up`, `hurt`, `death`, `victory` (y `grenade`, `special` en E4). Si falta alguna, el `Fighter` usa `idle`.
 
 ## 5. Registrar y verificar

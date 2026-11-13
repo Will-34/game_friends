@@ -14,6 +14,7 @@ import { PATHS } from '../config.js';
 export const textureKey = (charId) => `char:${charId}`;
 export const effectsKey = (charId) => `fx:${charId}`;
 export const portraitKey = (charId) => `portrait:${charId}`;
+export const droneKey = (charId) => `drone:${charId}`;
 export const animKey = (charId, anim) => `${charId}_${anim}`;
 export const mapKey = (mapId) => `map:${mapId}`;
 export const mapImageKey = (mapId, image) => `map:${mapId}:${image}`;
@@ -107,6 +108,12 @@ export class ContentLoader {
             if (def.portrait) {
                 load.image(portraitKey(def.id), def.basePath + def.portrait);
             }
+            if (def.drone && def.drone.image) {
+                load.spritesheet(droneKey(def.id), def.basePath + def.drone.image, {
+                    frameWidth: def.drone.frameWidth,
+                    frameHeight: def.drone.frameHeight,
+                });
+            }
             if (def.effects) {
                 load.spritesheet(effectsKey(def.id), def.basePath + def.effects.image, {
                     frameWidth: def.effects.frameWidth,
@@ -131,6 +138,15 @@ export class ContentLoader {
     /** Crea las animaciones de Phaser de un personaje a partir de su character.json. */
     static createAnimations(scene, def) {
         const anims = scene.anims;
+        // Dron propio (acción DRON): hélice animada
+        if (def.drone && def.drone.image && !anims.exists(animKey(def.id, 'drone')) && scene.textures.exists(droneKey(def.id))) {
+            anims.create({
+                key: animKey(def.id, 'drone'),
+                frames: anims.generateFrameNumbers(droneKey(def.id), { start: 0, end: (def.drone.frameCount || 1) - 1 }),
+                frameRate: 14,
+                repeat: -1,
+            });
+        }
         for (const [name, a] of Object.entries(def.animations)) {
             const key = animKey(def.id, name);
             if (anims.exists(key)) continue;

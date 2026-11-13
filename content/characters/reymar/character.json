@@ -311,5 +311,22 @@
         "frames": {
             "smoke": 0
         }
+    },
+    "drone": {
+        "name": "Capucha Sombra",
+        "description": "Capucha morada con ojos enojados; dispara más lento pero más fuerte.",
+        "bulletColor": "#b06bff",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 400,
+            "range": 460,
+            "damage": 10,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

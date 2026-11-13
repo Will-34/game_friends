@@ -316,5 +316,22 @@
             "explosion": 1,
             "smoke": 2
         }
+    },
+    "drone": {
+        "name": "Dron Arcoíris",
+        "description": "Dron que lleva su bandera arcoíris ondeando; dispara balas de colores.",
+        "bulletColor": "rainbow",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 300,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

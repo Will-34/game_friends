@@ -7,7 +7,7 @@ Que teclado, táctil e IA controlen a cualquier personaje mediante las mismas ac
 ## Requisitos
 
 ### Requisito: Acciones abstractas
-El sistema DEBE expresar toda entrada como las acciones `moveX`, `jump`, `shoot`, `crouch`, `aimUp`, `grenade`, `special`, `switchWeapon` y `pause`, con estado mantenido y flancos de pulsación/liberación calculados en un único lugar.
+El sistema DEBE expresar toda entrada como las acciones `moveX`, `jump`, `shoot`, `crouch`, `aimUp`, `grenade`, `special`, `switchWeapon`, `drone` y `pause`, con estado mantenido y flancos de pulsación/liberación calculados en un único lugar.
 
 #### Escenario: Flanco de salto
 - DADO que el botón de salto estaba suelto
@@ -52,3 +52,11 @@ Las entidades NO DEBEN conocer el origen de sus acciones; un controlador DEBE po
 - DADO un Fighter con rol ENEMY y un `Controller([EnemyAI])`
 - CUANDO la IA reporta `shoot`
 - ENTONCES el Fighter dispara con la misma lógica que el jugador
+
+### Requisito: Acción de dron
+DEBE existir la acción abstracta `drone`, asignada por defecto a la tecla E y al botón táctil DRON (configurables en `controls.json`), que todas las fuentes (teclado, táctil, IA) pueden producir.
+
+#### Escenario: Dron con teclado
+- DADO una partida con el dron listo
+- CUANDO se pulsa E
+- ENTONCES `pressed.drone` es verdadero en ese frame y el protagonista lanza su dron

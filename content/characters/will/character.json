@@ -304,5 +304,22 @@
             ],
             "placeholder": false
         }
+    },
+    "drone": {
+        "name": "Dron AFK",
+        "description": "Gorra AFK, auriculares y capa roja.",
+        "bulletColor": "#ff5a5a",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

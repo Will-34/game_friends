@@ -85,6 +85,9 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         this.inventory = [{ id: (opts.weapons && opts.weapons.default) || 'pistola', ammo: Number.POSITIVE_INFINITY }];
         this.weaponIdx = 0;
         this.specialCharge = 0;
+        // Dron propio (acción DRON): listo al empezar, luego con recarga
+        this.droneReadyAt = 0;
+        this.droneCooldownMs = (def.drone && def.drone.cooldownMs) || 20000;
         this.kills = 0;
         this.lastAttacker = null;
         /** @type {Array<object>} buffs activos */
@@ -244,6 +247,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
             }
             if (a.pressed.grenade) this.throwGrenade(time);
             if (a.pressed.special) this.tryUseSpecial(time);
+            if (a.pressed.drone) this.tryUseDrone(time);
             if (a.pressed.switchWeapon) this.cycleWeapon();
         } else {
             body.setVelocityX(body.velocity.x * 0.88);
@@ -390,6 +394,20 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         this.specialPoseUntil = time + Math.min(700, this.animDuration('special'));
         this.emit(FIGHTER_EVENTS.STATS, this);
         return true;
+    }
+
+/** Lanza su dron si ya se recargó. */
+    tryUseDrone(time) {
+        if (!this.specials || this.dead || time < this.droneReadyAt) return false;
+        if (!this.specials.activateDrone(this)) return false;
+        this.droneReadyAt = time + this.droneCooldownMs;
+        this.emit(FIGHTER_EVENTS.STATS, this);
+        return true;
+    }
+
+    /** Segundos que faltan para el dron (0 = listo). */
+    droneSecondsLeft(time) {
+        return Math.max(0, Math.ceil((this.droneReadyAt - time) / 1000));
     }
 
     updateFlash(time) {

@@ -303,5 +303,22 @@
             ],
             "placeholder": false
         }
+    },
+    "drone": {
+        "name": "Dron Llorón J&J",
+        "description": "Carita que llora con su banderita J&J.",
+        "bulletColor": "#6fb8ff",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 8000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

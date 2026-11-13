@@ -304,5 +304,22 @@
             ],
             "placeholder": false
         }
+    },
+    "drone": {
+        "name": "Bota Voladora",
+        "description": "Su bota verde brillante con hélice; dura más.",
+        "bulletColor": "#39ff6a",
+        "cooldownMs": 20000,
+        "params": {
+            "durationMs": 10000,
+            "fireRateMs": 320,
+            "range": 460,
+            "damage": 7,
+            "bulletSpeed": 560
+        },
+        "image": "drone.png",
+        "frameWidth": 48,
+        "frameHeight": 40,
+        "frameCount": 2
     }
 }

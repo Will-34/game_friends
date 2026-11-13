@@ -391,57 +391,37 @@ export class GameScene extends Phaser.Scene {
 
     setupArena() {
         this.bossStarted = false;
-        this.arenaOpen = false;
-        this.nextHintAt = 0;
         if (!this.hasBoss) return;
         this.arenaX = this.arenaObj.x - this.map.tileWidth / 2;
-        const h = this.map.heightInPixels;
-        const groundY = this.arenaObj.y;
-
-        // Barrera: cinta de peligro + campo semitransparente; solo frena al protagonista
-        const g = this.add.graphics().setDepth(8);
-        g.fillStyle(0xffd34d, 0.12).fillRect(this.arenaX - 10, 0, 20, h);
-        for (let y = groundY - 220, i = 0; y < groundY; y += 16, i++) {
-            g.fillStyle(i % 2 ? 0x1b1b1b : 0xffd34d, 1).fillRect(this.arenaX - 6, y, 12, 16);
-        }
-        g.fillStyle(0xffd34d, 1).fillRect(this.arenaX - 70, groundY - 150, 140, 22);
-        const sign = this.add.text(this.arenaX, groundY - 139, 'NO PASAR', textStyle(14, '#1b1b1b', { stroke: '#ffd34d', strokeThickness: 1 })).setOrigin(0.5).setDepth(8);
-        this.barrierGfx = [g, sign];
-        this.barrier = this.add.zone(this.arenaX - 10, 0, 20, h).setOrigin(0, 0);
-        this.physics.add.existing(this.barrier, true);
-        this.barrierCollider = this.physics.add.collider(this.player, this.barrier);
-
-        if (this.checkpoint === 'boss' || this.aliveLevelEnemies() === 0) this.openArena(true);
+        // Sin barrera: se puede llegar al jefe sin eliminar a todos (esquivándolos). Una flecha marca la arena.
+        this.arrow = this.add.text(this.arenaX + 90, this.arenaObj.y - 150, 'JEFE →', textStyle(26, '#ffd34d')).setOrigin(0.5).setDepth(40);
+        this.tweens.add({ targets: this.arrow, x: this.arrow.x + 24, duration: 450, yoyo: true, repeat: -1 });
     }
 
     aliveLevelEnemies() {
         return this.enemies.filter((e) => e.isLevelEnemy && !e.dead).length;
     }
 
-    /** El nivel quedó despejado: cae la barrera y una flecha señala al jefe. */
-    openArena(silent = false) {
-        if (this.arenaOpen || !this.hasBoss) return;
-        this.arenaOpen = true;
-        if (this.barrierCollider) this.physics.world.removeCollider(this.barrierCollider);
-        if (this.barrier) this.barrier.destroy();
-        for (const o of this.barrierGfx || []) this.tweens.add({ targets: o, alpha: 0, duration: 500, onComplete: () => o.destroy() });
-        if (!silent) this.message('¡ZONA DESPEJADA! Avanzá hacia el jefe →', '#7dff8a');
-        this.arrow = this.add.text(this.arenaX + 90, this.arenaObj.y - 150, 'JEFE →', textStyle(26, '#ffd34d')).setOrigin(0.5).setDepth(40);
-        this.tweens.add({ targets: this.arrow, x: this.arrow.x + 24, duration: 450, yoyo: true, repeat: -1 });
+    /** Enemigos que cuentan en el HUD: durante el jefe, solo los del combate. */
+    countedEnemies() {
+        return this.enemies.filter((e) => !e.dead && (!this.bossStarted || !e.isLevelEnemy)).length;
     }
 
-    /** Aviso si el protagonista intenta entrar a la arena antes de tiempo. */
-    checkArena(time) {
+    /** El combate empieza al llegar al centro de la arena. */
+    checkArena() {
         if (!this.hasBoss || this.bossStarted || this.ended) return;
-        if (!this.arenaOpen) {
-            if (this.player.x > this.arenaX - 60 && time >= this.nextHintAt) {
-                this.nextHintAt = time + 3000;
-                const n = this.aliveLevelEnemies();
-                this.message(`¡Faltan ${n}, chango! Bajalos a todos primero.`, '#ffb3b3');
-            }
-            return;
-        }
         if (this.player.x >= this.arenaX + GAME_WIDTH / 2 - 40 && !this.player.dead) this.startBoss();
+    }
+
+    /**
+     * Cierra la arena por la izquierda con una pared invisible para el protagonista, los aliados y el bando
+     * del jefe. Los enemigos del nivel que quedaron atrás no la cruzan ni quedan encerrados.
+     */
+    closeArena() {
+        const h = this.map.heightInPixels;
+        this.arenaWall = this.add.zone(this.arenaX - 20, 0, 20, h).setOrigin(0, 0);
+        this.physics.add.existing(this.arenaWall, true);
+        this.physics.add.collider(this.fighters, this.arenaWall, null, (f) => !f.isLevelEnemy, this);
     }
 
     /** Empieza el combate: cámara fija en la arena, jefe, escoltas y aliados. */
@@ -450,7 +430,7 @@ export class GameScene extends Phaser.Scene {
         if (this.arrow) this.arrow.destroy();
         const h = this.map.heightInPixels;
         const ax = this.arenaX;
-        this.physics.world.setBounds(ax, 0, GAME_WIDTH, h);
+        this.closeArena();
         const cam = this.cameras.main;
         cam.stopFollow();
         cam.pan(ax + GAME_WIDTH / 2, cam.midPoint.y, 600, 'Sine.easeInOut', true, (c, progress) => {
@@ -495,7 +475,7 @@ export class GameScene extends Phaser.Scene {
                 if (i === 0) showSpeech(this, a, '¡Llegamos, chango! ¡Vamos con todo!', 2400, '#14532d');
             });
         });
-        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.aliveEnemies());
+        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
     }
 
     /** Escoltas/refuerzos del jefe: caen desde arriba a los lados de la arena. */
@@ -511,7 +491,7 @@ export class GameScene extends Phaser.Scene {
                 const x = this.arenaX + GAME_WIDTH / 2 + side * (200 + Math.random() * 180);
                 const e = this.spawnEnemy(def, x, this.bossObj.y - 300, 160);
                 e.labelOffset = (i % 2) * 13;
-                this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.aliveEnemies());
+                this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
             });
         });
     }
@@ -593,7 +573,15 @@ export class GameScene extends Phaser.Scene {
         if (!this.ended) {
             this.enemyDirector.update(time);
             if (this.allies.length) this.allyDirector.update(time);
-            this.checkArena(time);
+            this.checkArena();
+            if (this.allies.length && time >= (this.nextAllyDroneAt || 0)) {
+                // Los aliados lanzan su dron cuando lo tienen listo y hay un enemigo cerca
+                this.nextAllyDroneAt = time + 1500;
+                for (const a of this.allies) {
+                    const t = !a.dead && this.nearestHostile(a);
+                    if (t && Math.abs(t.x - a.x) < 450 && Math.random() < 0.5) a.tryUseDrone(time);
+                }
+            }
             if (this.allySlots.length && time >= (this.nextAllyStatusAt || 0)) {
                 this.nextAllyStatusAt = time + 250;
                 this.emitAllies();
@@ -612,7 +600,7 @@ export class GameScene extends Phaser.Scene {
     emitInitialState() {
         this.events.emit(GAME_EVENTS.PLAYER_READY, this.player);
         this.events.emit(GAME_EVENTS.PLAYER_HEALTH, this.player.health, this.player.stats.maxHealth);
-        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.aliveEnemies());
+        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
         this.events.emit(GAME_EVENTS.PLAYER_STATS, this.player);
     }
 
@@ -637,7 +625,7 @@ export class GameScene extends Phaser.Scene {
             }
             if (!enemy.isBoss) this.pickups.maybeDrop(enemy.x, enemy.y - 30);
         }
-        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.aliveEnemies());
+        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
         // Tras la animación de muerte: humo y desaparición
         this.time.delayedCall(enemy.animDuration('death') + 700, () => {
             if (!enemy.active) return;
@@ -653,7 +641,7 @@ export class GameScene extends Phaser.Scene {
             this.events.emit(GAME_EVENTS.BOSS_END);
             this.winLevel();
         } else if (this.hasBoss) {
-            if (!this.bossStarted && this.aliveLevelEnemies() === 0) this.openArena();
+            if (!this.bossStarted && this.aliveLevelEnemies() === 0) this.message('¡ZONA DESPEJADA! Avanzá hacia el jefe →', '#7dff8a');
         } else if (this.aliveEnemies() === 0) {
             this.winLevel();
         }

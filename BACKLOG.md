@@ -223,6 +223,8 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 | H-058 | 2 aliados aleatorios contra el jefe (vuelven a los 5-10 s, máx. 2 veces) | Hecho |
 | H-059 | Historia antes de cada nivel y jerga cruceña | Hecho |
 | H-063 | Prueba humana del combate contra el jefe y equilibrio | Pendiente |
+| H-064 | Arena sin barrera: se puede esquivar a los enemigos y llegar al jefe | Hecho |
+| H-065 | Dron temático para todos los personajes (E / botón DRON) | Hecho |
 
 - Decisiones del usuario (2026-11-13): mapas de Santa Cruz; la UAGRM en lugar del mercado Los Pozos (con la foto de la Facultad de Humanidades como referencia); cada mapa con su jefe; el jefe tiene escoltas aleatorias; 2 aliados aleatorios contra el jefe que vuelven a los 5-10 s, como máximo 2 veces; jerga cruceña; arte "a mi manera" (generado) por ahora.
 - H-050 (hecho): `MapSelectScene`: tarjetas con miniatura (fondos del mapa), nivel, nombre, subtítulo, dificultad (★) y jefe. La "Zona de pruebas" solo en desarrollo.
@@ -231,6 +233,8 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 - H-054 (hecho): pesos Fácil/Normal/Difícil por mapa (60/30/10 → 40/40/20 → 25/40/35), más grupos y vida del jefe ×5 → ×7 → ×9.
 - H-057 (hecho): barrera hasta despejar el nivel; jefe = amigo al azar ×1,5 con frase, barra propia, fase 2 al 50 % (refuerzos, habilidad); reintento desde el jefe.
 - H-058 (hecho): aliados con `EnemyAI` en modo "seguir al líder"; todas las IA apuntan al hostil más cercano; estado en el HUD.
+- H-064 (hecho, pedido del usuario): se quitó la barrera "NO PASAR"; el jefe empieza al llegar al centro de la arena; pared invisible solo para el combate; los rezagados caen al vencer al jefe.
+- H-065 (hecho, pedido del usuario): acción `drone` (E / DRON), recarga 20 s; 10 drones generados con `tools/build-drones.php` según cada personaje (Pablo lata, Henry bandera arcoíris, Sergio bota verde, Will AFK…). Los aliados también lo usan; los enemigos no.
 - H-059 (hecho): `StoryScene` con el texto `story` de cada mapa; frases de jefes y aliados; carteles "¡QUÉ MACANA!" / "¡FUERZA CAMBA!".
 
 ## E6 — Final
