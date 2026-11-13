@@ -15,6 +15,7 @@ function build_catalog($contentDir)
         'version' => 1,
         'characters' => array(),
         'maps' => array(),
+        'bosses' => array(),
         'warnings' => array(),
     );
 
@@ -31,6 +32,21 @@ function build_catalog($contentDir)
             'name' => isset($data['name']) ? (string)$data['name'] : $id,
             'path' => 'content/characters/' . $id . '/',
             'placeholder' => !empty($data['placeholder']),
+        );
+    }
+
+    // ---- Jefes y robots (E6): personajes no jugables en content/bosses/ ----
+    foreach (list_subdirs($contentDir . '/bosses') as $id) {
+        $file = $contentDir . '/bosses/' . $id . '/character.json';
+        $data = read_json_file($file);
+        if ($data === null) {
+            $catalog['warnings'][] = "bosses/$id: character.json ausente o inválido";
+            continue;
+        }
+        $catalog['bosses'][] = array(
+            'id' => $id,
+            'name' => isset($data['name']) ? (string)$data['name'] : $id,
+            'path' => 'content/bosses/' . $id . '/',
         );
     }
 

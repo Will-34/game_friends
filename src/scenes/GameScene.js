@@ -25,6 +25,7 @@ import { DifficultyManager, DIFFICULTY_TIERS } from '../systems/DifficultyManage
 import { SPECIAL_CHARGE_PER_KILL } from '../entities/Fighter.js';
 import { showKillPopup, showEmote, showSpeech } from '../systems/FloatingText.js';
 import { levelInfo, nextLevelId } from '../systems/LevelCatalog.js';
+import { RobotBossDirector } from '../systems/RobotBossDirector.js';
 import { textStyle } from './ui.js';
 
 /** Granadas iniciales del protagonista. */
@@ -60,6 +61,9 @@ export class GameScene extends Phaser.Scene {
         this.boss = null;
         this.bossEnraged = false;
         this.captive = null;
+        this.robotDirector = null;
+        this.nextMinionAt = 0;
+        this.minionsAnnounced = false;
     }
 
     create() {
@@ -227,7 +231,7 @@ export class GameScene extends Phaser.Scene {
             modsOverride: mods,
             nameColor: boss ? NAME_COLORS.boss : NAME_COLORS.enemy,
             title: opts.title || `${def.name.toUpperCase()}${DIFFICULTY_MARK[tier.id] || ''}`,
-            scale: boss ? BOSS_SCALE : 1,
+            scale: boss ? def.bossScale ?? BOSS_SCALE : 1,
         });
         self = enemy;
         enemy.ai = ai;
@@ -452,20 +456,29 @@ export class GameScene extends Phaser.Scene {
         // Reparto: aliados primero (para que el jefe y las escoltas no los repitan)
         const nAllies = Math.max(0, this.prop('allies', 2));
         const allyIds = this.roles.pickIds(this.content.characters, nAllies);
-        const [bossId] = this.roles.pickEnemyIds(this.content.characters, 1, allyIds);
+        // bossType: jefe fijo de content/bosses/ (Robot Guardián); si no, un amigo "hackeado" al azar
+        const bossType = this.prop('bossType', null);
+        const fixedBoss = bossType ? this.content.bosses.get(bossType) : null;
+        const bossId = fixedBoss ? fixedBoss.id : this.roles.pickEnemyIds(this.content.characters, 1, allyIds)[0];
         const escorts = Math.max(0, this.prop('bossEscorts', 1));
         this.reinforcements = Math.max(0, this.prop('bossReinforcements', 2));
         this.escortPool = [...allyIds, bossId];
 
-        const bossDef = this.content.characters.get(bossId);
+        const bossDef = fixedBoss || this.content.characters.get(bossId);
         const groundY = this.bossObj.y;
         const title = this.level.bossName || 'JEFE';
         this.boss = this.spawnEnemy(bossDef, this.bossObj.x, groundY - 260, 240, { boss: true, title: `★ ${bossDef.name.toUpperCase()} ★` });
+        if (bossDef.bossAttacks) {
+            this.robotDirector = new RobotBossDirector(this, this.boss, bossDef.bossAttacks, { x: ax, width: GAME_WIDTH, groundY });
+        }
         this.boss.on(FIGHTER_EVENTS.DAMAGED, (f) => {
             this.events.emit(GAME_EVENTS.BOSS_HEALTH, f.health, f.stats.maxHealth);
-            if (!this.bossEnraged && !f.dead && f.health <= f.stats.maxHealth / 2) this.enrageBoss();
+            // Los jefes con patrones propios (robot) llevan sus fases en su director
+            if (!this.robotDirector && !this.bossEnraged && !f.dead && f.health <= f.stats.maxHealth / 2) this.enrageBoss();
         });
-        this.events.emit(GAME_EVENTS.BOSS_START, this.boss, `${title} · ${bossDef.name.toUpperCase()}`);
+        this.nextMinionAt = this.time.now + Math.max(6000, this.prop('minionEveryMs', 0) * 0.6);
+        const hudTitle = fixedBoss ? title : `${title} · ${bossDef.name.toUpperCase()}`;
+        this.events.emit(GAME_EVENTS.BOSS_START, this.boss, hudTitle);
         this.events.emit(GAME_EVENTS.BOSS_HEALTH, this.boss.health, this.boss.stats.maxHealth);
         audio.sfx('special');
         this.cameras.main.shake(300, 0.006);
@@ -498,7 +511,43 @@ export class GameScene extends Phaser.Scene {
                 if (this.bossEnraged) b.droneReadyAt = time + b.droneCooldownMs * 0.6;
             }
         }
+        if (this.robotDirector) this.robotDirector.update(time);
+        const every = this.prop('minionEveryMs', 0);
+        if (every > 0 && b && b.active && !b.dead && time >= this.nextMinionAt) {
+            this.nextMinionAt = time + every;
+            this.spawnMinions(2);
+        }
         this.updateCaptive(time);
+    }
+
+    /**
+     * El jefe invoca mini-robots (`bossMinion` del mapa) que caen a los lados de la arena.
+     * Sin `force`, respeta el máximo de vivos (`minionMax`).
+     */
+    spawnMinions(n, force = false) {
+        const id = this.prop('bossMinion', null);
+        const def = id && this.content.bosses.get(id);
+        if (!def || this.ended || !this.bossStarted) return;
+        const alive = this.enemies.filter((e) => e.isMinion && !e.dead).length;
+        const max = this.prop('minionMax', 3);
+        const count = force ? n : Math.min(n, max - alive);
+        if (count <= 0) return;
+        if (!this.minionsAnnounced) {
+            this.minionsAnnounced = true;
+            this.message('¡El jefe invoca MINI-ROBOTS!', '#ff8a8a');
+        }
+        if (this.boss && this.boss.active) showSpeech(this, this.boss, '¡Vengan, mis robots!', 1400, '#7a1d1d');
+        for (let i = 0; i < count; i++) {
+            this.time.delayedCall(250 + i * 300, () => {
+                if (this.ended) return;
+                const side = i % 2 === 0 ? -1 : 1;
+                const x = this.arenaX + GAME_WIDTH / 2 + side * (260 + Math.random() * 160);
+                const e = this.spawnEnemy(def, x, this.bossObj.y - 320, 200);
+                e.isMinion = true;
+                e.labelOffset = (i % 2) * 13;
+                this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
+            });
+        }
     }
 
     // ------------------------------------------------------------------ personaje capturado (Henry)
@@ -540,10 +589,19 @@ export class GameScene extends Phaser.Scene {
         const y0 = s.y - h;
         const g = c.cage;
         g.clear();
-        g.lineStyle(3, 0x3a3f48, 1);
-        for (let x = x0; x <= x0 + w; x += 9) g.lineBetween(x, y0, x, s.y);
-        g.lineStyle(4, 0x6d737a, 1).strokeRect(x0, y0, w, h);
-        g.fillStyle(0xffd34d, 1).fillRect(s.x - 3, s.y - h / 2 - 3, 6, 6); // candado
+        if (this.prop('captiveStyle', 'cage') === 'capsule') {
+            // Cápsula de vidrio con base metálica y brillo
+            g.fillStyle(0x6fe8ff, 0.18).fillEllipse(s.x, s.y - h / 2, w + 6, h + 8);
+            g.lineStyle(3, 0x9ff3ff, 0.9).strokeEllipse(s.x, s.y - h / 2, w + 6, h + 8);
+            g.fillStyle(0xffffff, 0.5).fillEllipse(s.x - w / 4, s.y - h * 0.75, 6, 18);
+            g.fillStyle(0x5b6676, 1).fillRect(x0 - 4, s.y - 4, w + 8, 8);
+            g.fillStyle(0xff3b3b, 1).fillRect(s.x - 2, s.y - 2, 4, 3);
+        } else {
+            g.lineStyle(3, 0x3a3f48, 1);
+            for (let x = x0; x <= x0 + w; x += 9) g.lineBetween(x, y0, x, s.y);
+            g.lineStyle(4, 0x6d737a, 1).strokeRect(x0, y0, w, h);
+            g.fillStyle(0xffd34d, 1).fillRect(s.x - 3, s.y - h / 2 - 3, 6, 6); // candado
+        }
         c.label.setPosition(s.x, y0 - 4);
         if (time >= c.nextCryAt) {
             c.nextCryAt = time + 9000 + Math.random() * 5000;
@@ -560,7 +618,8 @@ export class GameScene extends Phaser.Scene {
         const s = c.sprite;
         // Barrotes que salen volando
         for (let i = 0; i < 8; i++) {
-            const bar = this.add.rectangle(s.x, s.y - 30, 3, 18, 0x6d737a).setDepth(13);
+            const capsule = this.prop('captiveStyle', 'cage') === 'capsule';
+            const bar = capsule ? this.add.triangle(s.x, s.y - 30, 0, 0, 8, 2, 3, 12, 0x9ff3ff, 0.8).setDepth(13) : this.add.rectangle(s.x, s.y - 30, 3, 18, 0x6d737a).setDepth(13);
             this.tweens.add({
                 targets: bar,
                 x: bar.x + Phaser.Math.Between(-90, 90),
@@ -641,6 +700,7 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.shake(250, 0.008);
         b.tryUseSpecial(this.time.now, true);
         this.spawnEscorts(this.reinforcements, 400);
+        this.spawnMinions(2, true);
     }
 
     // ------------------------------------------------------------------ aliados (H-058)
@@ -799,13 +859,18 @@ export class GameScene extends Phaser.Scene {
                 this.showBanner('¡ZONA DESPEJADA!', 'Pulsa Esc o toca para volver al menú', { summary: this.summaryText() });
                 return;
             }
-            const go = next
+            const final = !!this.prop('final', false);
+            const go = final
+                ? () => this.goTo('Final', { characterId: this.characterId, summary: this.summaryText() })
+                : next
                 ? () => this.goTo('Story', { characterId: this.characterId, mapId: next })
                 : () => this.exitToMenu();
-            this.showBanner('¡FUERZA CAMBA!', next ? 'Enter / toque: siguiente nivel · Esc: menú' : 'Enter / toque / Esc: volver al menú', {
+            const hint = final ? 'Enter / toque: ver el final' : next ? 'Enter / toque: siguiente nivel · Esc: menú' : 'Enter / toque / Esc: volver al menú';
+            this.showBanner(final ? '¡HENRY RESCATADO!' : '¡FUERZA CAMBA!', hint, {
                 summary: this.summaryText(),
                 extra: this.level.clearText,
                 onPrimary: go,
+                onSecondary: final ? go : undefined,
             });
         });
     }
@@ -899,6 +964,7 @@ export class GameScene extends Phaser.Scene {
     cleanup() {
         this.game.events.off(Phaser.Core.Events.HIDDEN, this.onHidden, this);
         this.events.off(GAME_EVENTS.REQUEST_PAUSE, this.openPause, this);
+        if (this.robotDirector) this.robotDirector.clearEffects();
         for (const f of [...this.fighters]) if (f.active) f.destroy();
         this.fighters.length = 0;
         this.enemies.length = 0;

@@ -29,7 +29,7 @@ export class PreloadScene extends Phaser.Scene {
 
     create() {
         const content = this.registry.get('content');
-        for (const def of content.characters.values()) {
+        for (const def of [...content.characters.values(), ...content.bosses.values()]) {
             ContentLoader.createAnimations(this, def);
         }
         this.scene.start('Menu');

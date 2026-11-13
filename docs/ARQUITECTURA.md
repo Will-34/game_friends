@@ -70,6 +70,13 @@ EnemyAI ──────────┘
 - `EnemyAbilityDirector` se usa dos veces: una para enemigos y otra para aliados.
 - La arena no tiene barrera: el combate empieza al llegar a su centro; `closeArena` crea una pared invisible a la izquierda que no afecta a los enemigos del nivel (`isLevelEnemy`).
 
+## Jefes no jugables y final (E6)
+
+- `content/bosses/<id>/character.json` (mismo formato que un personaje) se lista en `catalog.bosses` y se carga en `content.bosses`: no aparece en la selección ni como enemigo aleatorio. Los genera `tools/build-robots.php`.
+- Mapa con `bossType` → ese jefe; con `bossMinion` → el jefe invoca ese enemigo (`GameScene.spawnMinions`).
+- Un jefe con `bossAttacks` usa `RobotBossDirector` (fases por vida, blindaje y punto débil con buffs, misiles con `GrenadePool`, láser y ondas como efectos de la escena).
+- `final: true` en el mapa → al vencer, `FinalScene` (celebración y créditos).
+
 ## Drones
 
 - Acción abstracta `drone` → `Fighter.tryUseDrone` (recarga `cooldownMs`) → `SpecialAbilitySystem.activateDrone` → `DroneAbility` (`src/abilities/drone.js`) con el sprite `drone:<id>` y la animación `<id>_drone`, cargados por `ContentLoader` desde `character.json → drone`. La habilidad de Plata usa el mismo `DroneAbility`.

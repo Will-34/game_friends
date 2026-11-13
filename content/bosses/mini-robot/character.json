@@ -1,0 +1,266 @@
+{
+    "id": "mini-robot",
+    "name": "Mini-Robot",
+    "archetype": "Esbirro",
+    "description": "Robot pequeño que invocan los jefes.",
+    "placeholder": false,
+    "credits": "Arte generado por código (tools/build-robots.php).",
+    "canBeEnemy": false,
+    "stats": {
+        "maxHealth": 45,
+        "speed": 150,
+        "jumpVelocity": 520,
+        "fireRateMs": 320,
+        "bulletSpeed": 540,
+        "bulletDamage": 7
+    },
+    "body": {
+        "width": 30,
+        "height": 50
+    },
+    "crouchBody": {
+        "width": 30,
+        "height": 50
+    },
+    "muzzle": {
+        "stand": {
+            "x": 28,
+            "y": -30
+        },
+        "crouch": {
+            "x": 28,
+            "y": -30
+        },
+        "up": {
+            "x": 0,
+            "y": -60
+        }
+    },
+    "ability": null,
+    "enemyAbility": null,
+    "taunt": {
+        "label": "BIP",
+        "color": "#ff5a5a"
+    },
+    "spritesheet": "spritesheet.png",
+    "frameWidth": 56,
+    "frameHeight": 60,
+    "animations": {
+        "idle": {
+            "frames": [
+                0,
+                1
+            ],
+            "fps": 4,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "run": {
+            "frames": [
+                2,
+                3,
+                4,
+                5
+            ],
+            "fps": 10,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "jump": {
+            "frames": [
+                2
+            ],
+            "fps": 1,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fall": {
+            "frames": [
+                3
+            ],
+            "fps": 1,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "crouch": {
+            "frames": [
+                0
+            ],
+            "fps": 1,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "crouch_fire": {
+            "frames": [
+                6,
+                7
+            ],
+            "fps": 10,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fire": {
+            "frames": [
+                6,
+                7
+            ],
+            "fps": 10,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "fire_up": {
+            "frames": [
+                6
+            ],
+            "fps": 1,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "hurt": {
+            "frames": [
+                8
+            ],
+            "fps": 8,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "special": {
+            "frames": [
+                0
+            ],
+            "fps": 1,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "grenade": {
+            "frames": [
+                0
+            ],
+            "fps": 1,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "death": {
+            "frames": [
+                9,
+                10
+            ],
+            "fps": 4,
+            "loop": false,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        },
+        "victory": {
+            "frames": [
+                0,
+                1
+            ],
+            "fps": 4,
+            "loop": true,
+            "origin": [
+                0.5,
+                1
+            ],
+            "offset": [
+                0,
+                0
+            ],
+            "placeholder": false
+        }
+    }
+}

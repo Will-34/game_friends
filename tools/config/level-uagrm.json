@@ -27,7 +27,10 @@
     "allies": 2,
     "allyRespawns": 2,
     "clearText": "¡Henry libre otra vez! Pero el robot lo raptó de nuevo rumbo a las Lomas de Arena.",
-    "captive": "henry"
+    "captive": "henry",
+    "bossMinion": "mini-robot",
+    "minionEveryMs": 15000,
+    "minionMax": 3
   },
   "ground": [
     {

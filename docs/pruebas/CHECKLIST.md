@@ -107,6 +107,20 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | G23 | Jugar con Henry | No aparece Henry capturado |
 | G24 | Morir contra el jefe y reintentar | El jefe vuelve con toda la vida, Henry enjaulado y se enfurece otra vez al 50 % |
 
+## H. Final (E6)
+
+| # | Paso | Resultado esperado |
+| --- | --- | --- |
+| H1 | Vencer a Lomas de Arena → Enter | Historia del nivel 4 "Base del Robot Guardián" |
+| H2 | Avanzar por el nivel 4 | Noche industrial; piso electrificado daña, aceite frena, resortes rebotan |
+| H3 | Llegar al centro de la arena | Robot Guardián cae con su frase; Henry en cápsula de vidrio encima; llegan 4 aliados |
+| H4 | Fase 1 | Dispara con el cañón y lanza misiles rojos en arco |
+| H5 | Bajar al robot del 66 % | "¡FASE 2…!"; mini-robots; dron; aviso de láser (franja roja) y rayo: bajo → saltar, alto → agacharse |
+| H6 | Bajar del 33 % | "¡FASE 3…!"; ondas amarillas por el suelo: saltar para esquivarlas |
+| H7 | Pecho abierto (núcleo naranja) | El robot se queda quieto y recibe mucho más daño; con el pecho cerrado recibe menos |
+| H8 | Vencer al robot | Cápsula rota, Henry feliz, "¡HENRY RESCATADO!" → Enter → escena final con los 10 amigos, confeti y créditos → Enter → menú |
+| H9 | Jefes de los niveles 1-3 | Invocan mini-robots ("¡Vengan, mis robots!") cada cierto tiempo y al enfurecerse |
+
 ## D. Móvil (E2)
 
 En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para pruebas reales ver README → "Jugar desde el teléfono".
@@ -133,6 +147,7 @@ En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para prueb
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 1.0.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | H3–H9 ✅ (robot 2700 de vida, 4 aliados, cápsula, fases 2 y 3 con láser, ondas y mini-robots, punto débil ×2,2, final y créditos). Regresión E5 OK. Sin errores en consola. H1, H2 y la dificultad real: prueba humana. |
 | 2026-11-13 | 0.8.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | G20–G24 ✅ (colores, jefe 800/1100/1400 de vida con dron, Henry capturado y liberado, reintento). Sin errores en consola. |
 | 2026-11-13 | 0.7.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30, también con `?touch=1` | G8 (jefe con 10 enemigos del nivel vivos; pared izquierda), G16–G18 ✅ (Pablo, Henry, Will, Domeki; aliados con dron; botón DRON). Sin errores en consola. |
 | 2026-11-13 | 0.6.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | G1–G14 ✅ (selección de mapa, historia, terreno, barrera caminando, arena, jefe ×1,5, aliados y reaparición, fase 2, reintento desde el jefe, victoria → nivel 2; UAGRM y Lomas cargan y se juegan con IA). Sin errores en consola. G15 y la sensación del combate: prueba humana (H-063). |

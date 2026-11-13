@@ -61,8 +61,8 @@ export class ContentLoader {
         ]);
 
         // Se descargan en paralelo pero se guardan en el orden del catálogo (orden de la pantalla de selección)
-        const defs = await Promise.all(
-            catalog.characters.map(async (entry) => {
+        const loadDefs = (entries) => Promise.all(
+            entries.map(async (entry) => {
                 try {
                     const def = await fetchJson(`${entry.path}character.json`);
                     const missing = REQUIRED_CHARACTER_FIELDS.filter((f) => def[f] === undefined);
@@ -75,8 +75,12 @@ export class ContentLoader {
                 }
             })
         );
+        const defs = await loadDefs(catalog.characters);
         const characters = new Map();
         for (const def of defs) if (def) characters.set(def.id, def);
+        // Jefes y robots (no jugables): content/bosses/ — mismo formato que character.json
+        const bosses = new Map();
+        for (const def of await loadDefs(catalog.bosses || [])) if (def) bosses.set(def.id, def);
 
         const maps = new Map();
         await Promise.all(
@@ -94,13 +98,13 @@ export class ContentLoader {
         if (characters.size === 0) throw new Error('No hay ningún personaje válido en content/characters/');
         if (maps.size === 0) throw new Error('No hay ningún mapa válido en content/maps/');
 
-        return { catalog, characters, maps, controls, audio: audioConfig, weapons };
+        return { catalog, characters, bosses, maps, controls, audio: audioConfig, weapons };
     }
 
     /** Encola en el Loader de Phaser los recursos de todos los personajes y mapas. */
     static queueAssets(scene, content) {
         const load = scene.load;
-        for (const def of content.characters.values()) {
+        for (const def of [...content.characters.values(), ...content.bosses.values()]) {
             load.spritesheet(textureKey(def.id), def.basePath + def.spritesheet, {
                 frameWidth: def.frameWidth,
                 frameHeight: def.frameHeight,

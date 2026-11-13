@@ -10,6 +10,7 @@ import { CharacterSelectScene } from './scenes/CharacterSelectScene.js';
 import { MapSelectScene } from './scenes/MapSelectScene.js';
 import { StoryScene } from './scenes/StoryScene.js';
 import { GameScene } from './scenes/GameScene.js';
+import { FinalScene } from './scenes/FinalScene.js';
 import { HudScene } from './scenes/HudScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { AnimViewerScene } from './scenes/AnimViewerScene.js';
@@ -42,7 +43,7 @@ const game = new Phaser.Game({
             debug: DEBUG,
         },
     },
-    scene: [BootScene, PreloadScene, MenuScene, CharacterSelectScene, MapSelectScene, StoryScene, GameScene, HudScene, PauseScene, AnimViewerScene],
+    scene: [BootScene, PreloadScene, MenuScene, CharacterSelectScene, MapSelectScene, StoryScene, GameScene, FinalScene, HudScene, PauseScene, AnimViewerScene],
 });
 
 // Móvil: táctil, horizontal/pantalla completa, aviso de girar, zonas seguras (ver DeviceManager)

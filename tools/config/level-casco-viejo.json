@@ -27,7 +27,10 @@
     "allies": 2,
     "allyRespawns": 2,
     "clearText": "¡Henry está libre! Pero el robot volvió por él y se lo llevó a la U. ¡Vamos a la UAGRM!",
-    "captive": "henry"
+    "captive": "henry",
+    "bossMinion": "mini-robot",
+    "minionEveryMs": 18000,
+    "minionMax": 2
   },
   "ground": [
     {

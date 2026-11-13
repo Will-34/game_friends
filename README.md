@@ -2,7 +2,7 @@
 
 Videojuego arcade de acción lateral 2D (run-and-gun) en pixel art, 100 % original. Nueve amigos pueden ser protagonistas o enemigos; al final, cuatro se vuelven aliados para rescatar a Henry de un robot gigante.
 
-**Estado:** E0 (Fundaciones), E1 (MVP), E2 (móvil), E3 (10 personajes y selección), E4 (habilidades, granadas, armas, objetos, IA) y E5 (3 niveles de Santa Cruz con jefe y aliados) terminadas. Siguiente: E6 (final). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
+**Estado:** E0 a E6 terminadas: 10 personajes, combate, móvil, 4 niveles de Santa Cruz con jefes, aliados y drones, y el final contra el Robot Guardián. Siguiente: E7 (pulido). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
 
 ## Requisitos
 
@@ -75,6 +75,7 @@ Las teclas se configuran en [content/config/controls.json](content/config/contro
 php tools/sprite-cutter.php tools/config/<id>.json [--debug]    # lámina → spritesheet, retrato, efectos y character.json
 php tools/build-level.php --all                                 # niveles de Santa Cruz (Tiled + arte generado)
 php tools/build-drones.php                                      # drones temáticos de cada personaje
+php tools/build-robots.php                                      # Robot Guardián y mini-robot (content/bosses/)
 php tools/build-test-map.php tools/config/map-prueba.json       # mapa de prueba en formato Tiled
 php tools/build-catalog.php                                     # regenera content/catalog.json (respaldo)
 ```

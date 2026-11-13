@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [1.0.0] — 2026-11-13
+
+### E6 — Final
+
+#### Agregado
+- **Nivel 4 "Base del Robot Guardián"** (Parque Industrial de noche) con piso electrificado, aceite y resortes.
+- **Robot Guardián** (jefe final, generado por código) con 3 fases: misiles, barridos láser con aviso, dron centinela, ondas de choque y punto débil en el pecho.
+- **4 aliados** en el combate final y **Henry en una cápsula de vidrio** sobre el robot.
+- **Escena final**: "¡HENRY RESCATADO!", los 10 amigos celebrando, confeti y créditos.
+- **Mini-robots** que invocan todos los jefes.
+- `content/bosses/` (personajes no jugables) en el catálogo; `tools/build-robots.php`; capacidad `final` en OpenSpec.
+
+#### Cambiado
+- Lomas de Arena lleva al nivel 4.
+
 ## [0.9.0] — 2026-11-13
 
 ### Armas de largo alcance
