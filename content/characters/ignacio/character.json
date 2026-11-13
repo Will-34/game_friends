@@ -8,7 +8,7 @@
     "stats": {
         "maxHealth": 100,
         "speed": 190,
-        "jumpVelocity": 640,
+        "jumpVelocity": 700,
         "fireRateMs": 180,
         "bulletSpeed": 620,
         "bulletDamage": 10

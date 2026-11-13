@@ -46,6 +46,15 @@ const DIFFICULTY_MARK = Object.freeze({ facil: '', normal: ' ★', dificil: ' �
 const CAPTIVE_SCALE = 0.8;
 /** Rango (ms) de espera para que un aliado caído vuelva. */
 const ALLY_RETURN_MS = [5000, 10000];
+/**
+ * Oleadas de enemigos del nivel: se crean de a poco al acercarse el jugador.
+ * Al empezar solo 1 a la vez; el tope sube con las bajas o el tiempo hasta maxOnScreen.
+ */
+const ENEMY_WAVES = { maxOnScreen: 3, startCap: 1, capStepMs: 12000, gapMs: 2200, aheadPx: 260 };
+/** Máximo de escoltas/mini-robots vivos a la vez durante el jefe (sin contar al jefe). */
+const BOSS_ADDS_MAX = 3;
+/** Aura de los aliados (además del nombre verde). */
+const ALLY_AURA = '#7dff8a';
 /** Cada cuánto daña un tile de peligro a quien lo pisa. */
 const HAZARD_TICK_MS = 600;
 
@@ -66,6 +75,10 @@ export class GameScene extends Phaser.Scene {
         this.robotDirector = null;
         this.nextMinionAt = 0;
         this.minionsAnnounced = false;
+        this.enemyQueue = [];
+        this.levelKills = 0;
+        this.wavesStartAt = 0;
+        this.nextWaveAt = 0;
     }
 
     create() {
@@ -196,11 +209,51 @@ export class GameScene extends Phaser.Scene {
                     continue;
                 }
                 const x = o.x + (k - (n - 1) / 2) * GROUP_SPACING;
-                const e = this.spawnEnemy(def, x, o.y, tiledProp(o, 'patrol', 3) * this.map.tileWidth);
-                e.labelOffset = (k % 2) * 13; // alterna la altura del nombre dentro del grupo
-                e.isLevelEnemy = true;
+                this.enemyQueue.push({ def, x, y: o.y, patrol: tiledProp(o, 'patrol', 3) * this.map.tileWidth, labelOffset: (k % 2) * 13 });
             }
         }
+        // Se crean de a poco (updateEnemyWaves): primero los más cercanos al inicio
+        this.enemyQueue.sort((a, b) => a.x - b.x);
+        this.wavesStartAt = this.time.now;
+        this.nextWaveAt = this.time.now + 800;
+    }
+
+    /**
+     * Oleadas: crea el siguiente enemigo encolado cuando el jugador se acerca, sin superar el tope
+     * de enemigos cerca de la pantalla (1 al empezar, sube hasta ENEMY_WAVES.maxOnScreen).
+     * Los que el jugador deja muy atrás (los esquivó) ya no aparecen.
+     */
+    updateEnemyWaves(time) {
+        if (this.bossStarted || !this.enemyQueue.length || this.player.dead) return;
+        const cam = this.cameras.main.worldView;
+        const before = this.enemyQueue.length;
+        while (this.enemyQueue.length && this.enemyQueue[0].x < cam.x - 200) this.enemyQueue.shift();
+        if (this.enemyQueue.length !== before) this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
+        if (!this.enemyQueue.length || time < this.nextWaveAt) return;
+        const W = ENEMY_WAVES;
+        const steps = Math.max(this.levelKills, Math.floor((time - this.wavesStartAt) / W.capStepMs));
+        const cap = Math.min(W.maxOnScreen, W.startCap + steps);
+        const near = this.enemies.filter((e) => e.isLevelEnemy && !e.dead && Math.abs(e.x - this.player.x) < GAME_WIDTH).length;
+        if (near >= cap) return;
+        const q = this.enemyQueue[0];
+        if (q.x > cam.right + W.aheadPx) return; // todavía lejos: aparece cuando el jugador avance
+        this.enemyQueue.shift();
+        this.nextWaveAt = time + W.gapMs;
+        // Si su sitio ya está a la vista, cae desde arriba; si no, aparece en su sitio
+        const inView = q.x > cam.x && q.x < cam.right;
+        const e = this.spawnEnemy(q.def, q.x, inView ? q.y - 260 : q.y, q.patrol);
+        e.labelOffset = q.labelOffset;
+        e.isLevelEnemy = true;
+        if (inView) {
+            e.setAlpha(0);
+            this.tweens.add({ targets: e, alpha: 1, duration: 350 });
+        }
+        this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
+    }
+
+    /** Escoltas y mini-robots vivos durante el jefe (para respetar BOSS_ADDS_MAX). */
+    bossAddsAlive() {
+        return this.enemies.filter((e) => !e.dead && !e.isBoss && !e.isLevelEnemy).length;
     }
 
     /**
@@ -283,6 +336,7 @@ export class GameScene extends Phaser.Scene {
         });
         self = ally;
         ai.attach(ally);
+        ally.addBuff({ id: 'ally-aura', durationMs: Number.POSITIVE_INFINITY, aura: ALLY_AURA, glow: true });
         ally.slot = slot;
         slot.fighter = ally;
         slot.returnAt = 0;
@@ -416,12 +470,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     aliveLevelEnemies() {
-        return this.enemies.filter((e) => e.isLevelEnemy && !e.dead).length;
+        return this.enemies.filter((e) => e.isLevelEnemy && !e.dead).length + this.enemyQueue.length;
     }
 
     /** Enemigos que cuentan en el HUD: durante el jefe, solo los del combate. */
     countedEnemies() {
-        return this.enemies.filter((e) => !e.dead && (!this.bossStarted || !e.isLevelEnemy)).length;
+        if (!this.bossStarted) return this.enemies.filter((e) => !e.dead).length + this.enemyQueue.length;
+        return this.enemies.filter((e) => !e.dead && !e.isLevelEnemy).length;
     }
 
     /** El combate empieza al llegar al centro de la arena. */
@@ -456,6 +511,7 @@ export class GameScene extends Phaser.Scene {
             cam.startFollow(this.player, true, 0.12, 0.12, 0, 40);
         });
 
+        this.enemyQueue.length = 0;
         // Reparto: aliados primero (para que el jefe y las escoltas no los repitan)
         const nAllies = Math.max(0, this.prop('allies', 2));
         const allyIds = this.roles.pickIds(this.content.characters, nAllies);
@@ -499,7 +555,10 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(1300 + i * 500, () => {
                 if (this.ended) return;
                 const a = this.spawnAlly(slot, ax + 40 + i * 60, this.player.y - 220);
-                if (i === 0) showSpeech(this, a, '¡Llegamos, chango! ¡Vamos con todo!', 2400, '#14532d');
+                if (i === 0) {
+                    this.message(allyIds.length > 1 ? '¡LLEGARON LOS ALIADOS!' : '¡LLEGÓ UN ALIADO!', ALLY_AURA);
+                    showSpeech(this, a, '¡Llegamos, chango! ¡Vamos con todo!', 2400, '#14532d');
+                }
             });
         });
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
@@ -533,7 +592,7 @@ export class GameScene extends Phaser.Scene {
         if (!def || this.ended || !this.bossStarted) return;
         const alive = this.enemies.filter((e) => e.isMinion && !e.dead).length;
         const max = this.prop('minionMax', 3);
-        const count = force ? n : Math.min(n, max - alive);
+        const count = Math.min(force ? n : Math.min(n, max - alive), BOSS_ADDS_MAX - this.bossAddsAlive());
         if (count <= 0) return;
         if (!this.minionsAnnounced) {
             this.minionsAnnounced = true;
@@ -544,6 +603,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(250 + i * 300, () => {
                 if (this.ended) return;
                 const side = i % 2 === 0 ? -1 : 1;
+                if (this.bossAddsAlive() >= BOSS_ADDS_MAX) return;
                 const x = this.arenaX + GAME_WIDTH / 2 + side * (260 + Math.random() * 160);
                 const e = this.spawnEnemy(def, x, this.bossObj.y - 320, 200);
                 e.isMinion = true;
@@ -680,7 +740,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(delay + i * 350, () => {
                 if (this.ended) return;
                 const def = this.content.characters.get(id);
-                if (!def) return;
+                if (!def || this.bossAddsAlive() >= BOSS_ADDS_MAX) return;
                 const side = i % 2 === 0 ? 1 : -1;
                 const x = this.arenaX + GAME_WIDTH / 2 + side * (200 + Math.random() * 180);
                 const e = this.spawnEnemy(def, x, this.bossObj.y - 300, 160);
@@ -721,6 +781,7 @@ export class GameScene extends Phaser.Scene {
                 const cam = this.cameras.main.worldView;
                 const x = Phaser.Math.Clamp(this.player.x - 70 * this.player.facing, cam.x + 40, cam.right - 40);
                 const a = this.spawnAlly(slot, x, this.player.y - 240);
+                this.message(`¡${slot.def.name.toUpperCase()} VOLVIÓ A AYUDARTE!`, ALLY_AURA);
                 showSpeech(this, a, '¡Volví, pues!', 1800, '#14532d');
             });
         } else {
@@ -766,6 +827,7 @@ export class GameScene extends Phaser.Scene {
             this.applyTerrain(f, time);
         }
         if (!this.ended) {
+            this.updateEnemyWaves(time);
             this.enemyDirector.update(time);
             if (this.allies.length) this.allyDirector.update(time);
             this.checkArena();
@@ -801,7 +863,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     aliveEnemies() {
-        return this.enemies.filter((e) => !e.dead).length;
+        return this.enemies.filter((e) => !e.dead).length + this.enemyQueue.length;
     }
 
     /** Aviso grande en el centro (lo dibuja el HUD). */
@@ -820,6 +882,7 @@ export class GameScene extends Phaser.Scene {
                 showKillPopup(this, killer);
             }
             if (!enemy.isBoss) this.pickups.maybeDrop(enemy.x, enemy.y - 30);
+            if (enemy.isLevelEnemy) this.levelKills++;
         }
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, this.countedEnemies());
         // Tras la animación de muerte: humo y desaparición

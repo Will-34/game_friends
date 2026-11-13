@@ -8,6 +8,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 - **Sonido en celulares**: el audio se desbloquea en cualquier toque hasta quedar activo (antes podía quedar suspendido en iOS/Android), con truco de búfer silencioso, `audioSession` "playback" y reanudación al volver a la pestaña.
 
 ### Cambiado
+- **Dificultad más baja**: los enemigos aparecen en oleadas (1 al empezar, máximo 3 a la vez cerca de la pantalla); en el jefe, máximo 3 escoltas/mini-robots vivos.
+- **Aliados** con 2,5× de vida, aura verde y aviso "¡LLEGARON LOS ALIADOS!" / "¡X VOLVIÓ A AYUDARTE!".
+- **Salto** más alto y largo (velocidad 640 → 700).
+- **Plataformas** oscuras con franja amarilla en los 4 mapas (en UAGRM eran blancas sobre fondo blanco).
 - Sin botón **ARMA** en los controles táctiles: se usa el arma recogida del piso.
 - El jugador **regenera vida** (+5 cada 2 s tras 2,5 s sin daño).
 

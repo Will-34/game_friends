@@ -5,7 +5,7 @@
  */
 header('Content-Type: text/html; charset=utf-8');
 // Versión para invalidar la caché del navegador al desplegar (cambiar al publicar).
-$assetVersion = '1.0.2';
+$assetVersion = '1.0.3';
 // URL absoluta de la carpeta del juego (las vistas previas de WhatsApp/Facebook exigen URLs absolutas).
 $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 $baseUrl = ($https ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/') . '/';
