@@ -39,3 +39,4 @@ Videojuego arcade 2D de acción lateral (run-and-gun) en pixel art, 100 % origin
 | Selección de protagonista | `specs/character-select/spec.md` |
 | Niveles (mapas, terreno, jefe y aliados) | `specs/levels/spec.md` |
 | Historia | `specs/story/spec.md` |
+| Final (Robot Guardián y rescate) | `specs/final/spec.md` |

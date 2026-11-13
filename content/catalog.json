@@ -64,6 +64,11 @@
     ],
     "maps": [
         {
+            "id": "base-robot",
+            "name": "Base del Robot Guardián",
+            "path": "content/maps/base-robot/"
+        },
+        {
             "id": "casco-viejo",
             "name": "Casco Viejo",
             "path": "content/maps/casco-viejo/"
@@ -82,6 +87,18 @@
             "id": "uagrm",
             "name": "Ciudad Universitaria UAGRM",
             "path": "content/maps/uagrm/"
+        }
+    ],
+    "bosses": [
+        {
+            "id": "mini-robot",
+            "name": "Mini-Robot",
+            "path": "content/bosses/mini-robot/"
+        },
+        {
+            "id": "robot-guardian",
+            "name": "Robot Guardián",
+            "path": "content/bosses/robot-guardian/"
         }
     ],
     "warnings": []

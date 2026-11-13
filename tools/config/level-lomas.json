@@ -27,8 +27,11 @@
     "bossReinforcements": 3,
     "allies": 2,
     "allyRespawns": 2,
-    "clearText": "¡Henry libre! Pero detrás de las dunas espera la base del Robot Guardián... (Rescate final: próximamente)",
-    "captive": "henry"
+    "clearText": "¡Henry libre! Pero el Robot Guardián en persona bajó y se lo llevó a su base del Parque Industrial. ¡A rescatarlo!",
+    "captive": "henry",
+    "bossMinion": "mini-robot",
+    "minionEveryMs": 13000,
+    "minionMax": 3
   },
   "ground": [
     {

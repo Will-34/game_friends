@@ -122,6 +122,7 @@ Flujo: Menú → protagonista → **mapa** → **historia** (texto del nivel) �
 | 1 | **Casco Viejo** (Plaza 24 de Septiembre) | Día: Catedral, casas coloniales con galerías, toborochis, palmeras | Charcos de lluvia (lento), parrillas (daño), toldos de puestos (rebote) | El Capo de la Plaza |
 | 2 | **Ciudad Universitaria UAGRM** | Cielo azul: módulos de facultad, letrero UAGRM, laguna, palmeras | Laguna (daño), barro (lento), toldos de la feria azul y rojo (rebote) | El Inge del Cero |
 | 3 | **Lomas de Arena** | Atardecer: dunas rosadas, monte, árboles secos | Curichis (daño), arena movediza (lento), llantas (rebote) | El Rey de las Dunas |
+| 4 | **Base del Robot Guardián** (Parque Industrial) | Noche: fábricas iluminadas, grúa, chimeneas | Piso electrificado (daño), aceite (lento), resortes (rebote) | **Robot Guardián** (final) |
 
 - **Progresión:** más enemigos y más difíciles en cada nivel (Fácil/Normal/Difícil 60/30/10 → 40/40/20 → 25/40/35); vida del jefe ×8 → ×11 → ×14.
 - **Colores de nombre:** protagonista y aliados en **verde**, enemigos en **rojo** (dificultad con estrellas: Normal ★, Difícil ★★), jefe en **lila**, Henry capturado en amarillo.
@@ -133,11 +134,19 @@ Flujo: Menú → protagonista → **mapa** → **historia** (texto del nivel) �
 - Arte (fondos de 4 capas parallax y tilesets) **generado por código** con `tools/build-level.php`; se podrá reemplazar por imágenes propias sin tocar código (H-070).
 - La "Zona de pruebas" solo aparece en modo desarrollo.
 
-## 7. Jefe final
+## 7. Jefe final (E6)
 
-- **Robot Guardián** con 3 fases (E6). [PENDIENTE: requisitos-v2] ataques por fase y puntos débiles.
-- 4 aliados con máquina de estados ayudan en el combate final.
-- Al derrotarlo: rescate de Henry y pantalla de victoria.
+- **Robot Guardián**: robot gigante generado por código (`content/bosses/robot-guardian/`), 2700 de vida, con blindaje.
+  | Fase | Vida | Ataques |
+  | --- | --- | --- |
+  | 1 | > 66 % | Cañón y **misiles** en arco desde los hombros |
+  | 2 | 33-66 % | + **barrido láser** con aviso (bajo: ¡saltá!; alto: ¡agachate!), **Dron Centinela**, mini-robots |
+  | 3 | < 33 % | + **ondas de choque** por el suelo (¡saltá!), más mini-robots, más agresivo |
+  **Punto débil:** cada cierto tiempo abre el pecho (núcleo naranja), se queda quieto y recibe mucho más daño.
+- **4 aliados** al azar en el combate final (vuelven a los 5-10 s, máximo 2 veces).
+- **Henry en una cápsula de vidrio** sobre el robot; al vencerlo se rompe y Henry sale feliz.
+- **Final:** "¡HENRY RESCATADO!" → escena en la plaza con los 10 amigos celebrando, confeti y créditos.
+- **Mini-robots:** todos los jefes (también los de los niveles 1-3) invocan mini-robots cada cierto tiempo y al enfurecerse.
 
 ## 8. Audio
 

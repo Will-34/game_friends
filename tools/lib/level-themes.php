@@ -11,6 +11,7 @@
  *   5 rebote (oneWay + bounce) · 6 terreno lento (slow) · 7 relleno bajo el peligro
  */
 require_once __DIR__ . '/pixel-art.php';
+require_once __DIR__ . '/level-theme-base.php';
 
 const LW = 800;   // ancho a media resolución (1600 px finales)
 const LH = 270;   // alto a media resolución (540 px finales)
@@ -24,6 +25,7 @@ function theme_painters($theme)
         'casco-viejo' => 'cv_',
         'uagrm' => 'ua_',
         'lomas' => 'lo_',
+        'base' => 'bs_',
     ];
     if (!isset($map[$theme])) throw new RuntimeException("Tema desconocido: $theme");
     $p = $map[$theme];

@@ -3,7 +3,7 @@
 Estados: `Pendiente` · `En progreso` · `Hecho` · `Bloqueado`
 Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
-**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate; **E5 — Mapas** (3 niveles de Santa Cruz con jefe y aliados, historia y jerga cruceña) (2026-11-13). **Siguiente épica:** E6 — Final (Robot Guardián y rescate de Henry).
+**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate; E5 — Mapas; **E6 — Final** (Robot Guardián, 4 aliados, rescate y créditos) (2026-11-13). **Siguiente épica:** E7 — Pulido.
 
 ### Decisiones del usuario (2026-11-13)
 1. Las láminas sin transparencia se usan tal cual: la herramienta quitará el fondo pintado (H-045).
@@ -246,9 +246,16 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
 | ID | Historia | Estado |
 | --- | --- | --- |
-| H-060 | Robot Guardián de 3 fases | Pendiente |
-| H-061 | 4 aliados con máquina de estados (base hecha en E5: IA "seguir al líder" y reaparición) | Pendiente |
-| H-062 | Rescate de Henry y pantalla de victoria | Pendiente |
+| H-060 | Robot Guardián de 3 fases | Hecho |
+| H-061 | 4 aliados en el combate final | Hecho |
+| H-062 | Rescate de Henry y pantalla de victoria (escena final y créditos) | Hecho |
+| H-074 | Todos los jefes invocan mini-robots | Hecho |
+| H-075 | Prueba humana del nivel 4 y del equilibrio del Robot Guardián | Pendiente |
+
+- H-060 (hecho): `tools/build-robots.php` genera el robot (`content/bosses/robot-guardian/`); `RobotBossDirector`: fases por vida, blindaje 0,6, pecho abierto ×2,2, misiles, láser bajo/alto con aviso, ondas de choque, dron centinela.
+- H-061 (hecho): `allies: 4` en el nivel 4 (misma IA de E5: seguir al líder, reaparición 5-10 s máx. 2, dron).
+- H-062 (hecho): Henry en cápsula de vidrio sobre el robot; `FinalScene` con los 10 amigos celebrando, confeti y créditos.
+- H-074 (hecho, pedido del usuario): `bossMinion: mini-robot` en los 4 niveles; cada 18/15/13/15 s y al enfurecerse.
 
 ## E7 — Pulido
 
