@@ -30,15 +30,30 @@ export const DIFFICULTY_TIERS = Object.freeze({
 });
 
 export class DifficultyManager {
-    /** Elige un nivel al azar según los pesos. */
-    static pick() {
+    /**
+     * Elige un nivel al azar según los pesos.
+     * @param {object|null} [weights] pesos del mapa ({ facil: 60, normal: 30, dificil: 10 }); si no, los de cada nivel
+     */
+    static pick(weights = null) {
         const tiers = Object.entries(DIFFICULTY_TIERS);
-        const total = tiers.reduce((s, [, t]) => s + t.weight, 0);
+        const w = (id, t) => (weights && weights[id] !== undefined ? weights[id] : t.weight);
+        const total = tiers.reduce((s, [id, t]) => s + w(id, t), 0);
         let r = Math.random() * total;
         for (const [id, t] of tiers) {
-            r -= t.weight;
+            r -= w(id, t);
             if (r <= 0) return { id, ...t };
         }
         return { id: 'normal', ...DIFFICULTY_TIERS.normal };
+    }
+
+    /** Lee los pesos de un mapa: "facil:60,normal:30,dificil:10" → { facil: 60, normal: 30, dificil: 10 }. */
+    static parseWeights(text) {
+        if (!text) return null;
+        const out = {};
+        for (const part of String(text).split(',')) {
+            const [id, v] = part.split(':').map((x) => x.trim());
+            if (DIFFICULTY_TIERS[id] && !Number.isNaN(Number(v))) out[id] = Math.max(0, Number(v));
+        }
+        return Object.keys(out).length ? out : null;
     }
 }

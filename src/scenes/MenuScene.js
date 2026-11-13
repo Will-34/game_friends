@@ -26,7 +26,7 @@ export class MenuScene extends Phaser.Scene {
         }
 
         this.add.text(cx, 80, 'RESCATANDO A HENRY', textStyle(52, '#ffd34d')).setOrigin(0.5);
-        this.add.text(cx, 130, 'Acción arcade 2D', textStyle(20, '#c9d3e6')).setOrigin(0.5);
+        this.add.text(cx, 130, 'Acción arcade 2D · Santa Cruz de la Sierra', textStyle(20, '#c9d3e6')).setOrigin(0.5);
 
         // Protagonista por defecto (la selección llega en E3)
         const hero = content.characters.get(DEFAULTS.playerCharacterId) || [...content.characters.values()][0];
@@ -65,7 +65,7 @@ export class MenuScene extends Phaser.Scene {
             )
             .setOrigin(0.5);
         this.add
-            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.5.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
+            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.6.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
             .setOrigin(1, 1);
     }
 }

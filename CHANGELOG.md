@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.6.0] — 2026-11-13
+
+### E5 — Mapas de Santa Cruz
+
+#### Agregado
+- **3 niveles** de Santa Cruz de la Sierra: **Casco Viejo** (Plaza 24 de Septiembre), **Ciudad Universitaria UAGRM** y **Lomas de Arena**, con 4 capas parallax y tileset de pixel art generados por `tools/build-level.php` (temas en `tools/lib/level-themes.php`).
+- **Selección de mapa** (`MapSelectScene`) e **historia** antes de cada nivel (`StoryScene`) con jerga cruceña.
+- **Terreno especial**: peligros (parrilla, laguna, curichi), terreno lento (charco, barro, arena movediza) y rebote (toldos, llantas).
+- **Jefe al final de cada mapa**: amigo "hackeado" al azar, más grande, con barra de vida, frase, escoltas, fase 2 con refuerzos. Barrera "NO PASAR" hasta despejar el nivel.
+- **2 aliados aleatorios** contra el jefe que siguen al protagonista; si caen vuelven a los 5-10 s (máximo 2 veces). Estado en el HUD.
+- Victoria "¡FUERZA CAMBA!" con paso al siguiente nivel; reintento desde el jefe.
+- ADR-012; capacidades `levels` y `story` en OpenSpec.
+
+#### Cambiado
+- La IA apunta al hostil más cercano (enemigos atacan también a los aliados) y no pisa peligros.
+- Dificultad de enemigos por mapa (`difficulty`).
+- Derrota: "¡QUÉ MACANA!"; Esc vuelve al menú.
+- Mapa por defecto: `casco-viejo`. La "Zona de pruebas" solo aparece en desarrollo.
+
 ## [0.5.0] — 2026-11-13
 
 ### E4 — Combate (cierre)

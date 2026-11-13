@@ -137,6 +137,6 @@ export class CharacterSelectScene extends Phaser.Scene {
         this.registry.set(LAST_CHOICE_KEY, def.id);
         audio.sfx('ui');
         device.enterLandscapeFullscreen(); // por si se salió de la pantalla completa
-        this.scene.start('Game', { characterId: def.id, mapId: DEFAULTS.mapId });
+        this.scene.start('MapSelect', { characterId: def.id });
     }
 }

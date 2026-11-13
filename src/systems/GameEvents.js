@@ -10,6 +10,11 @@ export const GAME_EVENTS = Object.freeze({
     LEVEL_CLEARED: 'level-cleared',
     PLAYER_DEFEATED: 'player-defeated',
     REQUEST_PAUSE: 'request-pause',
+    BOSS_START: 'boss-start',            // (fighter, title)
+    BOSS_HEALTH: 'boss-health',          // (health, maxHealth)
+    BOSS_END: 'boss-end',
+    ALLIES_STATUS: 'allies-status',      // ([{ name, alive, returnsIn, respawnsLeft }])
+    MESSAGE: 'message',                  // (texto, color) aviso grande en el centro del HUD
 });
 
 /** Eventos que emite cada Fighter sobre sí mismo. */

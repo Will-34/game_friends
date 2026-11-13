@@ -19,7 +19,7 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 
 | # | Caso | Esperado |
 | --- | --- | --- |
-| B1 | Jugar | Plata aparece en el mapa de prueba; HUD con vida 100/100 y "ENEMIGOS: 4" |
+| B1 | Jugar (Zona de pruebas, en desarrollo) | El protagonista aparece en el mapa; HUD con vida 100/100 y enemigos restantes |
 | B2 | ← → / A D | Camina en ambos sentidos (animación `run`), se voltea |
 | B3 | Espacio / K | Salta (`jump` → `fall`); soltar antes reduce la altura |
 | B4 | Subir a plataformas grises desde abajo | Se atraviesan desde abajo y se puede aterrizar encima |
@@ -31,7 +31,7 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | B10 | Dejarse disparar | La vida baja de 10 en 10, parpadeo de invulnerabilidad, barra cambia de color |
 | B11 | Eliminar al enemigo de la plataforma alta | Posible disparando hacia arriba desde debajo |
 | B12 | Eliminar a todos | "¡ZONA DESPEJADA!", pose de victoria; Esc/clic vuelve al menú |
-| B13 | Morir | "HAS CAÍDO"; Espacio/J/clic reinicia la partida |
+| B13 | Morir | "¡QUÉ MACANA!"; Espacio/J/clic reinicia la partida; Esc vuelve al menú |
 | B14 | Esc / P | Pausa; Esc / P / CONTINUAR reanuda; SALIR AL MENÚ vuelve |
 | B15 | Cambiar de pestaña durante la partida | Al volver, el juego está en pausa |
 | B16 | U, L, Q | No hacen nada todavía (reservadas), sin errores |
@@ -78,6 +78,26 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | F13 | Subirse a una plataforma sobre un enemigo | Te persigue o te dispara hacia arriba; salta paredes |
 | F14 | Ganar o perder | El cartel muestra personaje, bajas y tiempo |
 
+## G. Mapas, jefe y aliados (E5)
+
+| # | Paso | Resultado esperado |
+| --- | --- | --- |
+| G1 | Elegir protagonista | Pantalla "ELIGE EL MAPA" con Casco Viejo, UAGRM y Lomas de Arena (miniatura, dificultad ★, jefe) |
+| G2 | ←/→ y Enter; tocar una tarjeta dos veces | Elige el mapa y pasa a la historia |
+| G3 | Historia | Texto con escritura progresiva sobre los fondos en movimiento; Enter completa; Enter otra vez juega; Esc vuelve |
+| G4 | Avanzar por cada nivel | 4 capas parallax a distinta velocidad; sin costuras visibles |
+| G5 | Pisar parrilla / laguna / curichi | Pierde vida y da un saltito |
+| G6 | Pisar charco / barro / arena movediza | Camina más lento |
+| G7 | Caer sobre un toldo o una llanta | Rebota muy alto |
+| G8 | Llegar a la arena con enemigos vivos | Barrera "NO PASAR"; aviso "¡Faltan N, chango!" |
+| G9 | Eliminar a todos los enemigos del nivel | "¡ZONA DESPEJADA! Avanzá hacia el jefe →"; la barrera desaparece; flecha "JEFE →" |
+| G10 | Llegar al centro de la arena | La cámara se fija; el jefe (más grande) cae con su frase; escoltas; barra del jefe arriba; llegan 2 aliados ("¡Llegamos, chango!") |
+| G11 | Dejar que un aliado muera | HUD "NOMBRE vuelve en N s"; vuelve a los 5-10 s ("¡Volví, pues!"); como máximo 2 veces |
+| G12 | Bajar al jefe a la mitad | "¡… SE PICÓ!", barra roja, refuerzos |
+| G13 | Vencer al jefe | Escoltas caen; "¡FUERZA CAMBA!" + texto del nivel + resumen; Enter → historia del siguiente nivel |
+| G14 | Morir contra el jefe y pulsar Espacio | Reaparece en la arena sin los enemigos del nivel |
+| G15 | Vencer al jefe de Lomas de Arena | Mensaje de la base del Robot Guardián; Enter vuelve al menú |
+
 ## D. Móvil (E2)
 
 En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para pruebas reales ver README → "Jugar desde el teléfono".
@@ -104,6 +124,7 @@ En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para prueb
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 0.6.0 | Edge 157 sin interfaz vía DevTools Protocol, PHP 8.0.30 | G1–G14 ✅ (selección de mapa, historia, terreno, barrera caminando, arena, jefe ×1,5, aliados y reaparición, fase 2, reintento desde el jefe, victoria → nivel 2; UAGRM y Lomas cargan y se juegan con IA). Sin errores en consola. G15 y la sensación del combate: prueba humana (H-063). |
 | 2026-11-13 | 0.5.0 | Edge sin interfaz vía DevTools Protocol, PHP 8.0.30 | F9–F12, F14 ✅ (las 4 armas, munición, Q, objetos, resumen); IA: transición patrulla → alerta → ataque verificada; partida automática ~45 s sin errores en consola. F13 (sensación de la IA): prueba humana. |
 | 2026-11-13 | 0.4.0 | Edge sin interfaz, emulación táctil 412×915 / 915×412, PHP 8.0.30 | D1–D3, D5, D7 (II y 🔊), D8, D13 ✅. Sin errores en consola. Pendientes de prueba en teléfono real: D4, D6, D9–D12, D14. |
 | 2026-11-13 | 0.3.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | F1–F7 ✅ (las 10 habilidades activadas; granada con daño en área; "+1" y carga; habilidad enemiga). Partida automática de ~45 s sin errores en consola. F8 y la sensación de dificultad: pendientes de prueba humana. |

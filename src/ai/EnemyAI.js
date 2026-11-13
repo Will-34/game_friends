@@ -8,7 +8,9 @@
  *   ATTACK  dispara en ráfagas; si el objetivo está encima, apunta arriba; si está a otra altura
  *           o lejos, lo persigue (salta paredes y plataformas, baja de plataformas) sin alejarse
  *           más de "leash" px de su zona; lanza granadas si su dificultad lo permite.
- * Además mantiene distancia con sus compañeros para no amontonarse.
+ * Además mantiene distancia con sus compañeros para no amontonarse y no pisa peligros (tiles con hazard).
+ *
+ * Con `getLeader` (aliados, E5) no patrulla: sigue al líder (el protagonista) y su zona se mueve con él.
  */
 
 const STATE = Object.freeze({ PATROL: 'patrol', ALERT: 'alert', ATTACK: 'attack' });
@@ -16,7 +18,8 @@ const STATE = Object.freeze({ PATROL: 'patrol', ALERT: 'alert', ATTACK: 'attack'
 export class EnemyAI {
     /**
      * @param {object} opts
-     * @param {() => object|null} opts.getTarget       Fighter objetivo
+     * @param {() => object|null} opts.getTarget       Fighter objetivo (p. ej. el hostil más cercano)
+     * @param {() => object|null} [opts.getLeader]     Fighter al que seguir cuando no hay objetivo (aliados)
      * @param {() => Array} [opts.getPeers]            compañeros (para separarse)
      * @param {Phaser.Tilemaps.TilemapLayer} [opts.groundLayer]
      * @param {number} [opts.patrolDistance]           px a cada lado del punto de aparición
@@ -26,6 +29,8 @@ export class EnemyAI {
     constructor(opts) {
         this.getTarget = opts.getTarget;
         this.getPeers = opts.getPeers || (() => []);
+        this.getLeader = opts.getLeader || null;
+        this.followDistance = opts.followDistance ?? 110;
         this.groundLayer = opts.groundLayer || null;
         this.patrolDistance = opts.patrolDistance ?? 128;
         this.sightRange = opts.sightRange ?? 440;
@@ -66,8 +71,12 @@ export class EnemyAI {
         // Mantener pulsado el salto unos ms para que no se corte (salto variable)
         if (time < this.jumpHoldUntil) raw.buttons.jump = true;
 
+        const leader = this.getLeader ? this.getLeader() : null;
+        const hasLeader = leader && leader.active && !leader.dead;
+        if (hasLeader) this.homeX = leader.x;
+
         const target = this.getTarget();
-        const alive = target && !target.dead;
+        const alive = target && target.active && !target.dead;
         const dx = alive ? target.x - me.x : 0;
         const dy = alive ? target.y - me.y : 0;
         const sees = alive && Math.abs(dx) < this.sightRange && Math.abs(dy) < this.verticalSight;
@@ -83,7 +92,7 @@ export class EnemyAI {
             this.state = STATE.ATTACK;
         }
 
-        if (this.state === STATE.PATROL) return this.patrol(raw, me);
+        if (this.state === STATE.PATROL) return hasLeader ? this.follow(raw, time, me, leader) : this.patrol(raw, me);
         const want = Math.sign(dx) || 1;
         if (this.state === STATE.ALERT) {
             if (me.facing !== want) raw.moveX += want; // un paso para girar
@@ -154,11 +163,31 @@ export class EnemyAI {
         }
     }
 
-    /** ¿No hay suelo justo delante? */
+    /** Sigue al líder: se acerca si está lejos y salta paredes, peligros o hacia donde esté él. */
+    follow(raw, time, me, leader) {
+        const dx = leader.x - me.x;
+        const dy = leader.y - me.y;
+        if (Math.abs(dx) <= this.followDistance) return;
+        const dir = Math.sign(dx);
+        if (this.peerAhead(me, dir)) return;
+        raw.moveX += dir * this.chaseSpeed;
+        const onGround = me.body.blocked.down;
+        if (!onGround || time < this.nextJumpAt) return;
+        const wall = me.body.blocked.left || me.body.blocked.right;
+        const climb = dy < -this.verticalTolerance && Math.abs(dx) < 220;
+        const gap = this.groundLayer && this.edgeAhead(me, dir) && dy <= this.verticalTolerance;
+        if (wall || climb || gap) {
+            this.jumpHoldUntil = time + 260;
+            this.nextJumpAt = time + 700 + Math.random() * 400;
+            raw.buttons.jump = true;
+        }
+    }
+
+    /** ¿No hay suelo (o hay un peligro) justo delante? */
     edgeAhead(me, dir) {
         const probeX = me.x + dir * (me.body.width / 2 + 6);
         const tile = this.groundLayer.getTileAtWorldXY(probeX, me.y + 4);
-        return !tile || !tile.collides;
+        return !tile || !tile.collides || !!(tile.properties && tile.properties.hazard);
     }
 
     /** ¿Hay un compañero muy cerca en esa dirección y a la misma altura? */

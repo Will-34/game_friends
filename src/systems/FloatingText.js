@@ -3,6 +3,7 @@
  *  - showKillPopup: "+1" seguido del símbolo del personaje (cuando el jugador hace una baja).
  *  - showEmote: solo el símbolo (gesto de un enemigo cuando acierta al jugador).
  *  - showAbilityBanner: nombre de la habilidad al activarla.
+ *  - showSpeech: globo de diálogo que sigue al personaje (jefe, aliados).
  *
  * El símbolo viene de character.json → "taunt":
  *   { "emoji": "🎂" }            emoji del sistema
@@ -81,4 +82,36 @@ export function showAbilityBanner(scene, fighter, text, color = '#ffd34d') {
     const { x, y } = fighter.headPoint();
     const t = scene.add.text(x, y - 18, `¡${text.toUpperCase()}!`, baseStyle(16, color)).setOrigin(0.5).setDepth(61);
     floatAway(scene, t, 36, 1400);
+}
+
+/** Globo de diálogo que sigue al personaje durante `ms` (frase del jefe, aliados que llegan). */
+export function showSpeech(scene, fighter, text, ms = 2600, color = '#1b1f2a') {
+    const t = scene.add
+        .text(0, 0, text, {
+            fontFamily: FONT.family,
+            fontSize: '15px',
+            color,
+            backgroundColor: '#fffbe8',
+            padding: { left: 8, right: 8, top: 5, bottom: 5 },
+            align: 'center',
+            wordWrap: { width: 300 },
+        })
+        .setOrigin(0.5, 1)
+        .setDepth(62);
+    const follow = () => {
+        if (!fighter.active || !t.active) return;
+        const { x, y } = fighter.headPoint();
+        // Dentro de la pantalla aunque el personaje esté en el borde
+        const view = scene.cameras.main.worldView;
+        const half = t.width / 2 + 4;
+        t.setPosition(Phaser.Math.Clamp(x, view.x + half, view.right - half), Math.max(view.y + t.height + 4, y - 4));
+    };
+    follow();
+    scene.events.on('update', follow);
+    const cleanup = () => {
+        scene.events.off('update', follow);
+        if (t.active) t.destroy();
+    };
+    scene.time.delayedCall(ms, () => scene.tweens.add({ targets: t, alpha: 0, duration: 250, onComplete: cleanup }));
+    scene.events.once('shutdown', cleanup);
 }
