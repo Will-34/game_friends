@@ -23,7 +23,8 @@ DeviceManager (sin escena): táctil, pantalla completa/horizontal, aviso HTML "G
    - Descarga cada `character.json` y `map.json` y los valida. Lo inválido se omite con un aviso en consola.
    - El resultado (`content`) se guarda en `game.registry` con la clave `content`.
 2. `PreloadScene` encola los recursos con claves derivadas de los ids (`char:<id>`, `fx:<id>`, `portrait:<id>`, `map:<id>`, `map:<id>:<imagen>`) y crea las animaciones `<id>_<animación>` (por ejemplo `plata_idle`).
-3. `GameScene` recibe `{ characterId, mapId }` y construye todo a partir de los datos.
+3. Flujo de escenas: `Menu` → `CharacterSelect` → `MapSelect` → `Story` → `Game` (+ `Hud`). Al vencer al jefe, `Game` pasa a la `Story` del siguiente nivel.
+4. `GameScene` recibe `{ characterId, mapId, checkpoint }` y construye todo a partir de los datos (`checkpoint: 'boss'` = reintentar desde el jefe).
 
 ## Entidades y roles
 
@@ -56,9 +57,17 @@ EnemyAI ──────────┘
 
 - Formato Tiled JSON en `content/maps/<id>/map.json`. Capas esperadas:
   - `ground` (tiles) — colisión por propiedad `collides`; `oneWay` para plataformas atravesables.
-  - `spawns` (objetos) — puntos `player` y `enemy` (propiedades `characterId`, `patrol`).
+  - `spawns` (objetos) — puntos `player`, `enemy` (propiedades `characterId`, `count`, `patrol`), `arena` (borde izquierdo de la arena del jefe) y `boss`.
   - Capas de imagen con `parallaxx` → fondos parallax (`TileSprite` con scroll proporcional).
-- Propiedades del mapa: `name`, `music`, `backgroundColor`, `placeholder`.
+- Propiedades del mapa: `name`, `subtitle`, `order` (campaña), `story`, `difficulty`, `bossName`, `bossTaunt`, `bossHealth`, `bossEscorts`, `bossReinforcements`, `allies`, `allyRespawns`, `clearText`, `music`, `backgroundColor`, `placeholder`. `LevelCatalog.js` las lee (sin conocer mapas concretos).
+- Propiedades de tile: `collides`, `oneWay`, `hazard` (daño), `slow` (multiplicador de velocidad), `bounce` (rebote). `GameScene.applyTerrain` las aplica a cualquier `Fighter` que las pise.
+- Los niveles de Santa Cruz se generan con `tools/build-level.php` (tema de arte + definición); ver ADR-012.
+
+## Jefe y aliados (E5)
+
+- El jefe es un personaje al azar con rol `ENEMY`, escala ×1,5 (`Fighter` escala la boca del arma, el nombre y el aura; el cuerpo de Arcade escala solo) y 2 fases.
+- Los aliados son `ALLY` (bando `heroes`) con la misma `EnemyAI` en modo "seguir al líder". Todas las IA apuntan al **hostil más cercano** (`GameScene.nearestHostile`).
+- `EnemyAbilityDirector` se usa dos veces: una para enemigos y otra para aliados.
 
 ## Audio
 
@@ -67,7 +76,7 @@ EnemyAI ──────────┘
 
 ## Eventos entre escenas
 
-`src/systems/GameEvents.js` define los nombres. `GameScene` emite en `this.events`: `player-health`, `player-ready`, `enemies-left`, `level-cleared`, `player-defeated`, y escucha `request-pause` (botón de pausa del HUD).
+`src/systems/GameEvents.js` define los nombres. `GameScene` emite en `this.events`: `player-health`, `player-ready`, `enemies-left`, `level-cleared`, `player-defeated`, `boss-start`, `boss-health`, `boss-end`, `allies-status`, `message`, y escucha `request-pause` (botón de pausa del HUD).
 
 ## Depuración
 

@@ -64,9 +64,24 @@
     ],
     "maps": [
         {
+            "id": "casco-viejo",
+            "name": "Casco Viejo",
+            "path": "content/maps/casco-viejo/"
+        },
+        {
+            "id": "lomas",
+            "name": "Lomas de Arena",
+            "path": "content/maps/lomas/"
+        },
+        {
             "id": "prueba",
             "name": "Zona de pruebas",
             "path": "content/maps/prueba/"
+        },
+        {
+            "id": "uagrm",
+            "name": "Ciudad Universitaria UAGRM",
+            "path": "content/maps/uagrm/"
         }
     ],
     "warnings": []

@@ -37,3 +37,5 @@ Videojuego arcade 2D de acción lateral (run-and-gun) en pixel art, 100 % origin
 | Audio | `specs/audio/spec.md` |
 | Visor de animaciones | `specs/anim-viewer/spec.md` |
 | Selección de protagonista | `specs/character-select/spec.md` |
+| Niveles (mapas, terreno, jefe y aliados) | `specs/levels/spec.md` |
+| Historia | `specs/story/spec.md` |

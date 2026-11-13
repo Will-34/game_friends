@@ -42,7 +42,7 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 | --- | --- |
 | `PLAYER` | Protagonista elegido por el jugador |
 | `ENEMY` | Cualquier amigo que no sea el protagonista puede aparecer como enemigo |
-| `ALLY` | En el final, 4 personajes se vuelven aliados controlados por IA |
+| `ALLY` | 2 aliados al azar en cada combate contra un jefe (E5); en el final, 4 (E6) |
 | `RESCUE_TARGET` | Henry, a quien hay que rescatar |
 
 [PENDIENTE: requisitos-v2] Reglas exactas de qué personajes son enemigos/aliados en cada nivel y cómo se eligen los 4 aliados.
@@ -95,11 +95,25 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 - **IA**: los enemigos patrullan, reaccionan al verte (más rápido cuanto más difíciles), te persiguen sin abandonar su zona, saltan y te disparan hacia arriba si estás encima.
 - Al terminar (victoria o derrota) se muestra el resumen: personaje, bajas y tiempo.
 
-## 6. Niveles y mapas
+## 6. Niveles y mapas (E5)
 
-- **Selección de mapa: pendiente de definir** (pantalla nueva, historia H-050).
-- 3 niveles con parallax, obstáculos y progresión de dificultad (E5). [PENDIENTE: requisitos-v2] temática de cada nivel.
-- E1 incluye un mapa de prueba ("Zona de pruebas") con gráficos provisionales.
+Ambientados en **Santa Cruz de la Sierra (Bolivia)**, con jerga cruceña ("¡Qué macana!", "chango", "¡Ahijuna!", "pues", voseo).
+
+Flujo: Menú → protagonista → **mapa** → **historia** (texto del nivel) → partida. Al vencer al jefe: "¡FUERZA CAMBA!" y se sigue al siguiente nivel.
+
+| # | Nivel | Ambiente | Peligros y obstáculos | Jefe |
+| --- | --- | --- | --- | --- |
+| 1 | **Casco Viejo** (Plaza 24 de Septiembre) | Día: Catedral, casas coloniales con galerías, toborochis, palmeras | Charcos de lluvia (lento), parrillas (daño), toldos de puestos (rebote) | El Capo de la Plaza |
+| 2 | **Ciudad Universitaria UAGRM** | Cielo azul: módulos de facultad, letrero UAGRM, laguna, palmeras | Laguna (daño), barro (lento), toldos de la feria azul y rojo (rebote) | El Inge del Cero |
+| 3 | **Lomas de Arena** | Atardecer: dunas rosadas, monte, árboles secos | Curichis (daño), arena movediza (lento), llantas (rebote) | El Rey de las Dunas |
+
+- **Progresión:** más enemigos y más difíciles en cada nivel (Fácil/Normal/Difícil 60/30/10 → 40/40/20 → 25/40/35); vida del jefe ×5 → ×7 → ×9.
+- **Arena del jefe:** una barrera ("NO PASAR") cierra la arena hasta eliminar a todos los enemigos del nivel. Al entrar: cámara fija, el jefe cae con su frase, llegan sus escoltas.
+- **Jefe:** un amigo "hackeado" al azar, más grande (×1,5), con barra de vida propia. **Fase 2** (≤ 50 % de vida): se enfurece ("¡… SE PICÓ!"), dispara más, usa su habilidad y llegan refuerzos. Al caer, las escoltas se desconectan.
+- **Aliados:** en el combate del jefe llegan **2 aliados al azar** (nunca el protagonista, Henry ni el jefe). Siguen al protagonista y atacan al enemigo más cercano. Si caen, **vuelven a los 5-10 s, como máximo 2 veces cada uno**. El HUD muestra su estado.
+- **Reintento:** si caes en la arena, puedes reintentar **desde el jefe**.
+- Arte (fondos de 4 capas parallax y tilesets) **generado por código** con `tools/build-level.php`; se podrá reemplazar por imágenes propias sin tocar código (H-070).
+- La "Zona de pruebas" solo aparece en modo desarrollo.
 
 ## 7. Jefe final
 

@@ -27,7 +27,7 @@ const TEAM_BY_ROLE = Object.freeze({
  */
 const ROLE_MODIFIERS = Object.freeze({
     PLAYER: { health: 1, bulletSpeed: 1, fireRate: 1, stunMs: 280, invulnerableMs: 900, tint: null },
-    ALLY: { health: 1, bulletSpeed: 1, fireRate: 1, stunMs: 200, invulnerableMs: 500, tint: null },
+    ALLY: { health: 1, bulletSpeed: 0.8, fireRate: 1.25, damage: 0.8, stunMs: 200, invulnerableMs: 500, tint: null },
     ENEMY: { health: 0.5, bulletSpeed: 0.55, fireRate: 1.4, stunMs: 120, invulnerableMs: 60, tint: 0xffc2c2 },
     RESCUE_TARGET: { health: 1, bulletSpeed: 1, fireRate: 1, stunMs: 0, invulnerableMs: 0, tint: null },
 });
@@ -57,11 +57,26 @@ export class CharacterRoleManager {
      * Reparte sin repetir mientras haya candidatos (baraja y recorre).
      * @param {Map<string, object>} characters
      * @param {number} count
+     * @param {Iterable<string>} [exclude]  ids que no se deben elegir (p. ej. el jefe y los aliados)
      * @returns {string[]} ids
      */
-    pickEnemyIds(characters, count) {
-        const exclude = new Set(this.withRole(ROLES.PLAYER));
-        const pool = [...characters.values()].filter((d) => !exclude.has(d.id) && d.canBeEnemy !== false).map((d) => d.id);
+    pickEnemyIds(characters, count, exclude = []) {
+        const out = this.pickIds(characters, count, exclude);
+        for (const id of new Set(out)) if (!this.assignments.has(id)) this.assign(id, ROLES.ENEMY);
+        return out;
+    }
+
+    /**
+     * Elige N personajes al azar entre los que pueden aparecer como no jugadores (canBeEnemy !== false),
+     * sin el protagonista ni los excluidos. Sin repetir mientras haya candidatos.
+     * Si al excluir no queda nadie, se ignoran los excluidos (nunca el protagonista).
+     */
+    pickIds(characters, count, exclude = []) {
+        const players = new Set(this.withRole(ROLES.PLAYER));
+        const base = [...characters.values()].filter((d) => !players.has(d.id) && d.canBeEnemy !== false).map((d) => d.id);
+        const ex = new Set(exclude);
+        let pool = base.filter((id) => !ex.has(id));
+        if (pool.length === 0) pool = base;
         if (pool.length === 0) return [];
         const out = [];
         let bag = [];
@@ -69,7 +84,6 @@ export class CharacterRoleManager {
             if (bag.length === 0) bag = Phaser.Utils.Array.Shuffle([...pool]);
             out.push(bag.pop());
         }
-        for (const id of new Set(out)) if (!this.assignments.has(id)) this.assign(id, ROLES.ENEMY);
         return out;
     }
 
@@ -93,7 +107,7 @@ export class CharacterRoleManager {
      * @param {string} role       ROLES.*
      * @param {number} x
      * @param {number} y          coordenada de los pies
-     * @param {object} deps       { controller, projectiles, grenades, specials, grenadeCount, modsOverride, nameColor }
+     * @param {object} deps       { controller, projectiles, grenades, specials, grenadeCount, modsOverride, nameColor, title, scale }
      */
     createFighter(scene, def, role, x, y, deps) {
         const mods = { ...CharacterRoleManager.modifiersOf(role), ...(deps.modsOverride || {}) };
@@ -108,6 +122,8 @@ export class CharacterRoleManager {
             grenadeCount: deps.grenadeCount,
             nameColor: deps.nameColor,
             weapons: deps.weapons,
+            title: deps.title,
+            scale: deps.scale,
         });
         if (mods.tint !== null) fighter.setTint(mods.tint);
         return fighter;

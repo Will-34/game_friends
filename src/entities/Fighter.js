@@ -40,7 +40,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
      * @param {number} x
      * @param {number} y  posición de los PIES
      * @param {object} def  character.json
-     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor, weapons }
+     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor, weapons, title, scale }
      */
     constructor(scene, x, y, def, opts) {
         super(scene, x, y, textureKey(def.id), def.animations.idle ? def.animations.idle.frames[0] : 0);
@@ -91,6 +91,9 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         this.buffs = [];
 
         this.setDepth(10);
+        // Escala (el jefe es más grande). El cuerpo físico de Arcade escala solo con el sprite.
+        this.sizeScale = opts.scale || 1;
+        if (this.sizeScale !== 1) this.setScale(this.sizeScale);
         this.body.setCollideWorldBounds(true);
         this.body.setMaxVelocity(2000, PHYSICS.maxFallSpeed);
 
@@ -106,7 +109,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         // Aura de habilidad y etiqueta con el nombre (y mini barra de vida si no es el jugador)
         this.aura = scene.add.graphics().setDepth(9);
         this.nameTag = scene.add
-            .text(x, y, def.name.toUpperCase(), {
+            .text(x, y, opts.title || def.name.toUpperCase(), {
                 fontFamily: FONT.family,
                 fontSize: '12px',
                 color: opts.nameColor || '#ffffff',
@@ -280,7 +283,8 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         const m = this.def.muzzle || {};
         const p = up ? m.up : this.crouching ? m.crouch : m.stand;
         const off = p || { x: 30, y: -40 };
-        return { x: this.x + off.x * this.facing, y: this.y + off.y };
+        const s = this.sizeScale;
+        return { x: this.x + off.x * s * this.facing, y: this.y + off.y * s };
     }
 
     /** Daño de un disparo propio, con los buffs aplicados. */
@@ -369,7 +373,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
 
     throwGrenade(time) {
         if (!this.grenadePool || this.grenades <= 0 || time < this.throwUntil) return false;
-        const g = this.grenadePool.throw(this, this.x + 14 * this.facing, this.y - 50, this.facing);
+        const g = this.grenadePool.throw(this, this.x + 14 * this.facing * this.sizeScale, this.y - 50 * this.sizeScale, this.facing);
         if (!g) return false;
         if (Number.isFinite(this.grenades)) this.grenades--;
         this.throwUntil = time + THROW_POSE_MS;
@@ -405,21 +409,22 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         g.clear();
         const b = this.buffs.find((x) => x.aura);
         if (!b) return;
-        const h = this.def.body.height;
+        const h = this.def.body.height * this.sizeScale;
         let color;
         if (b.aura === 'rainbow') color = Phaser.Display.Color.HSVToRGB((time / 1200) % 1, 0.8, 1).color;
         else color = Phaser.Display.Color.HexStringToColor(b.aura).color;
         const pulse = 0.35 + 0.25 * Math.sin(time / 120);
         g.lineStyle(3, color, 0.5 + pulse);
-        g.strokeEllipse(this.x, this.y - h / 2, 58, h + 18);
+        const w = 58 * this.sizeScale;
+        g.strokeEllipse(this.x, this.y - h / 2, w, h + 18);
         if (b.invulnerable) {
-            g.fillStyle(color, 0.12).fillEllipse(this.x, this.y - h / 2, 58, h + 18);
+            g.fillStyle(color, 0.12).fillEllipse(this.x, this.y - h / 2, w, h + 18);
         }
     }
 
     /** Coloca el nombre y la mini barra de vida sobre la cabeza. */
     syncLabels() {
-        const top = this.y - this.def.body.height - 14 - (this.labelOffset || 0);
+        const top = this.y - this.def.body.height * this.sizeScale - 14 - (this.labelOffset || 0);
         this.nameTag.setPosition(this.x, top);
         this.nameTag.setVisible(!this.dead);
         if (this.hpBar) {
@@ -435,7 +440,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
 
     /** Punto sobre la cabeza (para mensajes flotantes). */
     headPoint() {
-        return { x: this.x, y: this.y - this.def.body.height - 30 };
+        return { x: this.x, y: this.y - this.def.body.height * this.sizeScale - 30 };
     }
 
     // ------------------------------------------------------------------ daño y muerte

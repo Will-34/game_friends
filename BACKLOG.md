@@ -3,7 +3,7 @@
 Estados: `Pendiente` · `En progreso` · `Hecho` · `Bloqueado`
 Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
-**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **E4 cerrada** (armas, objetos, IA, resumen). **Siguiente épica:** E5 — Mapas (selección de mapa y 3 niveles).
+**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate; **E5 — Mapas** (3 niveles de Santa Cruz con jefe y aliados, historia y jerga cruceña) (2026-11-13). **Siguiente épica:** E6 — Final (Robot Guardián y rescate de Henry).
 
 ### Decisiones del usuario (2026-11-13)
 1. Las láminas sin transparencia se usan tal cual: la herramienta quitará el fondo pintado (H-045).
@@ -214,25 +214,38 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
 | ID | Historia | Estado |
 | --- | --- | --- |
-| H-050 | Pantalla de selección de mapa (diseño pendiente) | Pendiente |
-| H-051 | 3 niveles diseñados en Tiled | Pendiente |
-| H-052 | Parallax definitivo por nivel | Pendiente |
-| H-053 | Obstáculos y peligros | Pendiente |
-| H-054 | Progresión de dificultad entre niveles | Pendiente |
+| H-050 | Pantalla de selección de mapa | Hecho |
+| H-051 | 3 niveles en Tiled: Casco Viejo, UAGRM, Lomas de Arena | Hecho |
+| H-052 | Parallax por nivel (4 capas generadas) | Hecho |
+| H-053 | Obstáculos y peligros (peligro, terreno lento, rebote) | Hecho |
+| H-054 | Progresión de dificultad entre niveles | Hecho |
+| H-057 | Jefe al final de cada mapa (2 fases, escoltas y refuerzos) | Hecho |
+| H-058 | 2 aliados aleatorios contra el jefe (vuelven a los 5-10 s, máx. 2 veces) | Hecho |
+| H-059 | Historia antes de cada nivel y jerga cruceña | Hecho |
+| H-063 | Prueba humana del combate contra el jefe y equilibrio | Pendiente |
+
+- Decisiones del usuario (2026-11-13): mapas de Santa Cruz; la UAGRM en lugar del mercado Los Pozos (con la foto de la Facultad de Humanidades como referencia); cada mapa con su jefe; el jefe tiene escoltas aleatorias; 2 aliados aleatorios contra el jefe que vuelven a los 5-10 s, como máximo 2 veces; jerga cruceña; arte "a mi manera" (generado) por ahora.
+- H-050 (hecho): `MapSelectScene`: tarjetas con miniatura (fondos del mapa), nivel, nombre, subtítulo, dificultad (★) y jefe. La "Zona de pruebas" solo en desarrollo.
+- H-051/H-052 (hecho): `tools/build-level.php` + temas en `tools/lib/level-themes.php` (pixel art generado con GD a media resolución ×2). Casco Viejo: Catedral, casas coloniales con galería, toborochis. UAGRM: módulos de facultad (como la foto), letrero UAGRM, laguna. Lomas: dunas al atardecer, monte, árboles secos. **Arte provisional respecto a H-070**: se puede reemplazar por PNG propios (ver COMO-AGREGAR-MAPA).
+- H-053 (hecho): tiles `hazard` (parrilla, laguna, curichi), `slow` (charco, barro, arena movediza) y `bounce` (toldos, llantas). La IA no pisa peligros.
+- H-054 (hecho): pesos Fácil/Normal/Difícil por mapa (60/30/10 → 40/40/20 → 25/40/35), más grupos y vida del jefe ×5 → ×7 → ×9.
+- H-057 (hecho): barrera hasta despejar el nivel; jefe = amigo al azar ×1,5 con frase, barra propia, fase 2 al 50 % (refuerzos, habilidad); reintento desde el jefe.
+- H-058 (hecho): aliados con `EnemyAI` en modo "seguir al líder"; todas las IA apuntan al hostil más cercano; estado en el HUD.
+- H-059 (hecho): `StoryScene` con el texto `story` de cada mapa; frases de jefes y aliados; carteles "¡QUÉ MACANA!" / "¡FUERZA CAMBA!".
 
 ## E6 — Final
 
 | ID | Historia | Estado |
 | --- | --- | --- |
 | H-060 | Robot Guardián de 3 fases | Pendiente |
-| H-061 | 4 aliados con máquina de estados | Pendiente |
+| H-061 | 4 aliados con máquina de estados (base hecha en E5: IA "seguir al líder" y reaparición) | Pendiente |
 | H-062 | Rescate de Henry y pantalla de victoria | Pendiente |
 
 ## E7 — Pulido
 
 | ID | Historia | Estado |
 | --- | --- | --- |
-| H-070 | Sprites definitivos (incluye tileset y fondos, que hoy son provisionales) | Pendiente |
+| H-070 | Sprites definitivos (incluye tilesets y fondos: hoy generados por código en E5) | Pendiente |
 | H-071 | Música y efectos finales (CC0/CC-BY) | Pendiente |
 | H-072 | Optimización y calidad gráfica | Pendiente |
 | H-073 | Pruebas finales en todos los navegadores y dispositivos | Pendiente |

@@ -33,10 +33,10 @@ export const PATHS = {
     weapons: 'content/config/weapons.json',
 };
 
-/** Personaje y mapa por defecto mientras no exista la selección (E3/E5). */
+/** Personaje y mapa por defecto si la partida se abre sin elegirlos (la selección está en E3/E5). */
 export const DEFAULTS = {
     playerCharacterId: 'plata',
-    mapId: 'prueba',
+    mapId: 'casco-viejo',
 };
 
 /** Estilos de texto comunes */
