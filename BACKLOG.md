@@ -3,7 +3,7 @@
 Estados: `Pendiente` · `En progreso` · `Hecho` · `Bloqueado`
 Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
-**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **Pendiente en E4:** H-039 (armas) y H-044 (IA avanzada). **Siguiente épica:** E5 — Mapas.
+**Hecho:** E2 — Móvil; E3 — Personajes y selección; E4 — Combate (habilidades, granadas, dificultad, grupos de enemigos) (2026-11-13). **E4 cerrada** (armas, objetos, IA, resumen). **Siguiente épica:** E5 — Mapas (selección de mapa y 3 niveles).
 
 ### Decisiones del usuario (2026-11-13)
 1. Las láminas sin transparencia se usan tal cual: la herramienta quitará el fondo pintado (H-045).
@@ -190,15 +190,20 @@ Flujo de trabajo y Definición de Terminado: ver [AGENTS.md](AGENTS.md).
 
 | ID | Historia | Estado |
 | --- | --- | --- |
-| H-039 | Armas y cambio de arma | Pendiente |
+| H-039 | Armas y cambio de arma | Hecho |
 | H-040 | Habilidades de enemigos | Hecho |
 | H-041 | Granadas | Hecho |
 | H-042 | `SpecialAbilitySystem` y las 10 habilidades | Hecho |
 | H-043 | Dificultad aleatoria por enemigo (`DifficultyManager`) y grupos de 2-3 enemigos | Hecho |
-| H-044 | IA de enemigos definitiva (máquina de estados, cobertura, persecución) | Pendiente |
+| H-044 | IA de enemigos (estados, persecución, saltos, apuntar arriba, separación) | Hecho |
+| H-055 | Objetos que sueltan los enemigos (armas, vida, granadas) | Hecho |
+| H-056 | Resumen al terminar (personaje, bajas, tiempo) | Hecho |
 | H-048 | Nombre sobre cada personaje (y mini barra de vida en enemigos) | Hecho |
 | H-049 | "+1" con el símbolo del personaje en cada baja; gestos de los enemigos | Hecho |
 
+- H-039 (hecho): `content/config/weapons.json`: pistola (stats del personaje, infinita), metralleta, escopeta (6 perdigones) y lanzallamas (atraviesa). Munición limitada; al agotarse se vuelve a la pistola. Q / botón ARMA cambia de arma.
+- H-055 (hecho): 40 % de probabilidad al morir un enemigo: arma (caja con letra), vida (+30) o granadas (+3); duran 15 s.
+- H-044 (hecho): `src/ai/EnemyAI.js` (reemplaza a `DummyEnemyAI`): patrulla → alerta (tiempo de reacción según dificultad) → ataque. Persigue sin alejarse de su zona, salta paredes y hacia plataformas, apunta arriba si estás encima, no se amontona con sus compañeros. El daño de los enemigos también depende de la dificultad (60 / 80 / 100 %).
 - H-040 (hecho): los enemigos usan su misma habilidad (`enemyAbility: null` = usar `ability`). `EnemyAbilityDirector`: cada 9-16 s elige UN enemigo visible al azar; nunca dos habilidades enemigas a la vez.
 - H-041 (hecho): tecla U / botón GRANADA; 5 al empezar (Domeki recarga 3 con su habilidad); parábola, rebote, explosión con daño en área (85 px) y temblor de cámara. Los enemigos difíciles también lanzan.
 - H-042 (hecho): la habilidad se carga con 2 bajas y se activa con L / botón HABILIDAD. Tipos: `buff` (8 personajes), `drone` (Plata), `shadow-dash` (Reymar). Ver ADR-009.

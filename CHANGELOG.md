@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones con [SemVer](https://semver.org/lang/es/).
 
+## [0.5.0] — 2026-11-13
+
+### E4 — Combate (cierre)
+
+#### Agregado
+- **Armas** (`content/config/weapons.json`): pistola, metralleta, escopeta y lanzallamas con munición; cambio con Q / botón ARMA; HUD con arma y munición.
+- **Objetos** que sueltan los enemigos: armas, vida y granadas (`PickupManager`).
+- **IA de enemigos** `EnemyAI`: estados patrulla / alerta / ataque, persecución con límite, saltos, disparo hacia arriba y separación del grupo.
+- **Resumen** en los carteles de victoria y derrota (personaje, bajas, tiempo).
+- Proyectiles con textura por arma, alcance, perforación y crecimiento (llamas).
+
+#### Cambiado
+- El daño de los enemigos depende de su dificultad (60 / 80 / 100 %).
+- Icono de la bota verde de Sergio más reconocible; iconos pixel art más grandes en el "+1".
+
+#### Eliminado
+- `src/ai/DummyEnemyAI.js` (reemplazada por `EnemyAI`).
+
 ## [0.4.0] — 2026-11-13
 
 ### E2 — Móvil

@@ -59,13 +59,13 @@ export class MenuScene extends Phaser.Scene {
                 cx,
                 GAME_HEIGHT - 50,
                 device.touch
-                    ? 'Joystick (izquierda): mover · abajo agacharse · arriba apuntar\nBotones: FUEGO · SALTO · GRANADA · HABIL. (se carga con 2 bajas)'
-                    : 'Mover: ←→ / A D   Saltar: Espacio / K   Disparar: J   Agacharse: ↓ / S   Apuntar arriba: ↑ / W\nGranada: U   Habilidad: L (se carga con 2 bajas)   Pausa: Esc / P   Silencio: M',
+                    ? 'Joystick (izquierda): mover · abajo agacharse · arriba apuntar\nBotones: FUEGO · SALTO · GRANADA · HABIL. (2 bajas) · ARMA'
+                    : 'Mover: ←→ / A D   Saltar: Espacio / K   Disparar: J   Agacharse: ↓ / S   Apuntar arriba: ↑ / W\nGranada: U   Habilidad: L (2 bajas)   Cambiar arma: Q   Pausa: Esc / P   Silencio: M',
                 textStyle(14, '#9fb0cc', { align: 'center', strokeThickness: 2 })
             )
             .setOrigin(0.5);
         this.add
-            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.4.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
+            .text(GAME_WIDTH - 10, GAME_HEIGHT - 10, `v0.5.0 · catálogo: ${content.catalog.source}`, textStyle(11, '#56657f'))
             .setOrigin(1, 1);
     }
 }

@@ -2,7 +2,7 @@
 
 Videojuego arcade de acción lateral 2D (run-and-gun) en pixel art, 100 % original. Nueve amigos pueden ser protagonistas o enemigos; al final, cuatro se vuelven aliados para rescatar a Henry de un robot gigante.
 
-**Estado:** E0 (Fundaciones), E1 (MVP) y E3 (10 personajes y selección) , E2 (móvil) y E4 (habilidades, granadas, dificultad) terminadas. Pendiente en E4: armas (H-039) e IA avanzada (H-044). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
+**Estado:** E0 (Fundaciones), E1 (MVP), E2 (móvil), E3 (10 personajes y selección) y E4 (habilidades, granadas, armas, objetos, IA) terminadas. Siguiente: E5 (mapas). Ver [BACKLOG.md](BACKLOG.md) y [CHANGELOG.md](CHANGELOG.md).
 
 ## Requisitos
 
@@ -50,7 +50,7 @@ Controles táctiles: joystick flotante a la izquierda (donde pongas el pulgar; a
 | Disparar | J |
 | Granada | U |
 | Habilidad especial (se carga con 2 bajas) | L |
-| Cambiar arma (reservada) | Q |
+| Cambiar arma | Q |
 | Pausa | Esc o P |
 | Silencio | M |
 

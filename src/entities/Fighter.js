@@ -40,7 +40,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
      * @param {number} x
      * @param {number} y  posición de los PIES
      * @param {object} def  character.json
-     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor }
+     * @param {object} opts { role, team, modifiers, controller, projectiles, grenades, specials, grenadeCount, nameColor, weapons }
      */
     constructor(scene, x, y, def, opts) {
         super(scene, x, y, textureKey(def.id), def.animations.idle ? def.animations.idle.frames[0] : 0);
@@ -62,6 +62,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
             maxHealth: Math.max(1, Math.round(base.maxHealth * this.mods.health)),
             bulletSpeed: base.bulletSpeed * this.mods.bulletSpeed,
             fireRateMs: base.fireRateMs * this.mods.fireRate,
+            bulletDamage: base.bulletDamage * (this.mods.damage ?? 1),
         };
         this.health = this.stats.maxHealth;
 
@@ -79,6 +80,10 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         this.currentAnim = null;
 
         this.grenades = opts.grenadeCount ?? 0;
+        // Armas: siempre empieza con la de por defecto (munición infinita)
+        this.weaponDefs = opts.weapons ? opts.weapons.weapons : null;
+        this.inventory = [{ id: (opts.weapons && opts.weapons.default) || 'pistola', ammo: Number.POSITIVE_INFINITY }];
+        this.weaponIdx = 0;
         this.specialCharge = 0;
         this.kills = 0;
         this.lastAttacker = null;
@@ -236,7 +241,7 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
             }
             if (a.pressed.grenade) this.throwGrenade(time);
             if (a.pressed.special) this.tryUseSpecial(time);
-            // switchWeapon: reservada (H-039)
+            if (a.pressed.switchWeapon) this.cycleWeapon();
         } else {
             body.setVelocityX(body.velocity.x * 0.88);
         }
@@ -283,22 +288,83 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         return base * this.buffValue('damageMul');
     }
 
+    // ------------------------------------------------------------------ armas
+
+    /**
+     * Arma actual con sus valores efectivos. La pistola usa los stats del personaje (ya ajustados
+     * por rol y dificultad); las demás, los de content/config/weapons.json.
+     */
+    currentWeapon() {
+        const slot = this.inventory[this.weaponIdx] || this.inventory[0];
+        const w = (this.weaponDefs && this.weaponDefs[slot.id]) || { usesCharacterStats: true };
+        if (w.usesCharacterStats) {
+            return {
+                id: slot.id, name: w.name || 'Pistola', ammo: slot.ammo, texture: w.texture,
+                fireRateMs: this.stats.fireRateMs, damage: this.stats.bulletDamage, bulletSpeed: this.stats.bulletSpeed,
+                pellets: 1, spreadDeg: 0, lifespanMs: 1400, pierce: false, grow: 1, color: '#ffffff',
+            };
+        }
+        return { pellets: 1, spreadDeg: 0, lifespanMs: 1200, grow: 1, ...w, id: slot.id, ammo: slot.ammo };
+    }
+
+    /** Cambia a la siguiente arma del inventario (Q / botón ARMA). */
+    cycleWeapon() {
+        if (this.inventory.length < 2) return;
+        this.weaponIdx = (this.weaponIdx + 1) % this.inventory.length;
+        audio.sfx('ui');
+        this.emit(FIGHTER_EVENTS.STATS, this);
+    }
+
+    /** Recoge un arma: si ya la tiene suma munición; si no, la añade y la equipa. */
+    giveWeapon(id) {
+        const def = this.weaponDefs && this.weaponDefs[id];
+        if (!def) return false;
+        const ammo = def.ammo ?? Number.POSITIVE_INFINITY;
+        const slot = this.inventory.find((s) => s.id === id);
+        if (slot) slot.ammo += ammo;
+        else {
+            this.inventory.push({ id, ammo });
+            this.weaponIdx = this.inventory.length - 1;
+        }
+        this.emit(FIGHTER_EVENTS.STATS, this);
+        return true;
+    }
+
     shoot(time, up) {
+        const w = this.currentWeapon();
         const { x, y } = this.muzzlePoint(up);
-        const speed = this.stats.bulletSpeed;
-        const vx = up ? 0 : speed * this.facing;
-        const vy = up ? -speed : 0;
-        this.projectiles.fire(x, y, vx, vy, {
-            owner: this,
-            team: this.team,
-            damage: this.outgoingDamage(this.stats.bulletDamage),
-            tint: this.team === 'enemies' ? 0xff7b6b : null,
-        });
-        this.nextShotAt = time + this.stats.fireRateMs;
+        const base = up ? -90 : this.facing > 0 ? 0 : 180;
+        const n = Math.max(1, w.pellets);
+        for (let i = 0; i < n; i++) {
+            // Varios perdigones: abanico repartido; uno solo: pequeña dispersión aleatoria
+            const off = n > 1 ? -w.spreadDeg / 2 + (w.spreadDeg * i) / (n - 1) : (Math.random() - 0.5) * w.spreadDeg;
+            const ang = Phaser.Math.DegToRad(base + off);
+            this.projectiles.fire(x, y, Math.cos(ang) * w.bulletSpeed, Math.sin(ang) * w.bulletSpeed, {
+                owner: this,
+                team: this.team,
+                damage: this.outgoingDamage(w.damage),
+                tint: this.team === 'enemies' ? 0xff7b6b : null,
+                texture: w.texture,
+                lifespanMs: w.lifespanMs,
+                pierce: w.pierce,
+                grow: w.grow,
+            });
+        }
+        this.nextShotAt = time + w.fireRateMs;
         this.firingUntil = time + FIRE_POSE_MS;
         this.lastShotUp = up;
         this.flashUntil = time + 50;
         audio.sfx('shoot');
+        // Munición: al agotarse, se pierde el arma y se vuelve a la pistola
+        const slot = this.inventory[this.weaponIdx];
+        if (slot && Number.isFinite(slot.ammo)) {
+            slot.ammo--;
+            if (slot.ammo <= 0) {
+                this.inventory.splice(this.weaponIdx, 1);
+                this.weaponIdx = 0;
+            }
+            this.emit(FIGHTER_EVENTS.STATS, this);
+        }
     }
 
     throwGrenade(time) {

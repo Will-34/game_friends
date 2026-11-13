@@ -30,6 +30,7 @@ export const PATHS = {
     catalogFallback: 'content/catalog.json',
     controls: 'content/config/controls.json',
     audio: 'content/audio/audio.json',
+    weapons: 'content/config/weapons.json',
 };
 
 /** Personaje y mapa por defecto mientras no exista la selección (E3/E5). */

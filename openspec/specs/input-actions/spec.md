@@ -20,7 +20,7 @@ La asignación de teclas DEBE leerse de `content/config/controls.json`.
 #### Escenario: Teclas por defecto
 - DADO la configuración inicial
 - CUANDO el jugador pulsa ← → / A D, ↓ / S, ↑ / W, Espacio / K, J, Esc / P
-- ENTONCES se producen respectivamente `moveX`, `crouch`, `aimUp`, `jump`, `shoot` y `pause`; U produce `grenade`, L `special` y Q `switchWeapon` (reservada hasta H-039)
+- ENTONCES se producen respectivamente `moveX`, `crouch`, `aimUp`, `jump`, `shoot` y `pause`; U produce `grenade`, L `special` y Q `switchWeapon` 
 
 ### Requisito: Controles táctiles multitáctiles
 En dispositivos táctiles (o con `?touch=1`) el HUD DEBE mostrar un joystick flotante en la mitad izquierda y botones para FUEGO, SALTO, GRANADA, HABILIDAD y CAMBIAR ARMA, configurables en `controls.json` (posición relativa a los bordes, tamaño, `enabled`), que produzcan las mismas acciones que el teclado, admitiendo varios dedos a la vez y el deslizamiento entre botones. Los botones con `enabled: false` DEBEN verse atenuados y no producir acción.
@@ -49,6 +49,6 @@ En dispositivos táctiles (o con `?touch=1`) el HUD DEBE mostrar un joystick flo
 Las entidades NO DEBEN conocer el origen de sus acciones; un controlador DEBE poder combinar varias fuentes.
 
 #### Escenario: Enemigo controlado por IA
-- DADO un Fighter con rol ENEMY y un `Controller([DummyEnemyAI])`
+- DADO un Fighter con rol ENEMY y un `Controller([EnemyAI])`
 - CUANDO la IA reporta `shoot`
 - ENTONCES el Fighter dispara con la misma lógica que el jugador

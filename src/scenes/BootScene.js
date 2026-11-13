@@ -55,11 +55,15 @@ export class BootScene extends Phaser.Scene {
         }
         if (!this.textures.exists('icon-green-boot')) {
             // Bota verde brillante
+            // Bota verde: caña, empeine redondeado, suela oscura, cordones y brillo
             const g = this.make.graphics({ x: 0, y: 0 }, false);
-            px(g, 0x0b2a10, [[3, 1, 7, 10], [3, 10, 12, 5]]);
-            px(g, 0x39ff6a, [[4, 2, 5, 9], [4, 11, 10, 2]]);
-            px(g, 0x1a9c3a, [[4, 13, 10, 1]]);
-            px(g, 0xc8ffd2, [[5, 3, 1, 6], [6, 11, 3, 1]]);
+            px(g, 0x062010, [[3, 0, 8, 1], [2, 1, 1, 9], [11, 1, 1, 6], [11, 6, 3, 1], [14, 7, 1, 3], [2, 10, 13, 1]]);
+            px(g, 0x39ff6a, [[3, 1, 8, 9], [11, 7, 3, 3]]);
+            px(g, 0x1a9c3a, [[3, 7, 11, 3]]);
+            px(g, 0xeafff0, [[6, 2, 4, 1], [6, 4, 4, 1], [6, 6, 4, 1]]);
+            px(g, 0xc8ffd2, [[4, 2, 1, 4]]);
+            px(g, 0x202020, [[1, 11, 15, 3]]);
+            px(g, 0x555555, [[2, 12, 13, 1]]);
             g.generateTexture('icon-green-boot', 32, 32);
             g.destroy();
         }
@@ -83,6 +87,30 @@ export class BootScene extends Phaser.Scene {
         }
     }
 
+    /** Proyectiles de las armas (content/config/weapons.json → "texture"). */
+    makeProjectileTextures() {
+        const make = (key, w, h, draw) => {
+            if (this.textures.exists(key)) return;
+            const g = this.make.graphics({ x: 0, y: 0 }, false);
+            draw(g);
+            g.generateTexture(key, w, h);
+            g.destroy();
+        };
+        make('projectile-heavy', 18, 7, (g) => {
+            g.fillStyle(0xff9a1f, 1).fillRoundedRect(0, 0, 18, 7, 3);
+            g.fillStyle(0xfff3a0, 1).fillRect(10, 2, 7, 3);
+        });
+        make('projectile-pellet', 7, 7, (g) => {
+            g.fillStyle(0xffe066, 1).fillCircle(3.5, 3.5, 3.5);
+            g.fillStyle(0xffffff, 1).fillCircle(3, 3, 1.5);
+        });
+        make('projectile-flame', 16, 16, (g) => {
+            g.fillStyle(0xff4d1a, 0.85).fillCircle(8, 8, 8);
+            g.fillStyle(0xff9a1f, 0.95).fillCircle(8, 8, 5.5);
+            g.fillStyle(0xfff0a0, 1).fillCircle(8, 8, 2.5);
+        });
+    }
+
     /** Texturas genéricas generadas por código (no dependen de ningún personaje). */
     makeGeneratedTextures() {
         if (!this.textures.exists(PROJECTILE_TEXTURE)) {
@@ -93,6 +121,7 @@ export class BootScene extends Phaser.Scene {
             g.destroy();
         }
         this.makeIcons();
+        this.makeProjectileTextures();
         if (!this.textures.exists(MUZZLE_TEXTURE)) {
             // Fogonazo genérico para personajes cuya lámina no trae uno
             const g = this.make.graphics({ x: 0, y: 0 }, false);

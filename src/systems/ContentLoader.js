@@ -53,7 +53,11 @@ export class ContentLoader {
      */
     static async loadAll() {
         const catalog = await ContentLoader.loadCatalog();
-        const [controls, audioConfig] = await Promise.all([fetchJson(PATHS.controls), fetchJson(PATHS.audio)]);
+        const [controls, audioConfig, weapons] = await Promise.all([
+            fetchJson(PATHS.controls),
+            fetchJson(PATHS.audio),
+            fetchJson(PATHS.weapons),
+        ]);
 
         // Se descargan en paralelo pero se guardan en el orden del catálogo (orden de la pantalla de selección)
         const defs = await Promise.all(
@@ -89,7 +93,7 @@ export class ContentLoader {
         if (characters.size === 0) throw new Error('No hay ningún personaje válido en content/characters/');
         if (maps.size === 0) throw new Error('No hay ningún mapa válido en content/maps/');
 
-        return { catalog, characters, maps, controls, audio: audioConfig };
+        return { catalog, characters, maps, controls, audio: audioConfig, weapons };
     }
 
     /** Encola en el Loader de Phaser los recursos de todos los personajes y mapas. */

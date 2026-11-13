@@ -71,6 +71,12 @@ Leyenda de resultado: ✅ OK · ❌ falla · ⏭ no aplica / no probado
 | F6 | Dejarse disparar | El enemigo que acierta muestra su símbolo (como mucho cada 2,5 s) |
 | F7 | Esperar cerca de enemigos | De vez en cuando UN enemigo usa su habilidad (aviso en rojo); nunca dos a la vez |
 | F8 | Enemigo difícil (nombre rojo) a media distancia | A veces lanza granadas |
+| F9 | Recoger una caja de arma (M, E, L) | Se equipa; el HUD muestra nombre y munición; Q cambia entre las armas |
+| F10 | Gastar toda la munición | Vuelve a la pistola |
+| F11 | Lanzallamas contra un grupo | Las llamas crecen y atraviesan, dañando a varios |
+| F12 | Recoger vida / granadas | +30 vida / +3 granadas con aviso flotante |
+| F13 | Subirse a una plataforma sobre un enemigo | Te persigue o te dispara hacia arriba; salta paredes |
+| F14 | Ganar o perder | El cartel muestra personaje, bajas y tiempo |
 
 ## D. Móvil (E2)
 
@@ -98,6 +104,7 @@ En Chrome/Edge: F12 → icono de dispositivo → elegir un teléfono. Para prueb
 | Fecha | Versión | Entorno | Resultado |
 | --- | --- | --- | --- |
 | 2026-11-13 | 0.1.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, 960×540, PHP 8.0.30 | A1, A2, A3 (bloqueando la URL), A4, A5 (estado interno), B1–B14, B17, C1–C4, D1–D4, D6 (viewport 400×800 táctil emulado) ✅. Sin errores en consola. |
+| 2026-11-13 | 0.5.0 | Edge sin interfaz vía DevTools Protocol, PHP 8.0.30 | F9–F12, F14 ✅ (las 4 armas, munición, Q, objetos, resumen); IA: transición patrulla → alerta → ataque verificada; partida automática ~45 s sin errores en consola. F13 (sensación de la IA): prueba humana. |
 | 2026-11-13 | 0.4.0 | Edge sin interfaz, emulación táctil 412×915 / 915×412, PHP 8.0.30 | D1–D3, D5, D7 (II y 🔊), D8, D13 ✅. Sin errores en consola. Pendientes de prueba en teléfono real: D4, D6, D9–D12, D14. |
 | 2026-11-13 | 0.3.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | F1–F7 ✅ (las 10 habilidades activadas; granada con daño en área; "+1" y carga; habilidad enemiga). Partida automática de ~45 s sin errores en consola. F8 y la sensación de dificultad: pendientes de prueba humana. |
 | 2026-11-13 | 0.2.0 | Edge (Chromium) sin interfaz vía DevTools Protocol, PHP 8.0.30 | E1–E6 ✅ (los 10 personajes probados: disparo de pie, agachado, arriba y salto; enemigos aleatorios correctos). Sin errores en consola. E7, E8: pendientes de prueba humana. |

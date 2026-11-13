@@ -83,7 +83,17 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 - **Bajas**: al eliminar a un enemigo aparece "+1" con el símbolo del personaje (Will "AFK", Ignacio 🎂, Carlos 👩, Reymar 😠, Pablo lata verde, Henry 🧔, Sergio bota verde, Plata "TOKEN", Ruddy 😭, Domeki 🧹).
 - **Enemigos**: aparecen en grupos de 2-3, cada uno con dificultad aleatoria (Fácil verde, Normal amarillo, Difícil rojo). Al acertarte hacen su gesto (su símbolo). Usan su habilidad de vez en cuando, **nunca dos a la vez**.
 - Todos los personajes muestran su nombre encima; los enemigos, también una mini barra de vida.
-- Armas y cambio de arma: pendiente (H-039). [PENDIENTE: requisitos-v2] lista de armas y munición.
+- **Armas** (Q / botón ARMA para cambiar):
+  | Arma | Munición | Características |
+  | --- | --- | --- |
+  | Pistola | Infinita | Usa los stats de cada personaje |
+  | Metralleta | 150 | Muy rápida, poco daño, algo de dispersión |
+  | Escopeta | 24 | 6 perdigones en abanico, corto alcance |
+  | Lanzallamas | 160 | Corto alcance, atraviesa enemigos |
+  Al agotar la munición se vuelve a la pistola. Valores en `content/config/weapons.json`.
+- **Objetos**: los enemigos sueltan a veces (40 %) una caja de arma, vida (+30) o granadas (+3).
+- **IA**: los enemigos patrullan, reaccionan al verte (más rápido cuanto más difíciles), te persiguen sin abandonar su zona, saltan y te disparan hacia arriba si estás encima.
+- Al terminar (victoria o derrota) se muestra el resumen: personaje, bajas y tiempo.
 
 ## 6. Niveles y mapas
 

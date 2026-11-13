@@ -11,7 +11,8 @@ import { audio } from '../systems/AudioManager.js';
 import { Controller } from '../input/Actions.js';
 import { KeyboardControls, bindGlobalKeys } from '../input/KeyboardControls.js';
 import { TouchProxy } from '../input/MobileControls.js';
-import { DummyEnemyAI } from '../ai/DummyEnemyAI.js';
+import { EnemyAI } from '../ai/EnemyAI.js';
+import { PickupManager } from '../systems/PickupManager.js';
 import { Projectile } from '../entities/Projectile.js';
 import { GrenadePool } from '../systems/GrenadePool.js';
 import { SpecialAbilitySystem } from '../systems/SpecialAbilitySystem.js';
@@ -50,6 +51,8 @@ export class GameScene extends Phaser.Scene {
         this.fighters = [];
         this.grenades = new GrenadePool(this, () => this.fighters);
         this.specials = new SpecialAbilitySystem(this);
+        this.pickups = new PickupManager(this, this.content.weapons);
+        this.startedAt = this.time.now;
         this.spawnFromMap();
         this.enemyDirector = new EnemyAbilityDirector(this, () => this.enemies);
         this.setupCollisions();
@@ -119,6 +122,7 @@ export class GameScene extends Phaser.Scene {
             grenades: this.grenades,
             specials: this.specials,
             grenadeCount: PLAYER_GRENADES,
+            weapons: this.content.weapons,
             nameColor: '#6fd0ff',
         });
         this.player.on(FIGHTER_EVENTS.DAMAGED, (f) => this.events.emit(GAME_EVENTS.PLAYER_HEALTH, f.health, f.stats.maxHealth));
@@ -155,8 +159,9 @@ export class GameScene extends Phaser.Scene {
     /** Crea un enemigo con dificultad aleatoria. */
     spawnEnemy(def, x, y, patrolDistance) {
         const tier = DifficultyManager.pick();
-        const ai = new DummyEnemyAI({
+        const ai = new EnemyAI({
             getTarget: () => this.player,
+            getPeers: () => this.enemies,
             groundLayer: this.ground,
             patrolDistance,
             ...tier.ai,
@@ -167,6 +172,7 @@ export class GameScene extends Phaser.Scene {
             grenades: this.grenades,
             specials: this.specials,
             grenadeCount: Number.POSITIVE_INFINITY,
+            weapons: this.content.weapons,
             modsOverride: tier.mods,
             nameColor: tier.nameColor,
         });
@@ -207,6 +213,8 @@ export class GameScene extends Phaser.Scene {
         };
         this.physics.add.collider(this.fighters, this.ground, null, oneWayFilter, this);
         this.physics.add.collider(this.grenades.group, this.ground, null, oneWayFilter, this);
+        this.physics.add.collider(this.pickups.group, this.ground, null, oneWayFilter, this);
+        this.physics.add.overlap(this.player, this.pickups.group, (a, b) => this.pickups.collect(this.player, a === this.player ? b : a));
 
         // Proyectiles contra el escenario (atraviesan plataformas oneWay)
         this.physics.add.collider(
@@ -223,12 +231,20 @@ export class GameScene extends Phaser.Scene {
             this.fighters,
             (a, b) => {
                 const [p, f] = a instanceof Projectile ? [a, b] : [b, a];
+                if (p.pierce) {
+                    // Atraviesa (lanzallamas): daña una sola vez a cada personaje y sigue
+                    p.hitSet.add(f);
+                    f.takeDamage(p.damage, p);
+                    return;
+                }
                 if (f.takeDamage(p.damage, p)) this.impact(p);
                 else p.kill();
             },
             (a, b) => {
                 const [p, f] = a instanceof Projectile ? [a, b] : [b, a];
-                return p.active && !f.dead && p.owner !== f && CharacterRoleManager.areHostile(p.team, f.team);
+                return (
+                    p.active && !f.dead && p.owner !== f && !p.hitSet.has(f) && CharacterRoleManager.areHostile(p.team, f.team)
+                );
             },
             this
         );
@@ -286,6 +302,7 @@ export class GameScene extends Phaser.Scene {
             this.player.addSpecialCharge(SPECIAL_CHARGE_PER_KILL);
             showKillPopup(this, this.player);
         }
+        this.pickups.maybeDrop(enemy.x, enemy.y - 30);
         const left = this.aliveEnemies();
         this.events.emit(GAME_EVENTS.ENEMIES_LEFT, left);
         // Tras la animación de muerte: humo y desaparición
@@ -315,7 +332,7 @@ export class GameScene extends Phaser.Scene {
                 this.player.celebrate();
                 audio.sfx('victory');
                 this.events.emit(GAME_EVENTS.LEVEL_CLEARED);
-                this.showBanner('¡ZONA DESPEJADA!', 'Pulsa Esc o toca para volver al menú');
+                this.showBanner('¡ZONA DESPEJADA!', 'Pulsa Esc o toca para volver al menú', undefined, this.summaryText());
             });
         }
     }
@@ -327,18 +344,19 @@ export class GameScene extends Phaser.Scene {
         this.ended = true;
         this.events.emit(GAME_EVENTS.PLAYER_DEFEATED);
         this.time.delayedCall(this.player.animDuration('death') + 500, () => {
-            this.showBanner('HAS CAÍDO', 'Pulsa Espacio / J o toca para reintentar', () => this.scene.restart());
+            this.showBanner('HAS CAÍDO', 'Pulsa Espacio / J o toca para reintentar', () => this.scene.restart(), this.summaryText());
         });
     }
 
     /** Mensaje central de fin de partida; la acción continúa con tecla o toque. */
-    showBanner(title, subtitle, onContinue = () => this.exitToMenu()) {
+    showBanner(title, subtitle, onContinue = () => this.exitToMenu(), summary = '') {
         const cx = GAME_WIDTH / 2;
         const cy = GAME_HEIGHT / 2;
-        const bg = this.add.rectangle(cx, cy, GAME_WIDTH, 150, 0x000000, 0.6).setScrollFactor(0).setDepth(100);
-        const t1 = this.add.text(cx, cy - 22, title, textStyle(44, '#ffd34d')).setOrigin(0.5).setScrollFactor(0).setDepth(101);
-        const t2 = this.add.text(cx, cy + 30, subtitle, textStyle(18)).setOrigin(0.5).setScrollFactor(0).setDepth(101);
-        this.tweens.add({ targets: [bg, t1, t2], alpha: { from: 0, to: 1 }, duration: 250 });
+        const bg = this.add.rectangle(cx, cy, GAME_WIDTH, summary ? 190 : 150, 0x000000, 0.65).setScrollFactor(0).setDepth(100);
+        const t1 = this.add.text(cx, cy - 40, title, textStyle(44, '#ffd34d')).setOrigin(0.5).setScrollFactor(0).setDepth(101);
+        const t3 = this.add.text(cx, cy + 10, summary, textStyle(18, '#9fe8ff')).setOrigin(0.5).setScrollFactor(0).setDepth(101);
+        const t2 = this.add.text(cx, cy + 50, subtitle, textStyle(16)).setOrigin(0.5).setScrollFactor(0).setDepth(101);
+        this.tweens.add({ targets: [bg, t1, t2, t3], alpha: { from: 0, to: 1 }, duration: 250 });
 
         const done = () => {
             this.input.keyboard.off('keydown', onKey);
@@ -353,6 +371,13 @@ export class GameScene extends Phaser.Scene {
             this.input.keyboard.on('keydown', onKey);
             this.input.on('pointerup', done);
         });
+    }
+
+    /** Resumen de la partida: personaje, bajas y tiempo. */
+    summaryText() {
+        const secs = Math.floor((this.time.now - this.startedAt) / 1000);
+        const time = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+        return `${this.player.def.name.toUpperCase()}  ·  BAJAS: ${this.player.kills}  ·  TIEMPO: ${time}`;
     }
 
     openPause() {

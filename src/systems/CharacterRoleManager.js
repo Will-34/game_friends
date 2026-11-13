@@ -107,6 +107,7 @@ export class CharacterRoleManager {
             specials: deps.specials,
             grenadeCount: deps.grenadeCount,
             nameColor: deps.nameColor,
+            weapons: deps.weapons,
         });
         if (mods.tint !== null) fighter.setTint(mods.tint);
         return fighter;

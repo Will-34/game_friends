@@ -38,9 +38,10 @@ export class HudScene extends Phaser.Scene {
         this.specialText = this.add.text(left + BAR_W + 14, 50, '', textStyle(12, '#6fd0ff'));
         this.grenadeText = this.add.text(left, 70, '', textStyle(13, '#ffffff'));
         this.killsText = this.add.text(left + 140, 70, '', textStyle(13, '#7dff8a'));
+        this.weaponText = this.add.text(left, 88, '', textStyle(13, '#ffffff'));
         this.leftGroup = this.add.container(0, 0, [
             this.portrait, this.nameText, hpFrame, this.healthBar, this.healthText,
-            spFrame, this.specialBar, this.specialText, this.grenadeText, this.killsText,
+            spFrame, this.specialBar, this.specialText, this.grenadeText, this.killsText, this.weaponText,
         ]);
 
         // ---- Enemigos restantes
@@ -162,6 +163,10 @@ export class HudScene extends Phaser.Scene {
         this.specialText.setText(this.specialReady ? `${name.toUpperCase()} LISTA (${key})` : name);
         this.grenadeText.setText(device.touch ? `GRANADAS: ${p.grenades}` : `GRANADAS (U): ${p.grenades}`);
         this.killsText.setText(`BAJAS: ${p.kills}`);
+        const w = p.currentWeapon();
+        const ammo = Number.isFinite(w.ammo) ? ` ${w.ammo}` : ' ∞';
+        const more = p.inventory.length > 1 ? (device.touch ? '  (ARMA: cambiar)' : '  (Q: cambiar)') : '';
+        this.weaponText.setText(`${w.name.toUpperCase()}${ammo}${more}`).setColor(w.color || '#ffffff');
         if (this.touch) this.touch.highlight.special = this.specialReady;
     }
 

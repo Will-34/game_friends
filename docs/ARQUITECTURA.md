@@ -38,7 +38,7 @@ DeviceManager (sin escena): táctil, pantalla completa/horizontal, aviso HTML "G
 ```
 KeyboardControls ─┐
 MobileControls ───┼─(TouchProxy)─> Controller ──> ActionState ──> Fighter
-DummyEnemyAI ─────┘
+EnemyAI ──────────┘
 ```
 
 - Cada fuente implementa `read(raw, time, delta)` y escribe `raw.moveX` y `raw.buttons`.
@@ -73,3 +73,10 @@ DummyEnemyAI ─────┘
 
 - `?debug=1`: cuerpos físicos visibles y visor de animaciones.
 - En desarrollo (`localhost`) `window.__game` expone la instancia de Phaser.
+
+## Combate (E4)
+
+- `SpecialAbilitySystem` + `src/abilities/` (tipos `buff`, `drone`, `shadow-dash`); `EnemyAbilityDirector` (una habilidad enemiga a la vez).
+- `GrenadePool` (granadas), `PickupManager` (objetos), `DifficultyManager` (nivel por enemigo), `FloatingText` ("+1", gestos, avisos).
+- Armas: `content/config/weapons.json`; el inventario vive en el `Fighter` (`currentWeapon`, `cycleWeapon`, `giveWeapon`).
+- IA: `src/ai/EnemyAI.js` (estados patrulla / alerta / ataque).

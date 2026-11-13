@@ -23,7 +23,8 @@ const baseStyle = (size, color = '#ffffff') => ({
 function makeSymbol(scene, taunt, size) {
     if (!taunt) return null;
     if (taunt.icon && scene.textures.exists(taunt.icon)) {
-        return scene.add.image(0, 0, taunt.icon).setDisplaySize(size, size);
+        // Los iconos pixel art se dibujan en 32x32 con margen: se amplían algo más que los emojis
+        return scene.add.image(0, 0, taunt.icon).setDisplaySize(size * 1.35, size * 1.35);
     }
     if (taunt.emoji) {
         return scene.add.text(0, 0, taunt.emoji, { fontSize: `${size}px`, padding: { top: 4, bottom: 4 } }).setOrigin(0.5);
