@@ -27,7 +27,8 @@ const TEAM_BY_ROLE = Object.freeze({
  */
 const ROLE_MODIFIERS = Object.freeze({
     PLAYER: { health: 1, bulletSpeed: 1, fireRate: 1, stunMs: 280, invulnerableMs: 900, tint: null },
-    ALLY: { health: 1, bulletSpeed: 0.8, fireRate: 1.25, damage: 0.8, stunMs: 200, invulnerableMs: 500, tint: null },
+    // Aliados: 2,5× vida para que acompañen más tiempo al protagonista
+    ALLY: { health: 2.5, bulletSpeed: 0.8, fireRate: 1.25, damage: 0.8, stunMs: 200, invulnerableMs: 700, tint: null },
     ENEMY: { health: 0.5, bulletSpeed: 0.55, fireRate: 1.4, stunMs: 120, invulnerableMs: 60, tint: 0xffc2c2 },
     RESCUE_TARGET: { health: 1, bulletSpeed: 1, fireRate: 1, stunMs: 0, invulnerableMs: 0, tint: null },
 });

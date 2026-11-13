@@ -439,7 +439,8 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
     drawAura(time) {
         const g = this.aura;
         g.clear();
-        const b = this.buffs.find((x) => x.aura);
+        let b = null;
+        for (const x of this.buffs) if (x.aura) b = x; // el más reciente (habilidad) por encima del fijo
         if (!b) return;
         const h = this.def.body.height * this.sizeScale;
         let color;
@@ -451,6 +452,12 @@ export class Fighter extends Phaser.Physics.Arcade.Sprite {
         g.strokeEllipse(this.x, this.y - h / 2, w, h + 18);
         if (b.invulnerable) {
             g.fillStyle(color, 0.12).fillEllipse(this.x, this.y - h / 2, w, h + 18);
+        }
+        if (b.glow) {
+            // Aura fija (aliados): brillo suave, borde más grueso y sombra de color en el piso
+            g.fillStyle(color, 0.14 + pulse * 0.1).fillEllipse(this.x, this.y - h / 2, w, h + 18);
+            g.lineStyle(2, color, 0.9).strokeEllipse(this.x, this.y - h / 2, w + 8, h + 26);
+            g.fillStyle(color, 0.45).fillEllipse(this.x, this.y - 2, w + 10, 12);
         }
     }
 

@@ -41,6 +41,23 @@ $GLOBALS['TREE'] = ['trunk' => '#6b4a2e', 'trunkDark' => '#4a321e', 'dark' => '#
 $GLOBALS['TOBO'] = ['trunk' => '#9fb07a', 'trunkDark' => '#7d8c5c', 'dark' => '#b8457f', 'mid' => '#e3679f', 'light' => '#f7a8cb'];
 
 /** Caja de madera genérica (tile 3). */
+/**
+ * Plataforma "saltable" bien visible sobre cualquier fondo: borde negro, franja superior amarilla,
+ * cuerpo oscuro con remaches y ménsulas debajo. Misma lectura en todos los mapas.
+ */
+function tile_platform($im, $o, $body, $shade, $hi = '#ffcf4d')
+{
+    px_rect($im, $o, 0, $o + T - 1, 0, '#111111');
+    px_rect($im, $o, 1, $o + T - 1, 2, $hi);
+    px_rect($im, $o, 3, $o + T - 1, 6, $body);
+    px_rect($im, $o, 3, $o + T - 1, 3, $shade);
+    px_dot($im, $o + 3, 5, $shade);
+    px_dot($im, $o + 12, 5, $shade);
+    px_rect($im, $o, 7, $o + T - 1, 7, '#111111');
+    px_line($im, $o + 2, 8, $o + 5, 11, '#111111', 2);
+    px_line($im, $o + 13, 8, $o + 10, 11, '#111111', 2);
+}
+
 function tile_crate($im, $ox, $c = ['#a46a36', '#7a4a22', '#c88a4c'])
 {
     px_rect($im, $ox, 0, $ox + T - 1, T - 1, $c[0]);
@@ -301,14 +318,8 @@ function cv_tiles($im)
     $o = T;
     tile_texture($im, $o, '#6b4a36', ['#5a3c2b', '#7d5a42', '#4c3324'], 3, 22);
     for ($y = 3; $y < T; $y += 5) px_line($im, $o, $y, $o + T - 1, $y, '#5a3c2b');
-    // 2 plataforma: alero/balcón de madera
-    $o = T * 2;
-    px_rect($im, $o, 0, $o + T - 1, 4, '#8a5a32');
-    px_rect($im, $o, 0, $o + T - 1, 0, '#c08a52');
-    px_rect($im, $o, 4, $o + T - 1, 5, '#4f321b');
-    px_line($im, $o + 7, 1, $o + 7, 4, '#5f3d22');
-    px_line($im, $o + 2, 6, $o + 5, 9, '#5f3d22', 2);
-    px_line($im, $o + 13, 6, $o + 10, 9, '#5f3d22', 2);
+    // 2 plataforma: viga de madera oscura con franja amarilla (se distingue del fondo)
+    tile_platform($im, T * 2, '#3e2414', '#6b4226');
     // 3 caja
     tile_crate($im, T * 3);
     // 4 peligro: parrilla con brasas
@@ -478,12 +489,8 @@ function ua_tiles($im)
     px_dot($im, $o + 12, 14, '#d3d3cd');
     // 1 relleno: tierra
     tile_texture($im, T, '#6b5038', ['#5a422e', '#7f6248', '#8c8c86'], 13, 20);
-    // 2 plataforma: losa de cemento blanca (balcón de módulo)
-    $o = T * 2;
-    px_rect($im, $o, 0, $o + T - 1, 5, '#e9ebea');
-    px_rect($im, $o, 0, $o + T - 1, 0, '#ffffff');
-    px_rect($im, $o, 5, $o + T - 1, 6, '#9aa0a3');
-    px_rect($im, $o, 7, $o + T - 1, 7, '#5b6066');
+    // 2 plataforma: viga de acero oscura con franja amarilla (antes blanca: no se veía sobre los módulos)
+    tile_platform($im, T * 2, '#25303f', '#4a5a70');
     // 3 caja de cartón
     tile_crate($im, T * 3, ['#b8875a', '#7f5a36', '#d4a77a']);
     // 4 peligro: laguna con camalotes
@@ -583,13 +590,8 @@ function lo_tiles($im)
     for ($y = 4; $y < T; $y += 4) for ($x = 0; $x < T; $x++) if (($x + $y) % 6 < 3) px_dot($im, $o + $x, $y + (int)(sin($x / 2.5)), '#cf8a66');
     // 1 relleno: arena compacta
     tile_texture($im, T, '#c9845f', ['#b5704f', '#d99a74', '#a8664a'], 23, 24);
-    // 2 plataforma: tronco
-    $o = T * 2;
-    px_rect($im, $o, 0, $o + T - 1, 6, '#7a5130');
-    px_rect($im, $o, 0, $o + T - 1, 1, '#a0703f');
-    px_rect($im, $o, 6, $o + T - 1, 6, '#4a301a');
-    px_line($im, $o + 1, 3, $o + 6, 3, '#5a3a20');
-    px_line($im, $o + 9, 4, $o + 14, 4, '#5a3a20');
+    // 2 plataforma: tronco oscuro con franja amarilla
+    tile_platform($im, T * 2, '#3a2412', '#5e3b1e');
     // 3 caja
     tile_crate($im, T * 3);
     // 4 peligro: curichi (agua estancada con juncos)

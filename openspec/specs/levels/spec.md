@@ -70,7 +70,15 @@ El jefe DEBE ser un personaje al azar (nunca el protagonista, Henry ni los aliad
 - ENTONCES el jefe lanza su dron, que dispara al hostil más cercano
 
 ### Requisito: Aliados
-En el combate del jefe DEBEN llegar `allies` (2) aliados al azar (nunca el protagonista, Henry ni el jefe), controlados por IA, que siguen al protagonista y atacan al hostil más cercano. Si un aliado cae DEBE volver a los 5-10 s, como máximo `allyRespawns` (2) veces. El HUD DEBE mostrar su estado.
+En el combate del jefe DEBEN llegar `allies` (2) aliados al azar (nunca el protagonista, Henry ni el jefe), controlados por IA, que siguen al protagonista y atacan al hostil más cercano. Si un aliado cae DEBE volver a los 5-10 s, como máximo `allyRespawns` (2) veces. El HUD DEBE mostrar su estado. Los aliados DEBEN tener 2,5× de vida, un aura verde permanente (además del nombre verde) y su llegada DEBE anunciarse con "¡LLEGARON LOS ALIADOS!" (y "¡<NOMBRE> VOLVIÓ A AYUDARTE!" al volver).
+
+### Requisito: Oleadas de enemigos
+Los enemigos del nivel NO DEBEN crearse todos al empezar: DEBEN aparecer de a poco al acercarse el jugador a su sitio (cayendo desde arriba si ya está a la vista), con 1 a la vez al empezar y un tope que sube con las bajas o el tiempo hasta 3 enemigos cerca de la pantalla. Los que el jugador deja muy atrás ya no aparecen. Durante el jefe, las escoltas y mini-robots vivos a la vez NO DEBEN pasar de 3.
+
+#### Escenario: Inicio tranquilo
+- DADO que empieza un nivel
+- CUANDO pasan los primeros segundos
+- ENTONCES solo hay 1 enemigo cerca y luego van apareciendo más, nunca más de 3 a la vez
 
 #### Escenario: Aliado caído
 - DADO un aliado con 2 reapariciones
@@ -94,9 +102,12 @@ Un mapa con la propiedad `captive` (id de personaje) DEBE mostrar a ese personaj
 - ENTONCES la jaula se rompe, Henry salta al suelo, celebra y dice "¡Gracias, changos! ¡Soy libre!"
 
 ### Requisito: Mini-robots
-Un mapa con `bossMinion` DEBE hacer que su jefe invoque ese enemigo (2 a la vez) cada `minionEveryMs`, sin pasar de `minionMax` vivos, y además al enfurecerse.
+Un mapa con `bossMinion` DEBE hacer que su jefe invoque ese enemigo (2 a la vez) cada `minionEveryMs`, sin pasar de `minionMax` vivos (ni del tope de 3 escoltas/mini-robots), y además al enfurecerse.
 
 #### Escenario: Invocación
 - DADO el jefe de Casco Viejo con `minionEveryMs: 18000`
 - CUANDO pasa ese tiempo
 - ENTONCES caen 2 mini-robots a los lados de la arena y el jefe dice "¡Vengan, mis robots!"
+
+### Requisito: Plataformas visibles
+Las plataformas donde se salta DEBEN distinguirse del fondo en todos los mapas: cuerpo oscuro, borde negro y franja superior amarilla.

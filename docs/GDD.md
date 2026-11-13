@@ -99,6 +99,10 @@ Menú → JUGAR → **Elige tu protagonista** → partida. Se puede elegir cualq
 - **Enemigos**: aparecen en grupos de 2-3, cada uno con dificultad aleatoria (Fácil verde, Normal amarillo, Difícil rojo). Al acertarte hacen su gesto (su símbolo). Usan su habilidad de vez en cuando, **nunca dos a la vez**.
 - Todos los personajes muestran su nombre encima; los enemigos, también una mini barra de vida.
 - **Regeneración del jugador**: +5 de vida cada 2 s tras 2,5 s sin recibir daño.
+- **Oleadas**: los enemigos del nivel aparecen de a poco al avanzar (1 al empezar, máximo 3 cerca de la pantalla). En el jefe, máximo 3 escoltas/mini-robots a la vez.
+- **Aliados**: 2,5× de vida, aura verde y aviso "¡LLEGARON LOS ALIADOS!".
+- **Salto**: velocidad de salto 700 (antes 640) en todos los personajes.
+- **Plataformas**: oscuras con franja amarilla para distinguirlas del fondo.
 - **Armas** (Q para cambiar en PC; en móvil, el arma recogida se equipa sola y al acabarse la munición vuelve la pistola):
   | Arma | Munición | Características |
   | --- | --- | --- |

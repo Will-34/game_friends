@@ -121,12 +121,8 @@ function bs_tiles($im)
     foreach ([[2, 6], [13, 6], [2, 13], [13, 13]] as $r) px_dot($im, $o + $r[0], $r[1], '#8a96a8');
     // 1 relleno: hormigón oscuro
     tile_texture($im, T, '#2e3448', ['#262b3a', '#3a4158'], 83, 18);
-    // 2 plataforma: rejilla metálica
-    $o = T * 2;
-    px_rect($im, $o, 0, $o + T - 1, 5, '#6d7488');
-    for ($x = 1; $x < T; $x += 3) px_rect($im, $o + $x, 1, $o + $x, 4, '#2e3448');
-    px_rect($im, $o, 0, $o + T - 1, 0, '#9aa3b6');
-    px_rect($im, $o, 6, $o + T - 1, 6, '#ffcf4d');
+    // 2 plataforma: viga oscura con franja amarilla (igual lectura que en los demás mapas)
+    tile_platform($im, T * 2, '#1b2030', '#3a4158');
     // 3 caja de acero
     tile_crate($im, T * 3, ['#5b6478', '#2e3448', '#8a96a8']);
     // 4 peligro: piso electrificado
