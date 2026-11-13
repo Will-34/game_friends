@@ -1,0 +1,30 @@
+# Al hacer push a main, pide a cPanel que actualice el repo (pull) y despliegue (.cpanel.yml).
+# Las credenciales viven en los secrets del repo (CPANEL_URL, CPANEL_USER, CPANEL_TOKEN), nunca en el código.
+# Si los secrets no están configurados, el job se salta sin fallar.
+name: Deploy a cPanel
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CPANEL_URL: ${{ secrets.CPANEL_URL }}
+      CPANEL_USER: ${{ secrets.CPANEL_USER }}
+      CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+      REPO: /home/samirade/repositories/game_friends
+    steps:
+      - name: Pull y deploy en cPanel
+        if: ${{ env.CPANEL_TOKEN != '' }}
+        run: |
+          set -e
+          AUTH="Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}"
+          curl -fsS -H "$AUTH" "${CPANEL_URL}/execute/VersionControl/update?repository_root=${REPO}&branch=main" -o r1.json
+          grep -q '"status":1' r1.json || { cat r1.json; exit 1; }
+          curl -fsS -H "$AUTH" "${CPANEL_URL}/execute/VersionControlDeployment/create?repository_root=${REPO}" -o r2.json
+          grep -q '"status":1' r2.json || { cat r2.json; exit 1; }
+          echo "Despliegue solicitado correctamente."
+      - name: Aviso si faltan secrets
+        if: ${{ env.CPANEL_TOKEN == '' }}
+        run: echo "Faltan los secrets CPANEL_URL / CPANEL_USER / CPANEL_TOKEN; no se despliega."
